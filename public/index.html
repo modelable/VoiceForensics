@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>음성 위변조 탐지 포렌식</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f7f7f7;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>안녕하세요.</h1>
+    <h2>음성 위변조 탐지 포렌식 홈페이지입니다.</h2>
+
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <h2>음성 파일 업로드</h2>
+        <label for="voice1">음성 1:</label>
+        <input type="file" id="voice1" name="file1" accept="audio/*"><br><br>
+    
+        <label for="voice2">음성 2:</label>
+        <input type="file" id="voice2" name="file2" accept="audio/*"><br><br>
+    
+        <input type="submit" value="업로드">
+    </form>
+</body>
+</html>

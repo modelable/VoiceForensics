@@ -1,0 +1,47 @@
+{
+  "name": "turtle",
+  "version": "1.0.0",
+  "license":"MIT",
+  "homepage": "https://github.com/vail-systems/node-mfcc",
+  "repository": "vail-systems/node-mfcc",
+  "contributors": [
+    "Joshua Jung <joshua.p.jung@gmail.com> (http://www.joshjung.com)",
+    "Ben Bryan <bbryan@vailsys.com>"
+  ],
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "mfcc.js",
+    "src",
+    "test",
+    "data"
+  ],
+  "keywords": [
+    "mfcc",
+    "mel",
+    "scale",
+    "cepstrum",
+    "coefficients",
+    "frequency",
+    "fft",
+    "audio",
+    "speech"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.0",
+    "multer": "^1.4.5-lts.1",
+    "commander": "^2.8.1",
+    "dct": "^0.0.3",
+    "fft-js": "0.0.9",
+    "signal-windows": "^0.0.1",
+    "wav": "^1.0.0"
+  },
+  "description": ""
+}
