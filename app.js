@@ -63,7 +63,6 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
     }
 });
 
-// 서버 실행
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
