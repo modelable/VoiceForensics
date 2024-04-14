@@ -15,6 +15,7 @@ var program = require('commander'),
   ham = undefined,
   mfcc = require('./');
 
+//옵션 변경 가능 
 program.version('0.1')
        .usage('[options]')
        .option('-v, --verbose', 'True for verbose output.', 0)
@@ -61,6 +62,7 @@ wr.on('data', function (buffer, offset, length) {
         phasorMagnitudes = fft.util.fftMag(phasors),
         result = mfcc(phasorMagnitudes, program.debug && true);
 
+    //디버그 1로 설정 명령어 : node mfcc.js -d 1 -w test/ex2.wav 
     if (program.debug == 1)
     {
       console.log('Frame ' + fIx);
@@ -97,9 +99,9 @@ wr.on('format', function (format) {
 
   if (ulawMap) for (var k in ulawMap) ulawMap[k] = ulawMap[k]/32767;
 
-  if (format.channels != 1)
-    throw Error('Right now this MFCC code only works on single channel 8-bit wave files.');
   if (format.bitDepth != 8)
+    throw Error('Right now this MFCC code only works on single channel 8-bit wave files.');
+  if (format.channels != 1)
     throw Error('Right now this MFCC code only works on single channel 8-bit wave files.');
 
   // Breaks samples up into frames and runs them through a transform (map) if
@@ -125,4 +127,4 @@ wr.on('end', function () {
   process.exit(1);
 });
 
-fs.createReadStream(program.wav).pipe(wr);
+fs.createReadStream(program.wav).pipe(wr); //여기까지
