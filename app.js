@@ -1,3 +1,4 @@
+// app.js
 const express = require('express');
 const multer = require('multer');
 const mongoose = require('mongoose');
@@ -32,21 +33,12 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-
 // MongoDB 스키마 및 모델 정의
-const fileControlSchema = new mongoose.Schema({
-  filename: String,
-  path: String
-});
-
-const fileRecordSchema = new mongoose.Schema({
-  filename: String,
-  path: String
-});
-
+const fileControlSchema = require('./models/FileControl');
 const FileControl = mongoose.model('FileControl', fileControlSchema, 'file_control');
-const FileRecord = mongoose.model('FileRecord', fileRecordSchema, 'file_record');
 
+const fileRecordSchema = require('./models/FileRecord');
+const FileRecord = mongoose.model('FileRecord', fileRecordSchema, 'file_record');
 // 파일 업로드 및 MongoDB 저장
 app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file2', maxCount: 1 }]), async (req, res) => {
   try {

@@ -1,10 +1,9 @@
+// models/FileRecord.js
 const mongoose = require('mongoose');
 
-const fileControlSchema = new mongoose.Schema({
+const fileRecordSchema = new mongoose.Schema({
   filename: String,
   path: String
 });
 
-const FileControl = mongoose.model('FileRecord', fileRecordSchema);
-
-module.exports = FileRecord;
+module.exports = fileRecordSchema;

@@ -1,3 +1,4 @@
+// models/FileControl.js
 const mongoose = require('mongoose');
 
 const fileControlSchema = new mongoose.Schema({
@@ -5,6 +6,4 @@ const fileControlSchema = new mongoose.Schema({
   path: String
 });
 
-const FileControl = mongoose.model('FileControl', fileControlSchema);
-
-module.exports = FileControl;
+module.exports = fileControlSchema;
