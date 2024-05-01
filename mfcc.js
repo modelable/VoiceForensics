@@ -6,6 +6,7 @@
  * tool to understand the Mel-scale and its related coefficients used in
  * human speech analysis.
 \*===========================================================================*/
+
 var program = require('commander'),
   fs = require('fs'),
   path = require('path'),
@@ -35,7 +36,6 @@ if (program.wav === undefined)
   program.outputHelp();
   process.exit(1);
 }
-
 program.minFrequency = parseInt(program.minFrequency);
 program.maxFrequency = parseInt(program.maxFrequency);
 program.numMelSpecFilters = parseInt(program.numMelSpecFilters);

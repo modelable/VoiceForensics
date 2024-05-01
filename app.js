@@ -4,7 +4,7 @@ const multer = require('multer');
 const mongoose = require('mongoose');
 const path = require('path');
 const fs = require('fs');
-
+const { execFile } = require('child_process');
 const app = express();
 const port = 3000;
 
@@ -24,10 +24,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // 파일 업로드를 위한 multer 설정
 const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
+    destination: function (req, file, cb) {
         cb(null, 'uploads/'); // 업로드된 파일의 저장 경로
     },
-    filename: function(req, file, cb) {
+    filename: function (req, file, cb) {
         cb(null, file.originalname); // 업로드된 파일의 원본 파일명 사용
     }
 });
@@ -39,39 +39,77 @@ const FileControl = mongoose.model('FileControl', fileControlSchema, 'file_contr
 
 const fileRecordSchema = require('./models/FileRecord');
 const FileRecord = mongoose.model('FileRecord', fileRecordSchema, 'file_record');
+
+const CoeffieControl = mongoose.model('CoeffieControl', require('./models/CoeffieControl'));
+const CoeffieRecord = mongoose.model('CoeffieRecord', require('./models/CoeffieRecord'));
+
 // 파일 업로드 및 MongoDB 저장
 app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file2', maxCount: 1 }]), async (req, res) => {
-  try {
-      const { file1, file2 } = req.files;
+    try {
+        const { file1, file2 } = req.files;
 
-      // 파일1을 files_control 테이블에 저장
-      const newFile1 = new FileControl({
-          filename: file1[0].originalname,
-          path: file1[0].path
-      });
+        // 파일1을 files_control 테이블에 저장
+        const newFile1 = new FileControl({
+            filename: file1[0].originalname,
+            path: file1[0].path
+        });
 
-      await newFile1.save();
+        await newFile1.save();
 
-      // 파일2를 files_record 테이블에 저장
-      const newFile2 = new FileRecord({
-          filename: file2[0].originalname,
-          path: file2[0].path
-      });
+        // 파일2를 files_record 테이블에 저장
+        const newFile2 = new FileRecord({
+            filename: file2[0].originalname,
+            path: file2[0].path
+        });
 
-      await newFile2.save();
+        await newFile2.save();
 
-      res.status(200).send('Files uploaded and saved to database.');
-  } catch (error) {
-      console.error('Error uploading files:', error);
-      res.status(500).send('Error uploading files and saving to database.');
-  }
-});
+        // 파일 업로드와 MFCC 분석을 순차적으로 처리 (MFCC -> DB)
+        const files = [file1[0], file2[0]];
+        const mfccResults = await Promise.all(files.map(file => {
+            return new Promise((resolve, reject) => {
+                execFile('node', ['mfcc.js', '-d', '1', '-w', file.path], (error, stdout, stderr) => {
+                    if (error) {
+                        reject(error);
+                    } else if (stderr) {
+                        reject(new Error(stderr));
+                    } else {
+                        // stdout에서 MFCC 데이터 파싱
+                        const values = stdout.trim().split('\n').map(line =>
+                            line.split(',').map(val => parseFloat(val))
+                        );
+                        resolve(values);
+                    }
+                });
+            });
+        }));
+        
+            for (let i = 0; i < files.length; i++) {
+                for (let result of mfccResults[i]) {
+                    const mfccData = {
+                        MFCID: result[0], // 첫 열의 값을 MFCID로 사용
+                        MFCC1: result[1], MFCC2: result[2], MFCC3: result[3],MFCC4: result[4],
+                        MFCC5: result[5],MFCC6: result[6],MFCC7: result[7], MFCC8: result[8],
+                        MFCC9: result[9], MFCC10: result[10], MFCC11: result[11], MFCC12: result[12],
+                        fileControl: files[i]._id // 파일 ID 참조
+                    };
 
+                    // CoeffieControl 또는 CoeffieRecord 모델에 따라 저장
+                    const mfccDocument = new (i === 0 ? CoeffieControl : CoeffieRecord)(mfccData);
+                    await mfccDocument.save();
+                }
+            }
+            res.status(200).send('Files uploaded and MFCC data saved to database.');
+        } catch (error) {
+            console.error('Error processing files:', error);
+            res.status(500).send('Error uploading files and saving to database.');
+        }
+    });
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
