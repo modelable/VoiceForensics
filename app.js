@@ -66,6 +66,7 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
 
         const files = [file1[0], file2[0]];
 
+        // mfcc 벡터 추출 값 정의
         const mfccResults = await Promise.all(files.map(file => {
             return new Promise((resolve, reject) => {
                 const childProcess = spawn('node', ['mfcc.js', '-w', file.path]);
@@ -98,9 +99,6 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
                 });
             });
         }));
-        
-
-        console.log('== debuging1 ==');
 
         for (let i = 0; i < files.length; i++) {
             for (let result of mfccResults[i]) {
