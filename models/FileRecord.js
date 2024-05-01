@@ -3,7 +3,11 @@ const mongoose = require('mongoose');
 
 const fileRecordSchema = new mongoose.Schema({
   filename: String,
-  path: String
+  path: String,
+  results: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Results'
+  }]
 });
 
 module.exports = fileRecordSchema;
