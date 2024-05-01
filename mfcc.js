@@ -124,7 +124,7 @@ wr.on('format', function (format) {
 });
 
 wr.on('end', function () {
-  process.exit(1);
+  process.exit(0);
 });
 
 fs.createReadStream(program.wav).pipe(wr); //여기까지

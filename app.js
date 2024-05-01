@@ -65,26 +65,6 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
         await newFile2.save();
 
         const files = [file1[0], file2[0]];
-        /*const mfccResults = await Promise.all(files.map(file => {
-            return new Promise((resolve, reject) => {
-                const childProcess = spawn('node', ['mfcc.js', '-w', file.path]);
-                childProcess.stdout.on('data', (data) => {
-                    // stdout에서 MFCC 데이터 파싱
-                    const values = data.toString().trim().split('\n').map(line =>
-                        line.split(',').map(val => parseFloat(val))
-                    );
-                    resolve(values);
-                });
-
-                childProcess.stderr.on('data', (data) => {
-                    reject(new Error(data.toString()));
-                });
-
-                childProcess.on('error', (error) => {
-                    console.error(`spawn error: ${error}`);
-                });
-            });
-        }));*/
 
         const mfccResults = await Promise.all(files.map(file => {
             return new Promise((resolve, reject) => {
@@ -92,32 +72,41 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
                 let outputData = [];
         
                 childProcess.stdout.on('data', (data) => {
-                    // 표준 출력에서 데이터를 받아 배열에 저장
                     const values = data.toString().trim().split('\n').map(line =>
                         line.split(',').map(val => parseFloat(val))
                     );
                     outputData = outputData.concat(values);
                 });
         
+                childProcess.stderr.on('data', (data) => {
+                    console.error(`Error from mfcc.js: ${data.toString()}`);
+                    reject(new Error(`Error from mfcc.js: ${data.toString()}`)); // 오류가 발생하면 즉시 reject
+                });
+        
                 childProcess.on('error', (error) => {
-                    // 프로세스 실행 중 발생하는 에러 핸들링
-                    reject(error);
+                    console.error(`Spawn error: ${error}`);
+                    reject(error); // 오류 이벤트가 발생하면 reject 호출
                 });
         
                 childProcess.on('close', (code) => {
-                    // 프로세스가 완전히 종료되었을 때 데이터 반환
                     if (code === 0) {
-                        resolve(outputData);
+                        resolve(outputData); // 정상 종료
                     } else {
-                        reject(new Error(`Process exited with code ${code}`));
+                        console.error(`mfcc.js exited with code ${code}`);
+                        reject(new Error(`Process exited with code ${code}`)); // 비정상 종료
                     }
                 });
             });
         }));
+        
+
+        console.log('== debuging1 ==');
 
         for (let i = 0; i < files.length; i++) {
-            for (let frame of values) {
-                for (let result of frame) {
+            for (let result of mfccResults[i]) {
+                console.log('== debuging2 ==');
+                var mfccDocument;
+                if (i == 0) {
                     const mfccData = {
                         MFCID: result[0], // 첫 열의 값을 MFCID로 사용
                         MFCC1: result[1], MFCC2: result[2], MFCC3: result[3], MFCC4: result[4],
@@ -126,17 +115,20 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
                         fileControl: files[i]._id // 파일 ID 참조
                     };
 
-                    // CoeffieControl 또는 CoeffieRecord 모델에 따라 저장
+                    mfccDocument = new CoeffieControl(mfccData);
+                } else {
+                    const mfccData = {
+                        MFCID: result[0], // 첫 열의 값을 MFCID로 사용
+                        MFCC1: result[1], MFCC2: result[2], MFCC3: result[3], MFCC4: result[4],
+                        MFCC5: result[5], MFCC6: result[6], MFCC7: result[7], MFCC8: result[8],
+                        MFCC9: result[9], MFCC10: result[10], MFCC11: result[11], MFCC12: result[12],
+                        fileRecord: files[i]._id // 파일 ID 참조
+                    };
 
-                    var mfccDocument;
-                    if (i == 0) {
-                        mfccDocument = new CoeffieControl(mfccData);
-                    } else {
-                        mfccDocument = new CoeffieRecord(mfccData);
-                    }
-                    await mfccDocument.save();
+                    mfccDocument = new CoeffieRecord(mfccData);
                 }
-            }
+                await mfccDocument.save();
+            };
         }
         res.status(200).send('Files uploaded and MFCC data saved to database.');
     } catch (error) {
