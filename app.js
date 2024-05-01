@@ -32,36 +32,49 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+
+// MongoDB 스키마 및 모델 정의
+const fileControlSchema = new mongoose.Schema({
+  filename: String,
+  path: String
+});
+
+const fileRecordSchema = new mongoose.Schema({
+  filename: String,
+  path: String
+});
+
+const FileControl = mongoose.model('FileControl', fileControlSchema, 'file_control');
+const FileRecord = mongoose.model('FileRecord', fileRecordSchema, 'file_record');
+
 // 파일 업로드 및 MongoDB 저장
 app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file2', maxCount: 1 }]), async (req, res) => {
-    try {
-        const { file1, file2 } = req.files;
+  try {
+      const { file1, file2 } = req.files;
 
-        // MongoDB에 파일 정보 저장
-        const File = mongoose.model('File', {
-            filename: String,
-            path: String
-        });
+      // 파일1을 files_control 테이블에 저장
+      const newFile1 = new FileControl({
+          filename: file1[0].originalname,
+          path: file1[0].path
+      });
 
-        const newFile1 = new File({
-            filename: file1[0].originalname,
-            path: file1[0].path
-        });
+      await newFile1.save();
 
-        const newFile2 = new File({
-            filename: file2[0].originalname,
-            path: file2[0].path
-        });
+      // 파일2를 files_record 테이블에 저장
+      const newFile2 = new FileRecord({
+          filename: file2[0].originalname,
+          path: file2[0].path
+      });
 
-        await newFile1.save();
-        await newFile2.save();
+      await newFile2.save();
 
-        res.status(200).send('Files uploaded and saved to database.');
-    } catch (error) {
-        console.error('Error uploading files:', error);
-        res.status(500).send('Error uploading files and saving to database.');
-    }
+      res.status(200).send('Files uploaded and saved to database.');
+  } catch (error) {
+      console.error('Error uploading files:', error);
+      res.status(500).send('Error uploading files and saving to database.');
+  }
 });
+
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
