@@ -1,7 +1,7 @@
 // models/CoeffieRecord.js
 const mongoose = require('mongoose');
 
-const coefieRecordSchema = new mongoose.Schema({
+const coeffieRecordSchema = new mongoose.Schema({
   MFCID: { type: Number, required: true },
   MFCC1: Number,
   MFCC2: Number,
@@ -15,10 +15,10 @@ const coefieRecordSchema = new mongoose.Schema({
   MFCC10: Number,
   MFCC11: Number,
   MFCC12: Number,
-  fileControl: {
+  fileRecord: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'FileRecord'
   }
 });
 
-module.exports = coefieRecordSchema;
+module.exports = coeffieRecordSchema;

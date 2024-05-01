@@ -1,7 +1,7 @@
 // models/CoeffieControl.js
 const mongoose = require('mongoose');
 
-const coefieControlSchema = new mongoose.Schema({
+const coeffieControlSchema = new mongoose.Schema({
   MFCID: { type: Number, required: true },
   MFCC1: Number,
   MFCC2: Number,
@@ -21,4 +21,4 @@ const coefieControlSchema = new mongoose.Schema({
   }
 });
 
-module.exports = coefieControlSchema;
+module.exports = coeffieControlSchema;
