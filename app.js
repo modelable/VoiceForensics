@@ -34,14 +34,10 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // MongoDB 스키마 및 모델 정의
-const fileControlSchema = require('./models/FileControl');
-const FileControl = mongoose.model('FileControl', fileControlSchema, 'file_control');
-
-const fileRecordSchema = require('./models/FileRecord');
-const FileRecord = mongoose.model('FileRecord', fileRecordSchema, 'file_record');
-
-const CoeffieControl = mongoose.model('CoeffieControl', require('./models/CoeffieControl'));
-const CoeffieRecord = mongoose.model('CoeffieRecord', require('./models/CoeffieRecord'));
+const FileControl = mongoose.model('FileControl', require('./models/FileControl'), 'file_control');
+const FileRecord = mongoose.model('FileRecord', require('./models/FileRecord'), 'file_record');
+const CoeffieControl = mongoose.model('CoeffieControl', require('./models/CoeffieControl'), 'coeffie_control');
+const CoeffieRecord = mongoose.model('CoeffieRecord', require('./models/CoeffieRecord'), 'coeffie_record');
 
 // 파일 업로드 및 MongoDB 저장
 app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file2', maxCount: 1 }]), async (req, res) => {
@@ -102,7 +98,6 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
 
         for (let i = 0; i < files.length; i++) {
             for (let result of mfccResults[i]) {
-                //console.log('== debuging2 ==');
 
                 // result[1]~result[12] 중 0이 하나라도 있는지 검사
                 if (!result.slice(1, 13).includes(0)) {
