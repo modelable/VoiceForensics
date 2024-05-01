@@ -103,7 +103,7 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
         for (let i = 0; i < files.length; i++) {
             for (let result of mfccResults[i]) {
                 //console.log('== debuging2 ==');
-                
+
                 // result[1]~result[12] 중 0이 하나라도 있는지 검사
                 if (!result.slice(1, 13).includes(0)) {
                     var mfccDocument;
@@ -113,7 +113,7 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
                             MFCC1: result[1], MFCC2: result[2], MFCC3: result[3], MFCC4: result[4],
                             MFCC5: result[5], MFCC6: result[6], MFCC7: result[7], MFCC8: result[8],
                             MFCC9: result[9], MFCC10: result[10], MFCC11: result[11], MFCC12: result[12],
-                            fileControl: files[i]._id // 파일 ID 참조
+                            files_control_id: newFile1._id // FileControl ID 참조
                         };
 
                         mfccDocument = new CoeffieControl(mfccData);
@@ -124,7 +124,7 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
                             MFCC1: result[1], MFCC2: result[2], MFCC3: result[3], MFCC4: result[4],
                             MFCC5: result[5], MFCC6: result[6], MFCC7: result[7], MFCC8: result[8],
                             MFCC9: result[9], MFCC10: result[10], MFCC11: result[11], MFCC12: result[12],
-                            fileRecord: files[i]._id // 파일 ID 참조
+                            files_record_id: newFile2._id // FileRecord ID 참조
                         };
 
                         mfccDocument = new CoeffieRecord(mfccData);

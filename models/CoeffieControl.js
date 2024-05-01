@@ -15,10 +15,11 @@ const coeffieControlSchema = new mongoose.Schema({
   MFCC10: Number,
   MFCC11: Number,
   MFCC12: Number,
-  fileControl: {
+  files_control_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'FileControl'
   }
 });
 
 module.exports = coeffieControlSchema;
+//module.exports = mongoose.model('CoeffieControl', coeffieControlSchema);

@@ -3,15 +3,9 @@ const mongoose = require('mongoose');
 
 const fileRecordSchema = new mongoose.Schema({
   filename: String,
-  path: String,
-  coeffieRecords: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'CoeffieRecord'
-  }],
-  results: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Results'
-  }]
+  path: String
 });
 
 module.exports = fileRecordSchema;
+//module.exports = mongoose.model('FileRecord', fileRecordSchema);
+

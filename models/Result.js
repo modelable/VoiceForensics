@@ -15,3 +15,4 @@ const resultsSchema = new mongoose.Schema({
 });
 
 module.exports = resultsSchema;
+//module.exports = mongoose.model('Results', resultsSchema);
