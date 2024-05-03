@@ -100,7 +100,7 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
             for (let result of mfccResults[i]) {
 
                 // result[1]~result[12] 중 0이 하나라도 있는지 검사
-                if (!result.slice(1, 13).includes(0)) {
+                if (!result.slice(1, 13).every(item => item === 0)) {
                     var mfccDocument;
                     if (i == 0) {
                         const mfccData = {
