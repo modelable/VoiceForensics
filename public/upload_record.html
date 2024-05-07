@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>음성 위변조 탐지 포렌식</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h2>음성 위변조 탐지 포렌식</h2>
+
+    <form action="/upload_record" method="post" enctype="multipart/form-data">
+        <h2>음성 파일 업로드</h2>
+        <label for="record">원본 음성:</label>
+        <input type="file" id="record" name="record" accept="audio/*"><br><br>
+        원본 음성: record file<br><br>
+        <input type="submit" value="업로드">
+    </form>
+</body>
+</html>

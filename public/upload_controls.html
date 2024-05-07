@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>음성 위변조 탐지 포렌식</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h2>음성 위변조 탐지 포렌식</h2>
+
+    <form action="/upload_controls" method="post" enctype="multipart/form-data">
+        <h2>음성 파일 업로드</h2>
+        <div id="fileInputs">
+            <div class="fileInput">
+                <label for="voice1">비교 음성:</label>
+                <input type="file" id="voice1" name="file" accept="audio/*">
+            </div>
+        </div>
+        <br>
+        <button type="button" onclick="addFileInput()">비교 음성 추가하기</button><br><br>
+        비교 음성: control file<br><br>
+        <input type="submit" value="업로드">
+    </form>
+
+    <script>
+        function addFileInput() {
+            var fileInputs = document.getElementById('fileInputs');
+            var newInput = document.createElement('div');
+            var inputNum = fileInputs.children.length + 1;
+            newInput.innerHTML = '<label for="voice' + inputNum + '">비교 음성: </label>' +
+                     '<input type="file" id="voice' + inputNum + '" name="file" accept="audio/*">';
+            fileInputs.appendChild(newInput);
+        }
+    </script>
+</body>
+</html>
