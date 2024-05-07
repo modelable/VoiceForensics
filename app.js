@@ -39,106 +39,152 @@ const FileRecord = mongoose.model('FileRecord', require('./models/FileRecord'), 
 const CoeffieControl = mongoose.model('CoeffieControl', require('./models/CoeffieControl'), 'coeffie_control');
 const CoeffieRecord = mongoose.model('CoeffieRecord', require('./models/CoeffieRecord'), 'coeffie_record');
 
-// 파일 업로드 및 MongoDB 저장
-app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file2', maxCount: 1 }]), async (req, res) => {
+// record 파일 업로드 및 MongoDB 저장
+app.post('/upload_record', upload.single('record'), async (req, res) => {
     try {
-        const { file1, file2 } = req.files;
+        const record = req.file;
 
-        // 파일1을 files_control 테이블에 저장
-        const newFile1 = new FileControl({
-            filename: file1[0].originalname,
-            path: file1[0].path
+        // 원본 파일을 files_record 테이블에 저장
+        const newFile = new FileRecord({
+            filename: record.originalname,
+            path: record.path
         });
 
-        await newFile1.save();
-
-        // 파일2를 files_record 테이블에 저장
-        const newFile2 = new FileRecord({
-            filename: file2[0].originalname,
-            path: file2[0].path
-        });
-
-        await newFile2.save();
-
-        const files = [file1[0], file2[0]];
+        await newFile.save();
 
         // mfcc 벡터 추출 값 정의
-        const mfccResults = await Promise.all(files.map(file => {
-            return new Promise((resolve, reject) => {
-                const childProcess = spawn('node', ['mfcc.js', '-w', file.path, '-n', '256']);
-                let outputData = [];
-        
-                childProcess.stdout.on('data', (data) => {
-                    const values = data.toString().trim().split('\n').map(line =>
-                        line.split(',').map(val => parseFloat(val))
-                    );
-                    outputData = outputData.concat(values);
-                });
-        
-                childProcess.stderr.on('data', (data) => {
-                    console.error(`Error from mfcc.js: ${data.toString()}`);
-                    reject(new Error(`Error from mfcc.js: ${data.toString()}`)); // 오류가 발생하면 즉시 reject
-                });
-        
-                childProcess.on('error', (error) => {
-                    console.error(`Spawn error: ${error}`);
-                    reject(error); // 오류 이벤트가 발생하면 reject 호출
-                });
-        
-                childProcess.on('close', (code) => {
-                    if (code === 0) {
-                        resolve(outputData); // 정상 종료
-                    } else {
-                        console.error(`mfcc.js exited with code ${code}`);
-                        reject(new Error(`Process exited with code ${code}`)); // 비정상 종료
-                    }
-                });
+        const mfccResults = await new Promise((resolve, reject) => {
+            const childProcess = spawn('node', ['mfcc.js', '-w', record.path, '-n', '256']);
+            let outputData = [];
+    
+            childProcess.stdout.on('data', (data) => {
+                const values = data.toString().trim().split('\n').map(line =>
+                    line.split(',').map(val => parseFloat(val))
+                );
+                outputData = outputData.concat(values);
             });
-        }));
 
-        for (let i = 0; i < files.length; i++) {
-            for (let result of mfccResults[i]) {
+            childProcess.stderr.on('data', (data) => {
+                console.error(`Error from mfcc.js: ${data.toString()}`);
+                reject(new Error(`Error from mfcc.js: ${data.toString()}`)); // 오류가 발생하면 즉시 reject
+            });
+    
+            childProcess.on('error', (error) => {
+                console.error(`Spawn error: ${error}`);
+                reject(error); // 오류 이벤트가 발생하면 reject 호출
+            });
 
-                // result[1]~result[12] 중 0이 하나라도 있는지 검사
-                if (!result.slice(1, 13).every(item => item === 0)) {
-                    var mfccDocument;
-                    if (i == 0) {
-                        const mfccData = {
-                            MFCID: result[0], // 첫 열의 값을 MFCID로 사용
-                            MFCC1: result[1], MFCC2: result[2], MFCC3: result[3], MFCC4: result[4],
-                            MFCC5: result[5], MFCC6: result[6], MFCC7: result[7], MFCC8: result[8],
-                            MFCC9: result[9], MFCC10: result[10], MFCC11: result[11], MFCC12: result[12],
-                            files_control_id: newFile1._id // FileControl ID 참조
-                        };
-
-                        mfccDocument = new CoeffieControl(mfccData);
-                        
-                    } else {
-                        const mfccData = {
-                            MFCID: result[0], // 첫 열의 값을 MFCID로 사용
-                            MFCC1: result[1], MFCC2: result[2], MFCC3: result[3], MFCC4: result[4],
-                            MFCC5: result[5], MFCC6: result[6], MFCC7: result[7], MFCC8: result[8],
-                            MFCC9: result[9], MFCC10: result[10], MFCC11: result[11], MFCC12: result[12],
-                            files_record_id: newFile2._id // FileRecord ID 참조
-                        };
-
-                        mfccDocument = new CoeffieRecord(mfccData);
-                    }
-                    await mfccDocument.save();
+            childProcess.on('close', (code) => {
+                if (code === 0) {
+                    resolve(outputData); // 정상 종료
+                } else {
+                    console.error(`mfcc.js exited with code ${code}`);
+                    reject(new Error(`Process exited with code ${code}`)); // 비정상 종료
                 }
-            };
-        }
-        res.status(200).send('Files uploaded and MFCC data saved to database.');
+            });
+        });
+        // 파일에 대한 모든 MFCC 데이터를 저장
+        mfccResults.forEach(async (result) => {
+            if (!result.slice(1, 13).every(item => item === 0)) {
+                const mfccData = {
+                    MFCID: result[0], // 첫 열의 값을 MFCID로 사용
+                    MFCC1: result[1], MFCC2: result[2], MFCC3: result[3], MFCC4: result[4],
+                    MFCC5: result[5], MFCC6: result[6], MFCC7: result[7], MFCC8: result[8],
+                    MFCC9: result[9], MFCC10: result[10], MFCC11: result[11], MFCC12: result[12],
+                    files_record_id: newFile._id // FileRecord ID 참조
+                };
+
+                const mfccDocument = new CoeffieRecord(mfccData);
+                await mfccDocument.save();
+            }
+        });
+        console.log('Record file uploaded and MFCC data saved to database.');
+        res.redirect('/upload_controls');
     } catch (error) {
         console.error('Error processing files:', error);
         res.status(500).send('Error uploading files and saving to database.');
     }
 });
 
+// control 파일 업로드 및 DB 저장
+app.post('/upload_controls', upload.array('file'), async (req, res) => {
+    try {
+        const files = req.files;
+
+        // 각 파일을 files_record 테이블에 저장하고 MFCC 데이터 추출
+        const mfccResults = await Promise.all(files.map(file => {
+            const newFile = new FileRecord({
+                filename: file.originalname,
+                path: file.path
+            });
+            return newFile.save().then(() => {
+                return new Promise((resolve, reject) => {
+                    const childProcess = spawn('node', ['mfcc.js', '-w', file.path, '-n', '256']);
+                    let outputData = [];
+
+                    childProcess.stdout.on('data', (data) => {
+                        const values = data.toString().trim().split('\n').map(line =>
+                            line.split(',').map(val => parseFloat(val))
+                        );
+                        outputData = outputData.concat(values);
+                    });
+
+                    childProcess.stderr.on('data', (data) => {
+                        console.error(`Error from mfcc.js: ${data.toString()}`);
+                        reject(new Error(`Error from mfcc.js: ${data.toString()}`));
+                    });
+
+                    childProcess.on('error', (error) => {
+                        console.error(`Spawn error: ${error}`);
+                        reject(error);
+                    });
+
+                    childProcess.on('close', (code) => {
+                        if (code === 0) {
+                            resolve(outputData);
+                        } else {
+                            console.error(`mfcc.js exited with code ${code}`);
+                            reject(new Error(`Process exited with code ${code}`));
+                        }
+                    });
+                });
+            });
+        }));
+
+        // MFCC 데이터를 데이터베이스에 저장
+        mfccResults.forEach((results, index) => {
+            results.forEach(async (result) => {
+                if (!result.slice(1, 13).every(item => item === 0)) {
+                    const mfccData = {
+                        MFCID: result[0],
+                        MFCC1: result[1], MFCC2: result[2], MFCC3: result[3], MFCC4: result[4],
+                        MFCC5: result[5], MFCC6: result[6], MFCC7: result[7], MFCC8: result[8],
+                        MFCC9: result[9], MFCC10: result[10], MFCC11: result[11], MFCC12: result[12],
+                        files_record_id: files[index]._id
+                    };
+
+                    const mfccDocument = new CoeffieRecord(mfccData);
+                    await mfccDocument.save();
+                }
+            });
+        });
+        console.log('All Control files uploaded and MFCC data saved to database.');
+    } catch (error) {
+        console.error('Error processing files:', error);
+        res.status(500).send('Error uploading files and saving to database.');
+    }
+});
+
+
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'upload_record.html'));
+});
+
+// 원본 음성 업로드 -> 비교 음성 업로드
+app.get('/upload_controls', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'upload_controls.html'));
 });
