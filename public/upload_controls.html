@@ -27,7 +27,7 @@
             var fileInputs = document.getElementById('fileInputs');
             var newInput = document.createElement('div');
             var inputNum = fileInputs.children.length + 1;
-            newInput.innerHTML = '<label for="voice' + inputNum + '">비교 음성:</label>' +
+            newInput.innerHTML = '<label for="voice' + inputNum + '">비교 음성: </label>' +
                      '<input type="file" id="voice' + inputNum + '" name="file" accept="audio/*">';
             fileInputs.appendChild(newInput);
         }

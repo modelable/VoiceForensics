@@ -3,12 +3,12 @@ const express = require('express');
 const multer = require('multer');
 const mongoose = require('mongoose');
 const path = require('path');
-const fs = require('fs');
-const { exec } = require('child_process');
-const { execFile } = require('child_process');
 const app = express();
 const port = 3000;
 const { spawn } = require('child_process');
+//const fs = require('fs');
+//const { exec } = require('child_process');
+//const { execFile } = require('child_process');
 
 // MongoDB 연결
 mongoose.connect('mongodb://localhost:27017/mydatabase');
@@ -83,6 +83,7 @@ app.post('/upload_record', upload.single('record'), async (req, res) => {
                 }
             });
         });
+
         // 파일에 대한 모든 MFCC 데이터를 저장
         mfccResults.forEach(async (result) => {
             if (!result.slice(1, 13).every(item => item === 0)) {
@@ -111,9 +112,9 @@ app.post('/upload_controls', upload.array('file'), async (req, res) => {
     try {
         const files = req.files;
 
-        // 각 파일을 files_record 테이블에 저장하고 MFCC 데이터 추출
+        // 각 파일을 files_control 테이블에 저장하고 MFCC 데이터 추출
         const mfccResults = await Promise.all(files.map(file => {
-            const newFile = new FileRecord({
+            const newFile = new FileControl({
                 filename: file.originalname,
                 path: file.path
             });
@@ -163,7 +164,7 @@ app.post('/upload_controls', upload.array('file'), async (req, res) => {
                         files_record_id: files[index]._id
                     };
 
-                    const mfccDocument = new CoeffieRecord(mfccData);
+                    const mfccDocument = new CoeffieControl(mfccData);
                     await mfccDocument.save();
                 }
             });
