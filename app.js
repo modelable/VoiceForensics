@@ -1,4 +1,5 @@
 // app.js
+require('dotenv').config(); //DB 환경 변수 import
 const express = require('express');
 const multer = require('multer');
 const mongoose = require('mongoose');
@@ -17,7 +18,8 @@ const db = mongoose.connection;
 
 //수정 -> MongoDB Atlas(클라우드)에 연결
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`;
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+mongoose.connect(uri);
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {

@@ -37,8 +37,3 @@ node_modules
 
 #env 설정 (추가)
 .env
-DB_USER=hansunguniv001
-DB_PASS=hansung
-DB_HOST=cluster0.hlw86l4.mongodb.net
-DB_NAME=test
-
