@@ -63,7 +63,7 @@ app.post('/upload_record', upload.single('record'), async (req, res) => {
         const mfccResults = await new Promise((resolve, reject) => {
             const childProcess = spawn('node', ['mfcc.js', '-w', record.path, '-n', '256']);
             let outputData = [];
-    
+
             childProcess.stdout.on('data', (data) => {
                 const values = data.toString().trim().split('\n').map(line =>
                     line.split(',').map(val => parseFloat(val))
@@ -75,7 +75,7 @@ app.post('/upload_record', upload.single('record'), async (req, res) => {
                 console.error(`Error from mfcc.js: ${data.toString()}`);
                 reject(new Error(`Error from mfcc.js: ${data.toString()}`)); // 오류가 발생하면 즉시 reject
             });
-    
+
             childProcess.on('error', (error) => {
                 console.error(`Spawn error: ${error}`);
                 reject(error); // 오류 이벤트가 발생하면 reject 호출
@@ -118,13 +118,14 @@ app.post('/upload_record', upload.single('record'), async (req, res) => {
 app.post('/upload_controls', upload.array('file'), async (req, res) => {
     try {
         const files = req.files;
-
+        let newFiles = [];
         // 각 파일을 files_control 테이블에 저장하고 MFCC 데이터 추출
         const mfccResults = await Promise.all(files.map(file => {
             const newFile = new FileControl({
                 filename: file.originalname,
                 path: file.path
             });
+            newFiles.push(newFile);
             return newFile.save().then(() => {
                 return new Promise((resolve, reject) => {
                     const childProcess = spawn('node', ['mfcc.js', '-w', file.path, '-n', '256']);
@@ -168,7 +169,7 @@ app.post('/upload_controls', upload.array('file'), async (req, res) => {
                         MFCC1: result[1], MFCC2: result[2], MFCC3: result[3], MFCC4: result[4],
                         MFCC5: result[5], MFCC6: result[6], MFCC7: result[7], MFCC8: result[8],
                         MFCC9: result[9], MFCC10: result[10], MFCC11: result[11], MFCC12: result[12],
-                        files_record_id: files[index]._id
+                        files_control_id: newFiles[index]._id // File Control ID 참조
                     };
 
                     const mfccDocument = new CoeffieControl(mfccData);
