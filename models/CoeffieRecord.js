@@ -18,6 +18,10 @@ const coeffieRecordSchema = new mongoose.Schema({
   files_record_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'FileRecord'
+  },
+  date: {
+    type: Date,
+    default: Date.now
   }
 });
 

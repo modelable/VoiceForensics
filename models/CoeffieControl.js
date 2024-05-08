@@ -18,6 +18,10 @@ const coeffieControlSchema = new mongoose.Schema({
   files_control_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'FileControl'
+  },
+  date: {
+    type: Date,
+    default: Date.now
   }
 });
 

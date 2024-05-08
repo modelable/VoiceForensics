@@ -11,7 +11,11 @@ const resultsSchema = new mongoose.Schema({
     ref: 'FileRecord'
   },
   bool: Boolean,
-  percent: Number
+  percent: Number,
+  date: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 module.exports = resultsSchema;
