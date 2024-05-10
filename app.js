@@ -10,8 +10,6 @@ const session = require('express-session')
 const passport = require('passport')
 const app = express();
 const port = 3000;
-const users = require('./routes/users')
-const index = require('./routes/index')
 
 // Passport config
 const initializePassport = require('./passport-config')
@@ -191,6 +189,9 @@ app.get('/upload', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'upload.html'));
 });
 
-// URL
+// URL(GET METHOD)
+const users = require('./routes/users')
+const index = require('./routes/index')
+
 app.use('/users', users)
-app.use('/', index) 
+app.use('/', index)

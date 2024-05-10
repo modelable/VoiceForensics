@@ -1,13 +1,18 @@
 extends ./layout.pug 
 block content
-    div(class="container")
-        h1(class="mt-4") This Page is Dash Board!
-        p(class="lead mb-3") Welcome!
-        console.log(name)
-        hr
-    form(action="/get-data" method="POST")
-        button(type='submit' class="btn btn-outline-success btn-block") Show Items
-    form(action="users/name" method="POST")
-        button(type='submit' class="btn btn-outline-success btn-block") Edit MyProfile
-    hr
-    a(href="/users/logout" class="btn btn-primary bth-lg") Logout
+    div(class='container')
+        div(class="row mt-5")
+            div(class="col-md-6 m-auto text-center")
+                h1(class="mt-4 text-center") Dash Board
+
+                div(class="card card-body text-center")
+                    form(action="/upload" method="GET")
+                        button(type='submit' class="btn btn-outline-success btn-block") Upload file
+                    form(action="/result" method="POST")
+                        button(type='submit' class="btn btn-outline-success btn-block") Show result
+                    form(action="/result_visual" method="POST")
+                        button(type='submit' class="btn btn-outline-success btn-block") Visualize result
+                        form(action="/file_download" method="POST")
+                        button(type='submit' class="btn btn-outline-success btn-block") Download file
+                br
+                a(href="/users/logout" class="btn btn-primary bth-lg") Logout

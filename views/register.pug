@@ -5,8 +5,7 @@ block content
             div(class="col-md-6 m-auto")
                 div(class="card card-body")
                     h1(class="text-center mb-3")
-                        i(class="fas fa-smile")  Register 
-                          i(class="fas fa-smile")
+                        i(class="fas fa-user-plus")  Register
                     if errors
                         each error in errors
                             div(class="alert alert-warning alert-dismissible fade show" role="alert")= error.msg
@@ -14,20 +13,17 @@ block content
                                     span(aria-hidden="true") &times;
                     form(action="/users/register" method="POST")
                         div(class="form-group")
-                            label(for="name" class="font-italic") 
-                            h3 Your Name
+                            label(for="name") Name
                             input(type="name" id="name" name="name" class="form-control" placeholder="Enter Name" required value=name)
                         div(class="form-group")
-                            label(for="phone" class="font-italic") 
-                            h3 Your Phone
-                            input(type="text" id="phone" name="phone" class="form-control" placeholder="Enter Phone" required value=email)
+                            label(for="email") Email
+                            input(type="email" id="email" name="email" class="form-control" placeholder="Enter Email" required value=email)
                         div(class="form-group")
-                            label(for="password" class="font-italic") 
-                            h3 Password
+                            label(for="password") Password
                             input(type="password" id="password" name="password" class="form-control" placeholder="Enter Password" required value=password)
                         div(class="form-group")
-                            label(for="password2" class="font-italic") 
-                            h3 Confirm Password
+                            label(for="password2") Confirm Password
                             input(type="password" id="password2" name="password2" class="form-control" placeholder="Confirm Password" required value=password2)
-                        button(type='submit' class="btn btn-outline-success btn-block") Register
-                              span(class="spinner-grow spinner-grow-sm") 
+                        button(type='submit' class="btn btn-primary btn-block") Register
+                    p(class="lead mt-4") Have An Account? 
+                        a(href='/users/login') Login

@@ -14,7 +14,6 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${proce
 
 mongoose.connect(uri);
 
-
 // Login page
 router.get('/login', forwardAuthenticated, (req, res) => {
     res.render('login')
