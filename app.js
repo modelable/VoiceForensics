@@ -71,24 +71,24 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
             return new Promise((resolve, reject) => {
                 const childProcess = spawn('node', ['mfcc.js', '-w', file.path, '-n', '256']);
                 let outputData = [];
-        
+
                 childProcess.stdout.on('data', (data) => {
                     const values = data.toString().trim().split('\n').map(line =>
                         line.split(',').map(val => parseFloat(val))
                     );
                     outputData = outputData.concat(values);
                 });
-        
+
                 childProcess.stderr.on('data', (data) => {
                     console.error(`Error from mfcc.js: ${data.toString()}`);
                     reject(new Error(`Error from mfcc.js: ${data.toString()}`)); // 오류가 발생하면 즉시 reject
                 });
-        
+
                 childProcess.on('error', (error) => {
                     console.error(`Spawn error: ${error}`);
                     reject(error); // 오류 이벤트가 발생하면 reject 호출
                 });
-        
+
                 childProcess.on('close', (code) => {
                     if (code === 0) {
                         resolve(outputData); // 정상 종료
@@ -100,6 +100,8 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
             });
         }));
 
+        // MFCC 데이터를 데이터베이스에 저장
+        // 비동기 작업(데이터베이스 저장)의 완료를 기다림(Promise, await)
         for (let i = 0; i < files.length; i++) {
             await Promise.all(mfccResults[i].map(async (result) => {
                 if (!result.slice(1, 13).every(item => item === 0)) {
@@ -112,9 +114,9 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
                             MFCC9: result[9], MFCC10: result[10], MFCC11: result[11], MFCC12: result[12],
                             files_control_id: newFile1._id // FileControl ID 참조
                         };
-        
+
                         mfccDocument = new CoeffieControl(mfccData);
-                        
+
                     } else {
                         const mfccData = {
                             MFCID: result[0], // 첫 열의 값을 MFCID로 사용
@@ -123,14 +125,14 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
                             MFCC9: result[9], MFCC10: result[10], MFCC11: result[11], MFCC12: result[12],
                             files_record_id: newFile2._id // FileRecord ID 참조
                         };
-        
+
                         mfccDocument = new CoeffieRecord(mfccData);
                     }
                     await mfccDocument.save();
                 }
             }));
         }
-        
+
         console.log('Files uploaded and MFCC data saved to database.');
         res.status(200).send('Files uploaded and MFCC data saved to database.');
     } catch (error) {
