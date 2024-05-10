@@ -1,0 +1,13 @@
+extends ./layout.pug 
+block content
+    div(class="container")
+        h1(class="mt-4") This Page is Dash Board!
+        p(class="lead mb-3") Welcome!
+        console.log(name)
+        hr
+    form(action="/get-data" method="POST")
+        button(type='submit' class="btn btn-outline-success btn-block") Show Items
+    form(action="users/name" method="POST")
+        button(type='submit' class="btn btn-outline-success btn-block") Edit MyProfile
+    hr
+    a(href="/users/logout" class="btn btn-primary bth-lg") Logout

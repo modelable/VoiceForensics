@@ -4,9 +4,47 @@ const express = require('express');
 const multer = require('multer');
 const mongoose = require('mongoose');
 const path = require('path');
+const { spawn } = require('child_process');
+const flash = require('express-flash')
+const session = require('express-session')
+const passport = require('passport')
 const app = express();
 const port = 3000;
-const { spawn } = require('child_process');
+const users = require('./routes/users')
+const index = require('./routes/index')
+
+// Passport config
+const initializePassport = require('./passport-config')
+initializePassport(passport)
+
+// Views in pug
+app.set('views', './views')
+app.set('view engine', 'pug')
+
+// BodyParser
+app.use(express.urlencoded({ extended: false}))
+
+// Express Session
+app.use(session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: true
+}))
+
+// Passport middleware
+app.use(passport.initialize())
+app.use(passport.session())
+
+// Express flash
+app.use(flash())
+
+// Global variables
+app.use((req, res, next) => {
+    res.locals.success_msg = req.flash('success_msg'),
+    res.locals.error_msg = req.flash('error_msg'),
+    res.locals.error = req.flash('error'),
+    next()
+})
 
 // MongoDB 로컬에 연결
 // mongoose.connect('mongodb://localhost:27017/mydatabase');
@@ -145,9 +183,14 @@ app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'home.html'));
-});
+// app.get('/', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'public', 'home.html'));
+// });
+
 app.get('/upload', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'upload.html'));
 });
+
+// URL
+app.use('/users', users)
+app.use('/', index) 
