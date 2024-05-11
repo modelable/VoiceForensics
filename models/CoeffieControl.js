@@ -25,6 +25,6 @@ const coeffieControlSchema = new mongoose.Schema({
   }
 });
 
-mongoose.set('strictQuery', true);
+mongoose.set('strictQuery', true); //추가 -> 스키마에 정해진 필드만 핸들, 나머지는 무시 
 module.exports = coeffieControlSchema;
 //module.exports = mongoose.model('CoeffieControl', coeffieControlSchema);
