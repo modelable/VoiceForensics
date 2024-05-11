@@ -10,6 +10,7 @@ const fileRecordSchema = new mongoose.Schema({
   }
 });
 
+mongoose.set('strictQuery', true);
 module.exports = fileRecordSchema;
 //module.exports = mongoose.model('FileRecord', fileRecordSchema);
 

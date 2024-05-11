@@ -10,5 +10,6 @@ const fileControlSchema = new mongoose.Schema({
   }
 });
 
+mongoose.set('strictQuery', true);
 module.exports = fileControlSchema;
 //module.exports = mongoose.model('FileControl', fileControlSchema);

@@ -18,5 +18,6 @@ const resultsSchema = new mongoose.Schema({
   }
 });
 
+mongoose.set('strictQuery', true);
 module.exports = resultsSchema;
 //module.exports = mongoose.model('Results', resultsSchema);

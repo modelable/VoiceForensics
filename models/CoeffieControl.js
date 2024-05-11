@@ -25,5 +25,6 @@ const coeffieControlSchema = new mongoose.Schema({
   }
 });
 
+mongoose.set('strictQuery', true);
 module.exports = coeffieControlSchema;
 //module.exports = mongoose.model('CoeffieControl', coeffieControlSchema);

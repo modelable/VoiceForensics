@@ -19,4 +19,5 @@ const UserSchema = new mongoose.Schema({
     }
 })
 
+mongoose.set('strictQuery', true);
 module.exports = mongoose.model('User', UserSchema)

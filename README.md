@@ -1,3 +1,9 @@
+# Develop Environment Configuration
+### requirement module install
+'''
+npm i express pug passport passport-local bcrypt express-flash express-session mongoose dotenv
+'''
+
 # mfcc
 Node.JS implementation of the MFCC (Mel Frequency Cepstrum Coefficients) algorithm.
 
