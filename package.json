@@ -46,6 +46,7 @@
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "pug": "^3.0.2",
+    "puppeteer": "^22.9.0",
     "signal-windows": "^0.0.1",
     "wav": "^1.0.2"
   },

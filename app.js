@@ -10,6 +10,7 @@ const session = require('express-session')
 const passport = require('passport')
 const app = express();
 const port = 3000;
+const User = require('./models/User')
 
 // Passport config
 const initializePassport = require('./passport-config')
@@ -20,7 +21,7 @@ app.set('views', './views')
 app.set('view engine', 'pug')
 
 // BodyParser
-app.use(express.urlencoded({ extended: false}))
+app.use(express.urlencoded({ extended: false }))
 
 // Express Session
 app.use(session({
@@ -39,9 +40,9 @@ app.use(flash())
 // Global variables
 app.use((req, res, next) => {
     res.locals.success_msg = req.flash('success_msg'),
-    res.locals.error_msg = req.flash('error_msg'),
-    res.locals.error = req.flash('error'),
-    next()
+        res.locals.error_msg = req.flash('error_msg'),
+        res.locals.error = req.flash('error'),
+        next()
 })
 
 // MongoDB 로컬에 연결
@@ -58,9 +59,6 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
     console.log('Connected to MongoDB');
 });
-
-// 정적 파일 제공을 위한 미들웨어 설정
-app.use(express.static(path.join(__dirname, 'public')));
 
 // 파일 업로드를 위한 multer 설정
 const storage = multer.diskStorage({
@@ -79,10 +77,11 @@ const FileRecord = mongoose.model('FileRecord', require('./models/FileRecord'), 
 const CoeffieControl = mongoose.model('CoeffieControl', require('./models/CoeffieControl'), 'coeffie_control');
 const CoeffieRecord = mongoose.model('CoeffieRecord', require('./models/CoeffieRecord'), 'coeffie_record');
 
-// 파일 업로드 및 MongoDB 저장(롤백)
+// 파일 업로드 및 MongoDB 저장
 app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file2', maxCount: 1 }]), async (req, res) => {
     try {
         const { file1, file2 } = req.files;
+        const userId = req.user._id;
 
         // 파일1을 files_control 테이블에 저장
         const newFile1 = new FileControl({
@@ -91,7 +90,7 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
         });
 
         await newFile1.save();
-
+        
         // 파일2를 files_record 테이블에 저장
         const newFile2 = new FileRecord({
             filename: file2[0].originalname,
@@ -100,6 +99,14 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
 
         await newFile2.save();
 
+        // 사용자의 파일 ID 정보 업데이트
+        await User.findByIdAndUpdate(userId, {
+            $set: {
+                files_control_id: newFile1._id,
+                files_record_id: newFile2._id
+            }
+        });
+        
         const files = [file1[0], file2[0]];
 
         // mfcc 벡터 추출 값 정의
@@ -170,7 +177,15 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
         }
 
         console.log('Files uploaded and MFCC data saved to database.');
-        res.status(200).send('Files uploaded and MFCC data saved to database.');
+        res.status(200).send(`
+    <script>
+        setTimeout(function() {
+            window.location.href = '/dashboard';
+        }, 3000); // 3초 후 대시보드로 리다이렉트
+    </script>
+    Files uploaded and MFCC data saved to database. Redirecting to dashboard...
+`);
+
     } catch (error) {
         console.error('Error processing files:', error);
         res.status(500).send('Error uploading files and saving to database.');
@@ -179,14 +194,6 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
-});
-
-// app.get('/', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'public', 'home.html'));
-// });
-
-app.get('/upload', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'upload.html'));
 });
 
 // URL(GET METHOD)

@@ -6,7 +6,7 @@ const passport = require('passport')
 const { forwardAuthenticated } = require('./auth')
 
 // Use Models
-const User = require('../models/user') 
+const User = require('../models/User') 
 const db = mongoose.connection;
 
 //수정 -> MongoDB Atlas(클라우드)에 연결
@@ -64,8 +64,12 @@ router.post('/register', (req, res) => {
                     })
                 } else {
                     const newUser = new User({
-                        name, email, password
-                    })
+                        name: name,
+                        email: email,
+                        password: password,
+                        files_control_id: null,  // 명시적으로 null을 할당
+                        files_record_id: null    // 명시적으로 null을 할당
+                    });
                     // Hash Password
                     bcrypt.hash(newUser.password, 10, (err,hash) => {
                         if(err) throw err;

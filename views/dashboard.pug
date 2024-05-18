@@ -8,11 +8,11 @@ block content
                 div(class="card card-body text-center")
                     form(action="/upload" method="GET")
                         button(type='submit' class="btn btn-outline-success btn-block") Upload file
-                    form(action="/result" method="POST")
+                    form(action="/result" method="GET")
                         button(type='submit' class="btn btn-outline-success btn-block") Show result
-                    form(action="/result_visual" method="POST")
+                    form(action="/result_visual" method="GET")
                         button(type='submit' class="btn btn-outline-success btn-block") Visualize result
-                        form(action="/file_download" method="POST")
+                    form(action="/file_download" method="GET")
                         button(type='submit' class="btn btn-outline-success btn-block") Download file
                 br
                 a(href="/users/logout" class="btn btn-primary bth-lg") Logout

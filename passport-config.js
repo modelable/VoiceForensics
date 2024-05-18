@@ -1,6 +1,6 @@
 const LocalStrategy = require('passport-local').Strategy
 const mongoose = require('mongoose')
-const User = require('./models/user')
+const User = require('./models/User')
 const bcrypt = require('bcrypt')
 
 function initialize(passport) {
@@ -21,10 +21,21 @@ function initialize(passport) {
     }
     
     passport.use(new LocalStrategy({ usernameField: 'email'}, authenticateUser))
-    passport.serializeUser((user, done) => { done(null, user.id) })
+    
+    // 아래 코드 수정 시 이기정에게 알림
+    passport.serializeUser((user, done) => {
+        done(null, user.id);
+    });
+    
     passport.deserializeUser((id, done) => {
-        User.findById(id, (err, user) => { done(null, user.id) })
-    })
+        User.findById(id, (err, user) => {
+            if (err) {
+                done(err);
+            }
+            done(null, user);
+        });
+    });
+    
 }
 
 module.exports = initialize

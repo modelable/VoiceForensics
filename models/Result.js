@@ -1,4 +1,4 @@
-// models/Results.js
+// models/Result.js
 const mongoose = require('mongoose');
 
 const resultsSchema = new mongoose.Schema({
@@ -19,5 +19,4 @@ const resultsSchema = new mongoose.Schema({
 });
 
 mongoose.set('strictQuery', true);
-module.exports = resultsSchema;
-//module.exports = mongoose.model('Results', resultsSchema);
+module.exports = mongoose.model('Result', resultsSchema);
