@@ -1,7 +1,7 @@
 # Develop Environment Configuration
 ### requirement module install
 
-    npm i express pug passport passport-local bcrypt express-flash express-session mongoose dotenv
+    npm i express pug passport passport-local bcrypt express-flash express-session mongoose dotenv puppeteer
 
 
 # mfcc
