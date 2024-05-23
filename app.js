@@ -1,56 +1,77 @@
-// app.js
-require('dotenv').config(); //DB 환경 변수 import
+require('dotenv').config(); // DB 환경 변수 import
 const express = require('express');
 const multer = require('multer');
 const mongoose = require('mongoose');
 const path = require('path');
+const http = require('http');
 const { spawn } = require('child_process');
-const flash = require('express-flash')
-const session = require('express-session')
-const passport = require('passport')
+const flash = require('express-flash');
+const session = require('express-session');
+const passport = require('passport');
+const User = require('./models/User');
+
 const app = express();
 const port = 3000;
-const User = require('./models/User')
+const server = http.createServer(app);
+const io = require('socket.io')(server);
+
+const userSockets = new Map();
+
+// socket.io 클라이언트 스크립트를 제공하는 정적 파일 경로 설정
+app.use('/socket.io', express.static(path.join(__dirname, 'node_modules', 'socket.io/client-dist')));
+
+// WebSocket 연결 및 userId를 이용한 소켓 등록
+io.on('connection', socket => {
+    socket.on('register', userId => {
+        userSockets.set(userId, socket);
+        console.log(`Socket registered for userId ${userId}`);
+
+        socket.on('disconnect', () => {
+            userSockets.delete(userId);
+            console.log(`Socket disconnected and removed for userId ${userId}`);
+        });
+    });
+});
 
 // Passport config
-const initializePassport = require('./passport-config')
-initializePassport(passport)
+const initializePassport = require('./passport-config');
+initializePassport(passport);
 
 // Views in pug
-app.set('views', './views')
-app.set('view engine', 'pug')
+app.set('views', './views');
+app.set('view engine', 'pug');
 
 // BodyParser
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: false }));
 
 // Express Session
 app.use(session({
     secret: 'secret',
     resave: false,
     saveUninitialized: true
-}))
+}));
 
 // Passport middleware
-app.use(passport.initialize())
-app.use(passport.session())
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Express flash
-app.use(flash())
+app.use(flash());
 
 // Global variables
 app.use((req, res, next) => {
-    res.locals.success_msg = req.flash('success_msg'),
-        res.locals.error_msg = req.flash('error_msg'),
-        res.locals.error = req.flash('error'),
-        next()
-})
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    next();
+});
 
 // MongoDB 로컬에 연결
 // mongoose.connect('mongodb://localhost:27017/mydatabase');
 
 const db = mongoose.connection;
 
-//수정 -> MongoDB Atlas(클라우드)에 연결
+// 수정 -> MongoDB Atlas(클라우드)에 연결
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 
 mongoose.connect(uri);
@@ -81,7 +102,13 @@ const CoeffieRecord = mongoose.model('CoeffieRecord', require('./models/CoeffieR
 app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file2', maxCount: 1 }]), async (req, res) => {
     try {
         const { file1, file2 } = req.files;
-        const userId = req.user._id;
+        const userId = req.user._id.toString();
+        const socket = userSockets.get(userId); // 맵에서 사용자의 소켓 가져오기
+
+        if (!socket) {
+            console.error('User socket not found for userId:', userId);
+            return res.json({ message: "User socket not found." });
+        }
 
         // 파일1을 files_control 테이블에 저장
         const newFile1 = new FileControl({
@@ -90,7 +117,7 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
         });
 
         await newFile1.save();
-        
+
         // 파일2를 files_record 테이블에 저장
         const newFile2 = new FileRecord({
             filename: file2[0].originalname,
@@ -106,7 +133,7 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
                 files_record_id: newFile2._id
             }
         });
-        
+
         const files = [file1[0], file2[0]];
 
         // mfcc 벡터 추출 값 정의
@@ -143,62 +170,59 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
             });
         }));
 
+        let totalCount = mfccResults.flat().length;
+        let processedCount = 0;
+        let progress = 0.0;
+        
         // MFCC 데이터를 데이터베이스에 저장
-        // 비동기 작업(데이터베이스 저장)의 완료를 기다림(Promise, await)
         for (let i = 0; i < files.length; i++) {
-            await Promise.all(mfccResults[i].map(async (result) => {
+            for (let result of mfccResults[i]) {
                 if (!result.slice(1, 13).every(item => item === 0)) {
-                    var mfccDocument;
+                    let mfccDocument;
                     if (i == 0) {
-                        const mfccData = {
-                            MFCID: result[0], // 첫 열의 값을 MFCID로 사용
+                        mfccDocument = new CoeffieControl({
+                            MFCID: result[0],
                             MFCC1: result[1], MFCC2: result[2], MFCC3: result[3], MFCC4: result[4],
                             MFCC5: result[5], MFCC6: result[6], MFCC7: result[7], MFCC8: result[8],
                             MFCC9: result[9], MFCC10: result[10], MFCC11: result[11], MFCC12: result[12],
-                            files_control_id: newFile1._id // FileControl ID 참조
-                        };
-
-                        mfccDocument = new CoeffieControl(mfccData);
-
+                            files_control_id: newFile1._id
+                        });
                     } else {
-                        const mfccData = {
-                            MFCID: result[0], // 첫 열의 값을 MFCID로 사용
+                        mfccDocument = new CoeffieRecord({
+                            MFCID: result[0],
                             MFCC1: result[1], MFCC2: result[2], MFCC3: result[3], MFCC4: result[4],
                             MFCC5: result[5], MFCC6: result[6], MFCC7: result[7], MFCC8: result[8],
                             MFCC9: result[9], MFCC10: result[10], MFCC11: result[11], MFCC12: result[12],
-                            files_record_id: newFile2._id // FileRecord ID 참조
-                        };
-
-                        mfccDocument = new CoeffieRecord(mfccData);
+                            files_record_id: newFile2._id
+                        });
                     }
+
                     await mfccDocument.save();
+                    processedCount++;
+                    let progress = Math.floor((processedCount / totalCount) * 100);
+                    socket.emit('uploadProgress', { progress });
                 }
-            }));
+            }
         }
+        
 
         console.log('Files uploaded and MFCC data saved to database.');
-        res.status(200).send(`
-    <script>
-        setTimeout(function() {
-            window.location.href = '/dashboard';
-        }, 3000); // 3초 후 대시보드로 리다이렉트
-    </script>
-    Files uploaded and MFCC data saved to database. Redirecting to dashboard...
-`);
+        // 변경: 클라이언트에 JSON 응답 보내기
+        res.json({ message: "Files uploaded and MFCC data saved to database.", redirectTo: '/dashboard' });
 
     } catch (error) {
         console.error('Error processing files:', error);
-        res.status(500).send('Error uploading files and saving to database.');
+        res.status(500).json({ message: 'Error uploading files and saving to database.' });
     }
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
 
 // URL(GET METHOD)
-const users = require('./routes/users')
-const index = require('./routes/index')
+const users = require('./routes/users');
+const index = require('./routes/index');
 
-app.use('/users', users)
-app.use('/', index)
+app.use('/users', users);
+app.use('/', index);

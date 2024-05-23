@@ -13,12 +13,15 @@ router.get('/', forwardAuthenticated, (req, res) => {
 
 router.get('/dashboard', ensureAuthenticated, (req, res) => {
     res.render('dashboard', {
-        name: req.user.name
+        name: req.user.name,
+        userId: req.user._id
     })
 })
 
 router.get('/upload', ensureAuthenticated, (req, res) => {
-    res.render('upload');
+    res.render('upload', {
+        userId: req.user._id
+    })
 })
 
 async function checkUserResult(userId) {

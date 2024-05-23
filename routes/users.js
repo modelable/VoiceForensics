@@ -21,12 +21,24 @@ router.get('/login', forwardAuthenticated, (req, res) => {
 
 // Login handle
 router.post('/login', (req, res, next) => {
-    passport.authenticate('local', {
-        successRedirect: '/dashboard',
-        failureRedirect: '/users/login',
-        failureFlash: true
-    })(req, res, next)
-})
+    passport.authenticate('local', (err, user, info) => {
+        if (err) {
+            return next(err);  // 에러 처리
+        }
+        if (!user) {
+            // 사용자 인증 실패
+            return res.redirect('/users/login');
+        }
+        req.logIn(user, (err) => {
+            if (err) {
+                return next(err);
+            }
+            // 로그인 성공 후 사용자 ID를 세션에 저장
+            req.session.userId = user._id;
+            return res.redirect('/dashboard');  // 성공적으로 로그인 처리 후 대시보드로 리다이렉트
+        });
+    })(req, res, next);
+});
 
 // Register page
 router.get('/register', forwardAuthenticated, (req, res) => {

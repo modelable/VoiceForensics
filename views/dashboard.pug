@@ -1,18 +1,41 @@
-extends ./layout.pug 
+extends ./layout.pug
 block content
-    div(class='container')
-        div(class="row mt-5")
-            div(class="col-md-6 m-auto text-center")
-                h1(class="mt-4 text-center") Dash Board
+    div(class='container mt-5')
+        div(class="row")
+            div(class="col-md-8 col-lg-6 m-auto")
+                h1(class="text-center mb-4") Dashboard
 
-                div(class="card card-body text-center")
-                    form(action="/upload" method="GET")
-                        button(type='submit' class="btn btn-outline-success btn-block") Upload file
-                    form(action="/result" method="GET")
-                        button(type='submit' class="btn btn-outline-success btn-block") Show result
-                    form(action="/result_visual" method="GET")
-                        button(type='submit' class="btn btn-outline-success btn-block") Visualize result
-                    form(action="/file_download" method="GET")
-                        button(type='submit' class="btn btn-outline-success btn-block") Download file
+                div(class="card")
+                    div(class="card-body text-center")
+                        form(action="/upload" method="GET")
+                            button(type='submit' class="btn btn-outline-success btn-block") Upload File
+
+                        form(action="/result" method="GET")
+                            button(type='submit' class="btn btn-outline-success btn-block") Show Result
+
+                        form(action="/result_visual" method="GET")
+                            button(type='submit' class="btn btn-outline-success btn-block") Visualize Result
+
+                        form(action="/file_download" method="GET")
+                            button(type='submit' class="btn btn-outline-success btn-block") Download File
+
                 br
-                a(href="/users/logout" class="btn btn-primary bth-lg") Logout
+                a(href="/users/logout" class="btn btn-primary btn-lg") Logout
+
+        script(src="/socket.io/socket.io.js")
+        script.
+            document.addEventListener('DOMContentLoaded', function() {
+                var userId = "#{userId}";  // Pug 템플릿에서 서버로부터 받은 userId
+                console.log('UserId:', userId);  // 콘솔에서 userId 확인
+                var socket = io();  // 소켓 연결 초기화
+
+                // 서버에 userId를 등록
+                socket.emit('register', userId);
+
+                socket.on('someEvent', function(data) {
+                    // 서버로부터 데이터 받기
+                    console.log(data);
+                });
+
+                // 다른 필요한 이벤트 핸들링
+            });
