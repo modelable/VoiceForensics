@@ -3,21 +3,21 @@ block content
     div(class='container mt-5')
         div(class="row")
             div(class="col-md-8 col-lg-6 m-auto")
-                h1(class="text-center mb-4") Dashboard
+                h1(class="text-center mb-4") Dashboard  
 
                 div(class="card")
                     div(class="card-body text-center")
                         form(action="/upload" method="GET")
-                            button(type='submit' class="btn btn-outline-success btn-block") Upload File
-
+                            button(type='submit' class="btn btn-outline-success btn-block btn-lg") Upload File
+                        br
                         form(action="/result" method="GET")
-                            button(type='submit' class="btn btn-outline-success btn-block") Show Result
-
+                            button(type='submit' class="btn btn-outline-success btn-block btn-lg") Show Result
+                        br
                         form(action="/result_visual" method="GET")
-                            button(type='submit' class="btn btn-outline-success btn-block") Visualize Result
-
+                            button(type='submit' class="btn btn-outline-success btn-block btn-lg") Visualize Result
+                        br
                         form(action="/file_download" method="GET")
-                            button(type='submit' class="btn btn-outline-success btn-block") Download File
+                            button(type='submit' class="btn btn-outline-success btn-block btn-lg") Download File
 
                 br
                 a(href="/users/logout" class="btn btn-primary btn-lg") Logout

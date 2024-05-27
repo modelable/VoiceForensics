@@ -19,8 +19,15 @@ block content
                             div(class="text-muted text-center mt-3") 비교 음성: control file, 원본 음성: record file
                             div(class="text-center mt-4")
                                 input(type="submit" value="upload" class="btn btn-primary")
+                            br
+                            h6(class="text-center text-primary") Please Wait Until Uploading finished ...
+                                span(class="spinner-grow spinner-grow-sm text-info") 
                             div(class="progress mt-3")
                                 div(class="progress-bar", role="progressbar", style="width: 0%", aria-valuenow="0", aria-valuemin="0", aria-valuemax="100")
+                br
+                form(action="/dashboard" method="GET")
+                    button(type='submit' class="btn btn-outline-success") Back to the Dashboard
+
                         script(src="/socket.io/socket.io.js")
                         script.
                             document.addEventListener('DOMContentLoaded', function() {
