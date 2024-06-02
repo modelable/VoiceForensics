@@ -1,7 +1,8 @@
-const express = require('express')
+const express = require('express');
 const puppeteer = require('puppeteer');
-const router = express.Router()
-const { ensureAuthenticated, forwardAuthenticated } = require('./auth')
+const axios = require('axios');
+const router = express.Router();
+const { ensureAuthenticated, forwardAuthenticated } = require('./auth');
 
 // Use Models
 const User = require('../models/User') 
@@ -18,10 +19,64 @@ router.get('/dashboard', ensureAuthenticated, (req, res) => {
     })
 })
 
+router.get('/upload_wait', ensureAuthenticated, async (req, res) => {
+    // 클라이언트에 train_progress 페이지를 렌더링
+    res.render('train_progress');
+
+    // Flask 서버의 라우트를 호출하는 함수
+    const callFlaskRoutes = async () => {
+        const flaskUrl = 'http://127.0.0.1:5000';  // Flask 서버의 URL
+        try {
+            // '/' 라우터 호출
+            let response = await axios.get(`${flaskUrl}/`);
+            console.log("Response from '/':", response.data);
+    
+            // '/import_dataset' 라우터 호출
+            response = await axios.get(`${flaskUrl}/import_dataset`);
+            console.log("Response from '/import_dataset':", response.data);
+
+            // '/mfcc_bar_graph' 라우터 호출
+            response = await axios.get(`${flaskUrl}/mfcc_bar_graph`);
+            console.log("Response from '/mfcc_bar_graph':", response.data);
+
+            // '/mfcc_spectrum' 라우터 호출
+            response = await axios.get(`${flaskUrl}/mfcc_spectrum`);
+            console.log("Response from '/mfcc_spectrum':", response.data);
+    
+            // '/label_setting' 라우터 호출
+            response = await axios.get(`${flaskUrl}/label_setting`);
+            console.log("Response from '/label_setting':", response.data);
+    
+            // '/training' 라우터 호출
+            response = await axios.get(`${flaskUrl}/training`);
+            console.log("Response from '/training':", response.data);
+
+            // '/model_predict' 라우터 호출
+             response = await axios.get(`${flaskUrl}/model_predict`);
+             console.log("Response from '/model_predict':", response.data);
+    
+            // '/visual_result' 라우터 호출 (이미지 생성 및 전송) 
+            //response = await axios.get(`${flaskUrl}/visual_result`);
+            //console.log("Response from '/visual_result':", response.data);
+
+            } catch (error) {
+                console.error('Error calling Flask routes:', error);
+             }
+        };
+    
+        // Flask 서버의 라우트를 호출합니다.
+        await callFlaskRoutes();
+});
+
+
 router.get('/upload', ensureAuthenticated, (req, res) => {
     res.render('upload', {
         userId: req.user._id
     })
+})
+
+router.get('/upload_okay', ensureAuthenticated, (req, res) => {
+
 })
 
 async function checkUserResult(userId) {
@@ -113,4 +168,4 @@ router.get('/file_download', ensureAuthenticated, async (req, res) => {
     res.send(pdf);
 });
 
-module.exports = router
+module.exports = router;

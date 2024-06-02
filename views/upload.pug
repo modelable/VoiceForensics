@@ -51,7 +51,7 @@ block content
                                     xhr.open('POST', '/upload', true);
                                     xhr.onload = function() {
                                         if (xhr.status === 200) {
-                                            window.location.href = '/dashboard'; // 성공 시 대시보드로 이동
+                                            window.location.href = '/upload_wait'; // 성공 시 upload_wait 라우터 호출
                                         } else {
                                             console.error('Upload failed.');
                                         }

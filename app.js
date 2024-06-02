@@ -1,6 +1,7 @@
 require('dotenv').config(); // DB 환경 변수 import
 const express = require('express');
 const multer = require('multer');
+const axios = require('axios'); //flask 라우터 호출하기 위한 모듈
 const mongoose = require('mongoose');
 const path = require('path');
 const http = require('http');
@@ -16,6 +17,35 @@ const server = http.createServer(app);
 const io = require('socket.io')(server);
 
 const userSockets = new Map();
+
+server.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
+
+//====================multer 선언부======================//
+//images dir에 flask에서 호출한 이미지들을 저장 
+const imageStorage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, 'images/');
+    },
+    filename: function(req, file, cb) {
+        cb(null, file.originalname);
+    }
+});
+
+const images_load = multer({storage: imageStorage});
+
+// 음성 파일 업로드를 위한 multer 설정
+const audiostorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/'); // 업로드된 파일의 저장 경로
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname); // 업로드된 파일의 원본 파일명 사용
+    }
+});
+const upload = multer({ storage: audiostorage });
+//===========================================================//
 
 // socket.io 클라이언트 스크립트를 제공하는 정적 파일 경로 설정
 app.use('/socket.io', express.static(path.join(__dirname, 'node_modules', 'socket.io/client-dist')));
@@ -80,17 +110,6 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
     console.log('Connected to MongoDB');
 });
-
-// 파일 업로드를 위한 multer 설정
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/'); // 업로드된 파일의 저장 경로
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname); // 업로드된 파일의 원본 파일명 사용
-    }
-});
-const upload = multer({ storage: storage });
 
 // MongoDB 스키마 및 모델 정의
 const FileControl = mongoose.model('FileControl', require('./models/FileControl'), 'file_control');
@@ -205,10 +224,9 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
             }
         }
         
-
-        console.log('Files uploaded and MFCC data saved to database.');
         // 변경: 클라이언트에 JSON 응답 보내기
-        res.json({ message: "Files uploaded and MFCC data saved to database.", redirectTo: '/dashboard' });
+        res.json({ message: "Files uploaded and MFCC data saved to database.", redirectTo: '/upload_wait' });
+        console.log("Files uploaded and MFCC data saved to database.");
 
     } catch (error) {
         console.error('Error processing files:', error);
@@ -216,8 +234,15 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
     }
 });
 
-server.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+// 이미지 파일을 업로드하는 라우터
+app.post('/upload_image', images_load.single('image'), (req, res) => {
+    try {
+        console.log('Image uploaded successfully:', req.file);
+        res.status(200).send('Image uploaded successfully');
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        res.status(500).send('Error uploading image');
+    }
 });
 
 // URL(GET METHOD)
