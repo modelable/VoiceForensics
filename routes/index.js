@@ -130,7 +130,7 @@ router.get('/result_visual', ensureAuthenticated, async (req, res) => {
     }
 
     // 결과가 있으면 결과 시각화 페이지 렌더링
-    res.render('result_viusal', {
+    res.render('result_visual', {
         userId: req.user._id,
         result
     })
