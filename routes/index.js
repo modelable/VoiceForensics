@@ -84,12 +84,12 @@ async function checkUserResult(userId) {
 
         const result = await Result.findOne({
             $or: [
-                { files_control_id: user.files_control_id },
-                { files_record_id: user.files_record_id }
+                { files_control_id: user.files_control_id.toString() },
+                { files_record_id: user.files_record_id.toString() }
             ]
         });
 
-        console.log(user.files_control_id.toString())
+        //console.log(files_control_id + "\n" + files_record_id + "\n" + user.files_control_id + "\n" + user.files_record_id.toString());
         return result ? { result } : { error: '아직 결과가 출력되지 않았습니다.', status: 204 };
     } catch (error) {
         console.error("Error fetching result:", error);
