@@ -9,10 +9,10 @@ block content
                 div(class="card card-body text-center")
                     
                     p 음성 유사도: #{result.MAE_similarity} 검사 날짜: #{result.timestamp.toLocaleDateString()}
-                    img(src=`train_acc_loss_${result.files_control_id}.png`, alt="Train accuracy and loss graph")
-                    img(src=`clustring_label_${result.files_control_id}.png`, alt="Clustering graph")
-                    img(src=`mfcc_spectrum_graph_${result.files_control_id}.png`, alt="Spectrogram of recorded and live speech")
-                    img(src=`mfcc_bar_graph_${result.files_control_id}.png`, alt="MFCC coefficients average values graph")
+                    img(src=`../images/train_acc_loss_${result.files_control_id}.png`, alt="Train accuracy and loss graph")
+                    img(src=`../images/clustring_label_${result.files_control_id}.png`, alt="Clustering graph")
+                    img(src=`../images/mfcc_spectrum_graph_${result.files_control_id}.png`, alt="Spectrogram of recorded and live speech")
+                    img(src=`../images/mfcc_bar_graph_${result.files_control_id}.png`, alt="MFCC coefficients average values graph")
                 div 결과: #{result.live_data_prediction} (라이브 데이터), #{result.record_data_prediction} (녹음 데이터)
 
     br
