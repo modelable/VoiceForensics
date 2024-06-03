@@ -1,7 +1,6 @@
 require('dotenv').config(); // DB 환경 변수 import
 const express = require('express');
 const multer = require('multer');
-const axios = require('axios'); //flask 라우터 호출하기 위한 모듈
 const mongoose = require('mongoose');
 const path = require('path');
 const http = require('http');
@@ -17,35 +16,6 @@ const server = http.createServer(app);
 const io = require('socket.io')(server);
 
 const userSockets = new Map();
-
-server.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
-
-//====================multer 선언부======================//
-//images dir에 flask에서 호출한 이미지들을 저장 
-const imageStorage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, 'images/');
-    },
-    filename: function(req, file, cb) {
-        cb(null, file.originalname);
-    }
-});
-
-const images_load = multer({storage: imageStorage});
-
-// 음성 파일 업로드를 위한 multer 설정
-const audiostorage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/'); // 업로드된 파일의 저장 경로
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname); // 업로드된 파일의 원본 파일명 사용
-    }
-});
-const upload = multer({ storage: audiostorage });
-//===========================================================//
 
 // socket.io 클라이언트 스크립트를 제공하는 정적 파일 경로 설정
 app.use('/socket.io', express.static(path.join(__dirname, 'node_modules', 'socket.io/client-dist')));
@@ -111,6 +81,17 @@ db.once('open', () => {
     console.log('Connected to MongoDB');
 });
 
+// 파일 업로드를 위한 multer 설정
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/'); // 업로드된 파일의 저장 경로
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname); // 업로드된 파일의 원본 파일명 사용
+    }
+});
+const upload = multer({ storage: storage });
+
 // MongoDB 스키마 및 모델 정의
 const FileControl = mongoose.model('FileControl', require('./models/FileControl'), 'file_control');
 const FileRecord = mongoose.model('FileRecord', require('./models/FileRecord'), 'file_record');
@@ -154,7 +135,6 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
         });
 
         const files = [file1[0], file2[0]];
-        let fftData = [];
 
         // mfcc 벡터 추출 값 정의
         const mfccResults = await Promise.all(files.map(file => {
@@ -162,26 +142,11 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
                 const childProcess = spawn('node', ['mfcc.js', '-w', file.path, '-n', '256']);
                 let outputData = [];
 
-                /*childProcess.stdout.on('data', (data) => {
+                childProcess.stdout.on('data', (data) => {
                     const values = data.toString().trim().split('\n').map(line =>
                         line.split(',').map(val => parseFloat(val))
                     );
                     outputData = outputData.concat(values);
-                });*/
-
-                childProcess.stdout.on('data', (data) => {
-                    const lines = data.toString().trim().split('\n');
-                    lines.forEach(line => {
-                        if (line.startsWith('FFT')) {
-                            // FFT 데이터 추출
-                            let fftValues = line.slice(4).split(',').map(val => parseFloat(val));
-                            fftData.push(fftValues);
-                        } else {
-                            // MFCC 데이터 추출
-                            let values = line.split(',').map(val => parseFloat(val));
-                            outputData.push(values);
-                        }
-                    });
                 });
 
                 childProcess.stderr.on('data', (data) => {
@@ -205,35 +170,6 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
             });
         }));
 
-        //추가
-        // 주파수 데이터
-        // let frequencies = Array.from({length: fftData.length}, (_, i) => i * 256 / fftSize);
-
-        // let data = [{
-        //     x: frequencies,
-        //     y: fftData,
-        //     type: 'scatter'
-        // }];
-
-        // // 그래프 레이아웃 설정
-        // let layout = {
-        //     title: 'FFT Spectrum',
-        //     xaxis: {
-        //         title: 'Frequency'
-        //     },
-        //     yaxis: {
-        //         title: 'Magnitude'
-        //     }
-        // };
-
-        // // 그래프 그리기
-        // Plotly.newPlot(context, data, layout);
-
-        // // 그래프 이미지를 파일로 저장
-        // let out = fs.createWriteStream(path.join(__dirname, 'images', 'fft_spectrum.png'));
-        // let stream = canvas.createPNGStream();
-        // stream.pipe(out);
-    
         let totalCount = mfccResults.flat().length;
         let processedCount = 0;
         let progress = 0.0;
@@ -268,10 +204,10 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
                 }
             }
         }
-        
+
+        console.log('Files uploaded and MFCC data saved to database.');
         // 변경: 클라이언트에 JSON 응답 보내기
-        res.json({ message: "Files uploaded and MFCC data saved to database.", redirectTo: '/upload_wait' });
-        console.log("Files uploaded and MFCC data saved to database.");
+        res.json({ message: "Files uploaded and MFCC data saved to database.", redirectTo: '/dashboard' });
 
     } catch (error) {
         console.error('Error processing files:', error);
@@ -279,15 +215,8 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
     }
 });
 
-// 이미지 파일을 업로드하는 라우터
-app.post('/upload_image', images_load.single('image'), (req, res) => {
-    try {
-        console.log('Image uploaded successfully:', req.file);
-        res.status(200).send('Image uploaded successfully');
-    } catch (error) {
-        console.error('Error uploading image:', error);
-        res.status(500).send('Error uploading image');
-    }
+server.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
 });
 
 // URL(GET METHOD)
