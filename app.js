@@ -51,6 +51,9 @@ const upload = multer({ storage: audiostorage });
 // socket.io 클라이언트 스크립트를 제공하는 정적 파일 경로 설정
 app.use('/socket.io', express.static(path.join(__dirname, 'node_modules', 'socket.io/client-dist')));
 
+// 정적 파일 제공 설정
+app.use(express.static(path.join(__dirname, 'images')));
+
 // WebSocket 연결 및 userId를 이용한 소켓 등록
 io.on('connection', socket => {
     socket.on('register', userId => {
