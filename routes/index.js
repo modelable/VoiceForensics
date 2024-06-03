@@ -25,7 +25,7 @@ router.get('/upload_wait', ensureAuthenticated, async (req, res) => {
 
     // Flask 서버의 라우트를 호출하는 함수
     const callFlaskRoutes = async () => {
-        const flaskUrl = 'http://127.0.0.1:5000';  // Flask 서버의 URL
+        const flaskUrl = 'https://b8e8-223-194-156-225.ngrok-free.app/';  // Flask 서버의 URL
         try {
             // '/' 라우터 호출
             let response = await axios.get(`${flaskUrl}/`);
@@ -89,7 +89,7 @@ async function checkUserResult(userId) {
             ]
         });
 
-        //console.log(files_control_id + "\n" + files_record_id + "\n" + user.files_control_id + "\n" + user.files_record_id.toString());
+        //console.log(Result.files_control_id + "\n" + Result.files_record_id + "\n" + user.files_control_id + "\n" + user.files_record_id.toString());
         return result ? { result } : { error: '아직 결과가 출력되지 않았습니다.', status: 204 };
     } catch (error) {
         console.error("Error fetching result:", error);
