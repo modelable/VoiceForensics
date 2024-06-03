@@ -52,8 +52,8 @@ router.get('/upload_wait', ensureAuthenticated, async (req, res) => {
             console.log("Response from '/training':", response.data);
 
             // '/model_predict' 라우터 호출
-             response = await axios.get(`${flaskUrl}/model_predict`);
-             console.log("Response from '/model_predict':", response.data);
+            response = await axios.get(`${flaskUrl}/model_predict`);
+            console.log("Response from '/model_predict':", response.data);
     
             // '/visual_result' 라우터 호출 (이미지 생성 및 전송) 
             //response = await axios.get(`${flaskUrl}/visual_result`);
@@ -61,7 +61,7 @@ router.get('/upload_wait', ensureAuthenticated, async (req, res) => {
 
             } catch (error) {
                 console.error('Error calling Flask routes:', error);
-             }
+            }
         };
     
         // Flask 서버의 라우트를 호출합니다.
@@ -99,6 +99,7 @@ async function checkUserResult(userId) {
 
 // 결과 페이지 라우트
 router.get('/result', ensureAuthenticated, async (req, res) => {
+    
     const { result, error, status } = await checkUserResult(req.user._id);
 
     if (error) {
@@ -110,7 +111,10 @@ router.get('/result', ensureAuthenticated, async (req, res) => {
     }
 
     // 결과가 있으면 결과 페이지 렌더링
-    res.render('result', { result });
+    res.render('result', {
+        userId: req.user._id,
+        result
+    })
 });
 
 // 결과 시각화 페이지 라우트
@@ -126,7 +130,10 @@ router.get('/result_visual', ensureAuthenticated, async (req, res) => {
     }
 
     // 결과가 있으면 결과 시각화 페이지 렌더링
-    res.render('result_visual', { result });
+    res.render('result_viusal', {
+        userId: req.user._id,
+        result
+    })
 });
 
 router.get('/file_download', ensureAuthenticated, async (req, res) => {

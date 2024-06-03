@@ -2,19 +2,32 @@
 const mongoose = require('mongoose');
 
 const resultsSchema = new mongoose.Schema({
-  files_control_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'FileControl'
+  live_data_prediction: {
+    type: Number,
+    required: true
+  },
+  record_data_prediction: {
+    type: Number,
+    required: true
+  },
+  MAE_similarity: {
+    type: Number,
+    required: true
   },
   files_record_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'FileRecord'
+    ref: 'FileRecord',
+    required: true
   },
-  bool: Boolean,
-  percent: Number,
-  date: {
+  files_control_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'FileControl',
+    required: true
+  },
+  timestamp: {
     type: Date,
-    default: Date.now
+    default: Date.now,
+    required: true
   }
 });
 
