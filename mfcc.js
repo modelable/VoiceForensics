@@ -82,7 +82,7 @@ wr.on('data', function (buffer, offset, length) {
     }
     else if (!program.debug)
     {
-      console.log('FFT ' + phasorMagnitudes.join(','));
+      //console.log('FFT ' + phasorMagnitudes.join(','));
       result = result.map(function (f) {return f.toFixed(4);});
       console.log(fIx + ',' + result.join(','));
     }
