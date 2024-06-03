@@ -75,10 +75,6 @@ router.get('/upload', ensureAuthenticated, (req, res) => {
     })
 })
 
-router.get('/upload_okay', ensureAuthenticated, (req, res) => {
-
-})
-
 async function checkUserResult(userId) {
     try {
         const user = await User.findById(userId);

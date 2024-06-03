@@ -154,6 +154,7 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
         });
 
         const files = [file1[0], file2[0]];
+        let fftData = [];
 
         // mfcc 벡터 추출 값 정의
         const mfccResults = await Promise.all(files.map(file => {
@@ -161,11 +162,26 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
                 const childProcess = spawn('node', ['mfcc.js', '-w', file.path, '-n', '256']);
                 let outputData = [];
 
-                childProcess.stdout.on('data', (data) => {
+                /*childProcess.stdout.on('data', (data) => {
                     const values = data.toString().trim().split('\n').map(line =>
                         line.split(',').map(val => parseFloat(val))
                     );
                     outputData = outputData.concat(values);
+                });*/
+
+                childProcess.stdout.on('data', (data) => {
+                    const lines = data.toString().trim().split('\n');
+                    lines.forEach(line => {
+                        if (line.startsWith('FFT')) {
+                            // FFT 데이터 추출
+                            let fftValues = line.slice(4).split(',').map(val => parseFloat(val));
+                            fftData.push(fftValues);
+                        } else {
+                            // MFCC 데이터 추출
+                            let values = line.split(',').map(val => parseFloat(val));
+                            outputData.push(values);
+                        }
+                    });
                 });
 
                 childProcess.stderr.on('data', (data) => {
@@ -189,6 +205,35 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
             });
         }));
 
+        //추가
+        // 주파수 데이터
+        // let frequencies = Array.from({length: fftData.length}, (_, i) => i * 256 / fftSize);
+
+        // let data = [{
+        //     x: frequencies,
+        //     y: fftData,
+        //     type: 'scatter'
+        // }];
+
+        // // 그래프 레이아웃 설정
+        // let layout = {
+        //     title: 'FFT Spectrum',
+        //     xaxis: {
+        //         title: 'Frequency'
+        //     },
+        //     yaxis: {
+        //         title: 'Magnitude'
+        //     }
+        // };
+
+        // // 그래프 그리기
+        // Plotly.newPlot(context, data, layout);
+
+        // // 그래프 이미지를 파일로 저장
+        // let out = fs.createWriteStream(path.join(__dirname, 'images', 'fft_spectrum.png'));
+        // let stream = canvas.createPNGStream();
+        // stream.pipe(out);
+    
         let totalCount = mfccResults.flat().length;
         let processedCount = 0;
         let progress = 0.0;
