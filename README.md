@@ -1,8 +1,16 @@
 # Develop Environment Configuration
 ### requirement module install
 
-    npm i express pug passport passport-local bcrypt express-flash express-session mongoose dotenv puppeteer socket.io 
+    npm i express pug passport passport-local bcrypt express-flash express-session mongoose dotenv puppeteer socket.io axios
 
+### Python 환경 및 node.js 연동을 위한 필수 환경 세팅
+    1. Anaconda install
+    2. cd MFCC_Project/
+    3. conda env create -f environment.yml 
+    -> environments.yml에 프로젝트에 필요한 모듈 및 패키지들이 명시되어 있어 위 명령어로 import 가능
+    4. nodemon app -> node.js 서버 실행
+    5. python 설치(로컬에 설치되어 있지 않다면) 및 실행 
+#### Python과 node.js 연동은 flask의 ngrok를 이용하여 파이썬 환경과 로컬 간의 터널링을 통해 진행
 
 # mfcc
 Node.JS implementation of the MFCC (Mel Frequency Cepstrum Coefficients) algorithm.
