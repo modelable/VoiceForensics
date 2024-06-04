@@ -25,7 +25,7 @@ router.get('/upload_wait', ensureAuthenticated, async (req, res) => {
 
     // Flask 서버의 라우트를 호출하는 함수
     const callFlaskRoutes = async () => {
-        const flaskUrl = 'https://b8e8-223-194-156-225.ngrok-free.app/';  // Flask 서버의 URL
+        const flaskUrl = 'http://127.0.0.1:5000';  // Flask 서버의 URL
         try {
             // '/' 라우터 호출
             let response = await axios.get(`${flaskUrl}/`);
