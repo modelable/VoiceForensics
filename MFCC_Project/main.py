@@ -246,11 +246,6 @@ def training():
     with open(f'images/train_acc_loss_{files_control_id}.png', 'wb') as f:
         f.write(img.getbuffer())
 
-    # # Node.js 서버로 이미지 전송
-    # with open(f'images/train_acc_loss_{files_control_id}.png', 'rb') as f:
-    #     response = requests.post('http://localhost:3000/upload_image', files={'image': f})
-    #     print(response.text)
-
     return "Training Image processed and sent to Node.js server"
 
 @app.route('/mfcc_spectrum', methods=['GET'])
@@ -318,11 +313,6 @@ def mfcc_spectrum():
     with open(f'images/mfcc_spectrum_graph_{files_control_id}.png', 'wb') as f:
         f.write(img.getbuffer())
 
-    # Node.js 서버로 이미지 전송
-    # with open(f'images/mfcc_spectrum_graph_{files_control_id}.png', 'rb') as f:
-    #     response = requests.post('http://localhost:3000/upload_image', files={'image': f})  # Node.js 서버 포트는 3000입니다.
-    #     print(response.text)
-
     return "mfcc_spectrum_graph.png processed and sent to Node.js server"
 
 
@@ -332,44 +322,45 @@ def mfcc_bar_graph():
     # 12개 열 각각의 평균을 계산합니다.
     control_means = {}
     record_means = {}
+    control_avg_data = {}
+    record_avg_data = {}
+    
+    # mfcc1을 먼저 저장(그래프에서는 MFCC2부터 시작하므로)
+    control_avg_data['MFCC1'] = pd.to_numeric(mfcc_control_data['MFCC1'], errors='coerce').mean()
+    record_avg_data['MFCC1'] = pd.to_numeric(mfcc_record_data['MFCC1'], errors='coerce').mean()
 
-    for column_name in mfcc_control_data.columns[0:14]:  # 첫 12개의 열에 대해 반복합니다.
+    for column_name in mfcc_control_data.columns[1:14]:  # mfcc1을 제외하고 나머지 열에 대해 반복
         try:
-            # 첫 번째 데이터프레임에서 각 열에서 숫자로 변환 가능한 값만 필터링합니다.
+            # 첫 번째 데이터프레임에서 각 열에서 숫자로 변환 가능한 값만 필터링
             control_data = pd.to_numeric(mfcc_control_data[column_name], errors='coerce')
             control_mfcc_mean = control_data.mean()
             control_means[column_name] = control_mfcc_mean
 
-            # 두 번째 데이터프레임에서 각 열에서 숫자로 변환 가능한 값만 필터링합니다.
+            # 두 번째 데이터프레임에서 각 열에서 숫자로 변환 가능한 값만 필터링
             record_data = pd.to_numeric(mfcc_record_data[column_name], errors='coerce')
             record_mfcc_mean = record_data.mean()
             record_means[column_name] = record_mfcc_mean
+
+            # MongoDB에 저장할 데이터에 MFCC 계수를 추가 
+            control_avg_data[column_name] = control_mfcc_mean
+            record_avg_data[column_name] = record_mfcc_mean
         except ValueError:
             # 변환할 수 없는 값이 있는 경우 예외 처리
             print(f'{column_name} 열에 변환할 수 없는 값이 있습니다.')
 
-    # 각 열의 평균값을 출력합니다.
-    print("\n실시간 column means:")
-    for column_name, column_mean in control_means.items():
-        print(f'{column_name}의 평균값은 {column_mean}입니다.')
-
-    print("\n녹취록 column means:")
-    for column_name, column_mean in record_means.items():
-        print(f'{column_name}의 평균값은 {column_mean}입니다.')
-
     # MongoDB에 데이터 삽입
     # 현재 시간을 UTC로 구하기
     current_time = datetime.datetime.utcnow()
-
-    record_avg_data = {
-        "mfcc_record_averages": record_means,
-        "timestamp": current_time
-    }
-
-    control_avg_data = {
-        "mfcc_control_averages" : control_means,
-        "timestamp" : current_time
-    }
+    
+    #file_id 추가
+    control_avg_data["files_control_id"] = ObjectId(files_record_id)
+    record_avg_data["files_record_id"] = ObjectId(files_record_id)
+    
+    # timestamp 필드 추가
+    control_avg_data["timestamp"] = current_time
+    record_avg_data["timestamp"] = current_time
+    
+    
     control_result = control_mfcc_avg.insert_one(control_avg_data)
     record_result = record_mfcc_avg.insert_one(record_avg_data)
 
@@ -420,11 +411,6 @@ def mfcc_bar_graph():
     # 이미지 파일로 저장
     with open(f'images/mfcc_bar_graph_{files_control_id}.png', 'wb') as f:
         f.write(img.getbuffer())
-
-    # Node.js 서버로 이미지 전송
-    # with open(f'images/mfcc_bar_graph_{files_control_id}.png', 'rb') as f:
-    #     response = requests.post('http://localhost:3000/upload_image', files={'image': f})  # Node.js 서버 포트는 3000입니다.
-    #     print(response.text)
 
     return "mfcc_bar_graph.png processed and sent to Node.js server"
 
@@ -536,12 +522,7 @@ def visual_result():
     # 이미지 파일로 저장
     with open(f'visual_result_{files_control_id}.png', 'wb') as f:
         f.write(img.getbuffer())
-
-    # Node.js 서버로 이미지 전송
-    # with open(f'visual_result_{files_control_id}.png', 'rb') as f:
-    #     response = requests.post('http://localhost:3000/upload_image', files={'image': f})  # Node.js 서버 포트는 3000입니다.
-    #     print(response.text)
-
+        
     return "visual_result.png processed and sent to Node.js server"
 
 
