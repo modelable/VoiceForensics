@@ -1,0 +1,10 @@
+region: us
+version: '2'
+authtoken: 2hFy5giQS0vDSro1VkFwT0fUWBY_5n72wqqwHnKdrZekRNdPw
+tunnels:
+  first:
+    addr: 5000
+    proto: http
+  second:
+    addr: 22
+    proto: tcp
