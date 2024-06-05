@@ -120,6 +120,9 @@ const FileControl = mongoose.model('FileControl', require('./models/FileControl'
 const FileRecord = mongoose.model('FileRecord', require('./models/FileRecord'), 'file_record');
 const CoeffieControl = mongoose.model('CoeffieControl', require('./models/CoeffieControl'), 'coeffie_control');
 const CoeffieRecord = mongoose.model('CoeffieRecord', require('./models/CoeffieRecord'), 'coeffie_record');
+const CoeffieControlAvg = mongoose.model('CoeffieControlAvg', require('./models/CoeffieControlAvg'), 'coeffie_control_avg');
+const CoeffieRecordAvg = mongoose.model('CoeffieRecordAvg', require('./models/CoeffieRecordAvg'), 'coeffie_record_avg');
+
 
 // 파일 업로드 및 MongoDB 저장
 app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file2', maxCount: 1 }]), async (req, res) => {
