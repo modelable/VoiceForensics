@@ -12,8 +12,26 @@ block content
                     img(src=`clustering_label_${result.files_control_id}.png`, alt="Clustering graph")
                     img(src=`mfcc_spectrum_graph_${result.files_control_id}.png`, alt="Spectrogram of recorded and live speech")
                     img(src=`mfcc_bar_graph_${result.files_control_id}.png`, alt="MFCC coefficients average values graph")
+                    //표
+                table(class="table mt-4")
+                    thead
+                        tr
+                            th 계수
+                            each num in [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                                th= num
+                    tbody
+                        tr
+                            td 녹취
+                            each num in [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                                - let value = recordAvg && recordAvg[`MFCC${num}`] ? recordAvg[`MFCC${num}`].toFixed(2) : ''
+                                td= value
+                        tr
+                            td 실시간
+                            each num in [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                                - let value = controlAvg && controlAvg[`MFCC${num}`] ? controlAvg[`MFCC${num}`].toFixed(2) : ''
+                                td= value
+                
                 div 결과: #{result.live_data_prediction} (라이브 데이터), #{result.record_data_prediction} (녹음 데이터)
-
     br
     form(action="/dashboard" method="GET")
         button(type='submit' class="btn btn-outline-success") Back to the Dashboard

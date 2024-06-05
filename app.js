@@ -15,8 +15,9 @@ const app = express();
 const port = 3000;
 const server = http.createServer(app);
 const io = require('socket.io')(server);
-
 const userSockets = new Map();
+const coeffieRecordAvgSchema = require('./models/CoeffieRecordAvg');
+const coeffieControlAvgSchema = require('./models/CoeffieControlAvg');
 
 //추가
 server.listen(port, () => {
@@ -251,6 +252,7 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
 // URL(GET METHOD)
 const users = require('./routes/users');
 const index = require('./routes/index');
+const coeffieControlSchema = require('./models/CoeffieControl');
 
 app.use('/users', users);
 app.use('/', index);

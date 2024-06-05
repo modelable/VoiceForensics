@@ -6,7 +6,9 @@ const { ensureAuthenticated, forwardAuthenticated } = require('./auth');
 
 // Use Models
 const User = require('../models/User') 
-const Result = require('../models/Result')
+const Result = require('../models/Result');
+const CoeffieRecordAvg = require('../models/CoeffieRecordAvg');
+const CoeffieControlAvg = require('../models/CoeffieControlAvg');
 
 router.get('/', forwardAuthenticated, (req, res) => {
     res.render('index')
@@ -89,7 +91,6 @@ async function checkUserResult(userId) {
             ]
         });
 
-        //console.log(Result.files_control_id + "\n" + Result.files_record_id + "\n" + user.files_control_id + "\n" + user.files_record_id.toString());
         return result ? { result } : { error: '아직 결과가 출력되지 않았습니다.', status: 204 };
     } catch (error) {
         console.error("Error fetching result:", error);
@@ -129,11 +130,17 @@ router.get('/result_visual', ensureAuthenticated, async (req, res) => {
         return res.render('no_result', { message: error });
     }
 
+    const recordAvg = await CoeffieRecordAvg.findOne({ files_record_id: result.files_record_id.toString() }).lean();
+    const controlAvg = await CoeffieControlAvg.findOne({ files_control_id: result.files_control_id.toString() }).lean();
+
     // 결과가 있으면 결과 시각화 페이지 렌더링
     res.render('result_visual', {
         userId: req.user._id,
-        result
-    })
+        result,
+        recordAvg: recordAvg || {}, // recordAvg가 null이면 빈 객체를 할당
+        controlAvg: controlAvg || {} // controlAvg가 null이면 빈 객체를 할당
+    });
+    
 });
 
 router.get('/file_download', ensureAuthenticated, async (req, res) => {
