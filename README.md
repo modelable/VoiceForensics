@@ -10,6 +10,8 @@
     -> environments.yml에 프로젝트에 필요한 모듈 및 패키지들이 명시되어 있어 위 명령어로 import 가능
     4. nodemon app -> node.js 서버 실행
     5. python 설치(로컬에 설치되어 있지 않다면) 및 실행 
+    + conda install -c conda-forge pyngrok pymongo librosa tensorflow
+
 #### Python과 node.js 연동은 flask의 ngrok를 이용, 파이썬 Project와 로컬 간의 터널링을 통해 진행 (url로 접속)
 
 # mfcc
