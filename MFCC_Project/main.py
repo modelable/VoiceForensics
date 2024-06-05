@@ -31,8 +31,8 @@ db = client['test']  # 데이터베이스 이름
 control_collection = db['coeffie_control']
 # coeffie_record 컬렉션 선언
 record_collection = db['coeffie_record']
-control_mfcc_avg = db['control_mfcc_avg']
-record_mfcc_avg = db['record_mfcc_avg']
+control_mfcc_avg = db['coeffie_control_avg']
+record_mfcc_avg = db['coeffie_record_avg']
 
 #모델 훈련 관련
 batch_size = 64
@@ -353,7 +353,7 @@ def mfcc_bar_graph():
     current_time = datetime.datetime.utcnow()
     
     #file_id 추가
-    control_avg_data["files_control_id"] = ObjectId(files_record_id)
+    control_avg_data["files_control_id"] = ObjectId(files_control_id)
     record_avg_data["files_record_id"] = ObjectId(files_record_id)
     
     # timestamp 필드 추가
