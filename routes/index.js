@@ -89,7 +89,6 @@ async function checkUserResult(userId) {
             ]
         });
 
-        //console.log(Result.files_control_id + "\n" + Result.files_record_id + "\n" + user.files_control_id + "\n" + user.files_record_id.toString());
         return result ? { result } : { error: '아직 결과가 출력되지 않았습니다.', status: 204 };
     } catch (error) {
         console.error("Error fetching result:", error);
