@@ -25,4 +25,4 @@ const coeffieControlAvgSchema = new mongoose.Schema({
 });
 
 mongoose.set('strictQuery', true); // 추가 -> 스키마에 정해진 필드만 핸들, 나머지는 무시 
-module.exports = mongoose.model('CoeffieControlAvg', coeffieControlAvgSchema);
+module.exports = mongoose.model('CoeffieControlAvg', coeffieControlAvgSchema, 'coeffie_control_avg');
