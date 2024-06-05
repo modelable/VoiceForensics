@@ -532,13 +532,10 @@ if __name__ == '__main__':
     public_url = ngrok.connect(5000, bind_tls=True).public_url  # 포트 번호와 함께 bind_tls 옵션 설정
     print(f" * ngrok tunnel \"{public_url}\" -> \"http://127.0.0.1:5000\"")
 
-    def run_flask():
-        app.run(port=5000)
-
-    flask_thread = Thread(target=run_flask)
-    flask_thread.start()
-
     # Flask 서버가 시작될 시간을 기다림
     time.sleep(2)  # 필요한 경우 더 길게 조정
+    
+    #Run the Flask app in the main thread
+    app.run(port=5000)
 
     print("Flask server is running and ngrok tunnel is established.")

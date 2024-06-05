@@ -237,16 +237,16 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
     }
 });
 
-// 이미지 파일을 업로드하는 라우터
-app.post('/upload_image', images_load.single('image'), (req, res) => {
-    try {
-        console.log('Image uploaded successfully:', req.file);
-        res.status(200).send('Image uploaded successfully');
-    } catch (error) {
-        console.error('Error uploading image:', error);
-        res.status(500).send('Error uploading image');
-    }
-});
+// 이미지 파일을 업로드하는 라우터 -> 파이썬 프로젝트와 node.js 환경이 같은 폴더에 있기 때문에 필요없(images로 바로 저장)
+// app.post('/upload_image', images_load.single('image'), (req, res) => {
+//     try {
+//         console.log('Image uploaded successfully:', req.file);
+//         res.status(200).send('Image uploaded successfully');
+//     } catch (error) {
+//         console.error('Error uploading image:', error);
+//         res.status(500).send('Error uploading image');
+//     }
+// });
 
 // URL(GET METHOD)
 const users = require('./routes/users');
