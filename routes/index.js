@@ -36,13 +36,14 @@ router.get('/upload_wait_events', ensureAuthenticated, async (req, res) => {
 
     const callFlaskRoutes = async () => {
         const flaskUrl = 'http://127.0.0.1:5000';
-        const steps = ['import_dataset', 'mfcc_bar_graph', 'mfcc_spectrum', 'label_setting', 'training', 'model_predict'];
-        for (let i = 0; i < steps.length; i++) {
-            const response = await axios.get(`${flaskUrl}/${steps[i]}`);
-            console.log(`Response from '/${steps[i]}':`, response.data);
+        const eng_steps = ['import_dataset', 'mfcc_bar_graph', 'mfcc_spectrum', 'fft_spectrum', 'label_setting', 'training', 'model_predict'];
+        const kor_steps = ['음성 추출 데이터셋 불러오기', '음성 특징 평균값 시각화', 'MFCC 스펙트럼 시각화', '주파수 스펙트럼 시각화', '클러스트링(데이터 분류)', 'AI 모델 학습', '유사도 측정'];
+        for (let i = 0; i < eng_steps.length; i++) {
+            const response = await axios.get(`${flaskUrl}/${eng_steps[i]}`);
+            console.log(`Response from '/${eng_steps[i]}':`, response.data);
 
             // 각 단계가 완료될 때마다 클라이언트에게 이벤트를 보냅니다.
-            res.write(`data: ${steps[i]}\n\n`);
+            res.write(`data: ${kor_steps[i]}\n\n`);
         }
         // 모든 단계가 완료되면 연결 종료를 알리는 이벤트를 보냅니다.
         res.write('data: done\n\n');

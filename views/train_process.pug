@@ -1,16 +1,13 @@
 extends ./layout.pug
 
 block content
-  div(class='container')
+  div(class='container-fluid')
     div(class="row mt-5")
-      div(class="col-md-6 m-auto text-center")
-        h1(class="mt-4 text-center") Training Progress
-
-        div(class="card")
-          div(class="card-body")
-            div(class="progress mt-3")
-              div(id="progress-bar" class="progress-bar", role="progressbar", style="width: 0%; height: 20px; background-color: green;", aria-valuenow="0", aria-valuemin="0", aria-valuemax="100") 0%
-            div(id="step-name" class="mt-3")
+      div(class="col-md-9 mx-auto text-center")
+        h4(class="mt-2 text-center") 인공지능 훈련 및 시각화 자료를 준비중입니다. 
+          div(class="progress mt-3")
+            div(id="progress-bar" class="progress-bar", role="progressbar", style="width: 0%; height: 20px; background-color: green;", aria-valuenow="0", aria-valuemin="0", aria-valuemax="100") 0%
+          div(id="step-name" class="mt-3")
   
   br
   form(action="/dashboard" method="GET")
@@ -21,7 +18,7 @@ block content
     const source = new EventSource('/upload_wait_events');
 
     // 진행 단계를 나타내는 배열을 선언합니다.
-    const steps = ['import_dataset', 'mfcc_bar_graph', 'mfcc_spectrum', 'label_setting', 'training', 'model_predict'];
+    const steps = ['음성 추출 데이터셋 불러오기', '음성 특징 평균값 시각화', 'MFCC 스펙트럼 시각화', '주파수 스펙트럼 시각화', '클러스트링(데이터 분류)', 'AI 모델 학습', '유사도 측정'];
 
     source.onmessage = function(event) {
         if (event.data === 'done') {
@@ -31,12 +28,12 @@ block content
             // 이벤트 데이터를 사용하여 프로그레스 바를 업데이트합니다.
             const progressBar = document.getElementById('progress-bar');
             const progressIndex = steps.indexOf(event.data) + 1;
-            const progressPercentage = (progressIndex / steps.length) * 100;
+            const progressPercentage = parseFloat(((progressIndex / steps.length) * 100).toFixed(2));
             progressBar.style.width = progressPercentage + '%';
             progressBar.setAttribute('aria-valuenow', progressPercentage);
             progressBar.textContent = progressPercentage + '%';
 
             const stepNameDiv = document.getElementById('step-name');
-            stepNameDiv.innerHTML = `<h3>${event.data} 단계 완료 </h3>`;
+            stepNameDiv.innerHTML = `<h6>${event.data} 단계 완료 </h6>`;
         }
     };

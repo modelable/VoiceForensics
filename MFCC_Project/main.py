@@ -17,12 +17,20 @@ from sklearn.decomposition import PCA
 import matplotlib.patches as mpatches
 import librosa
 import librosa.display
+from pydub import AudioSegment
+from scipy.fft import fft
 from threading import Thread
 import io
+import os
 
 #전역변수 선언부
 app = Flask(__name__)
 connection_string = 'mongodb+srv://hansunguniv001:hansung@cluster0.hlw86l4.mongodb.net/'
+
+# FFmpeg 경로 설정
+AudioSegment.converter = "C:\\Users\\sohee\\ffmpeg\\ffmpeg-n7.0-latest-win64-gpl-7.0\\bin\\ffmpeg.exe"
+AudioSegment.ffmpeg = "C:\\Users\\sohee\\ffmpeg\\ffmpeg-n7.0-latest-win64-gpl-7.0\\bin\\ffmpeg.exe"
+AudioSegment.ffprobe = "C:\\Users\\sohee\\ffmpeg\\ffmpeg-n7.0-latest-win64-gpl-7.0\\bin\\ffprobe.exe"
 
 # MongoDB 클라이언트 설정
 client = MongoClient(connection_string, tls=True, tlsAllowInvalidCertificates=True)
@@ -33,6 +41,8 @@ control_collection = db['coeffie_control']
 record_collection = db['coeffie_record']
 control_mfcc_avg = db['coeffie_control_avg']
 record_mfcc_avg = db['coeffie_record_avg']
+file_record_db = db['file_record']
+file_control_db = db['file_control']
 
 #모델 훈련 관련
 batch_size = 64
@@ -40,6 +50,7 @@ pca = PCA(n_components=2)
 
 # 한글 폰트 경로 설정
 font_path = r'C:\Windows\Fonts\H2GTRE.TTF'  # Windows의 윤고딕 폰트 파일 불러옴
+
 # 폰트 속성 설정
 font_prop = fm.FontProperties(fname=font_path, size=12)
 plt.rc('font', family=font_prop.get_name())
@@ -70,30 +81,11 @@ files_record_id = None
 mfcc_control_data = None
 mfcc_record_data = None
 
-@app.route('/plot_spectrum', methods=['POST'])
-def plot_spectrum():
-    data = request.json
-    x = data['x']
-    y = data['y']
-    frame_index = data['frame_index']
-    file_index = data['file_index']
-
-    plt.figure(figsize=(10, 6))
-    plt.plot(x, y)
-    plt.xlabel('Frequency Bin')
-    plt.ylabel('Magnitude')
-    plt.title(f'FFT Spectrum for File {file_index}, Frame {frame_index}')
-
-    image_path = f'images/fft_spectrum_file{file_index}_frame{frame_index}.png'
-    plt.savefig(image_path)
-    plt.close()
-
-    # Node.js 서버로 이미지 전송
-    with open(image_path, 'rb') as f:
-        response = requests.post('http://localhost:3000/upload_image', files={'image': f})
-        print(response.text)
-
-    return jsonify({'message': 'Plot saved and uploaded to Node.js server', 'image_path': image_path})
+def read_wav_file(file_path):
+    audio = AudioSegment.from_file(file_path)
+    audio = audio.set_frame_rate(44100).set_channels(1).set_sample_width(2)
+    samples = np.array(audio.get_array_of_samples())
+    return 44100, samples
 
 @app.route('/')
 def start():
@@ -176,6 +168,10 @@ def labeling():
     purple_patch = mpatches.Patch(color='purple', label='Label 0')
     yellow_patch = mpatches.Patch(color='darkorange', label='Label 1')
     ax.legend(handles=[purple_patch, yellow_patch])
+    
+    # 축 한계 설정
+    ax.set_xlim([-10, 10])  # x축 범위 설정
+    ax.set_ylim([-10, 10])  # y축 범위 설정
 
     ax.set_title('녹취 파일 & 실시간 파일 클러스트링 결과 그래프')
 
@@ -414,6 +410,82 @@ def mfcc_bar_graph():
 
     return "mfcc_bar_graph.png processed and sent to Node.js server"
 
+@app.route('/fft_spectrum', methods=['GET'])
+def fft_spectrum():
+    #1. record_file wav 파일 경로 읽어서 data 저장 (전처리)
+    record_each = file_record_db.find_one({"_id": ObjectId(files_record_id)})
+    if record_each:
+        record_file_path = record_each.get('path')
+        print(record_file_path)
+        if record_file_path and os.path.exists(record_file_path):
+            record_sample_rate, record_data = read_wav_file(record_file_path)
+            # 1분(60초)의 데이터만 사용
+            record_data = record_data[:record_sample_rate * 60]
+        else:
+            print("record File path does not exist.")
+    else:
+        print("Record not found.")
+        
+    #2. control_file wav 파일 경로 읽어서 data 저장 (전처리)
+    control_each = file_control_db.find_one({"_id": ObjectId(files_control_id)})
+    if control_each:
+        control_file_path = control_each.get('path')
+        print(control_file_path)
+        if control_file_path and os.path.exists(control_file_path):
+            control_sample_rate, control_data = read_wav_file(control_file_path)
+            # 1분(60초)의 데이터만 사용
+            control_data = control_data[:control_sample_rate * 60]
+        else:
+            print("control File path does not exist.")
+    else:
+        print("Control not found.")
+        
+    #3. FFT 계산
+    record_y = fft(record_data)
+    control_y = fft(control_data)
+    
+    #주파수 축 생성 
+    record_x = np.linspace(0.0, record_sample_rate / 2.0, len(record_data) // 2)
+    control_x = np.linspace(0.0, control_sample_rate / 2.0, len(control_data) // 2)
+    
+    # dB 단위 변환
+    record_dB = 20 * np.log10(2.0 / len(record_data) * np.abs(record_y[:len(record_data) // 2]))
+    control_dB = 20 * np.log10(2.0 / len(control_data) * np.abs(control_y[:len(control_data) // 2]))
+    
+    # 그래프 그리기
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
+
+    ax1.plot(record_x, record_dB, label='녹취 파일', color='orange')
+    ax1.set_title('녹취 파일 FFT 스펙트럼')
+    ax1.set_xlabel('Frequency (Hz)')
+    ax1.set_ylabel('Amplitude (dB)')
+    ax1.set_ylim([-80, 30])  # y축 범위 설정
+    ax1.grid(True)
+
+    ax2.plot(control_x, control_dB, label='실시간 음성 파일', color='green', alpha=0.75)
+    ax2.set_title('실시간 음성 파일 FFT 스펙트럼')
+    ax2.set_xlabel('Frequency (Hz)')
+    ax2.set_ylabel('Amplitude (dB)')
+    ax2.set_ylim([-80, 30])  # y축 범위 설정
+    ax2.grid(True)
+
+    plt.suptitle('FFT Comparison of Two Audio Files')
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    
+    # 이미지를 메모리에 저장
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+        
+    # 이미지 파일로 저장
+    with open(f'images/fft_spectrum_{files_control_id}.png', 'wb') as f:
+        f.write(img.getbuffer())
+    
+    plt.close()
+    
+    return "fft_spectrum.png processed and sent to Node.js server"
+    
+
 @app.route('/model_predict', methods=['GET'])
 def model_predict():
     #전역 변수 선언
@@ -482,49 +554,6 @@ def model_predict():
     # 데이터 삽입
     result = db['results'].insert_one(data)
     return "Data inserted with record id : {}".format(result.inserted_id)
-
-@app.route('/visual_result', methods=['GET'])
-def visual_result():
-    # 전역 변수 선언
-    global control_predicted_labels, record_predicted_labels
-
-    # 실제 레이블
-    control_data_labels = np.ones_like(control_predicted_labels)  # control은 모두 1
-    record_data_labels = np.zeros_like(record_predicted_labels)  # record는 모두 0
-
-    # 예측값과 실제 레이블 결합
-    predicted_labels = np.concatenate([control_predicted_labels, record_predicted_labels])
-    actual_labels = np.concatenate([control_data_labels, record_data_labels])
-
-    # 예측값의 분포도 시각화
-    fig, ax = plt.subplots(figsize=(10, 6))
-
-    # 예측값 분포
-    ax.hist(predicted_labels, bins=np.arange(-0.5, 2, 1), alpha=0.5, label='Predicted Labels', color='blue',
-            edgecolor='black')
-
-    # 실제 레이블 분포
-    ax.hist(actual_labels, bins=np.arange(-0.5, 2, 1), alpha=0.5, label='Actual Labels', color='red', edgecolor='black')
-
-    # 축과 제목 설정
-    ax.set_xticks([0, 1])
-    ax.set_xticklabels(['Record (0)', 'Control (1)'])
-    ax.set_xlabel('Labels')
-    ax.set_ylabel('Frequency')
-    ax.set_title('Distribution of Predicted and Actual Labels')
-    ax.legend(loc='upper right')
-
-    # 이미지를 메모리에 저장
-    img = io.BytesIO()
-    fig.savefig(img, format='png')
-    img.seek(0)
-
-    # 이미지 파일로 저장
-    with open(f'visual_result_{files_control_id}.png', 'wb') as f:
-        f.write(img.getbuffer())
-        
-    return "visual_result.png processed and sent to Node.js server"
-
 
 if __name__ == '__main__':
     # ngrok을 통해 외부 접근 가능하도록 설정
