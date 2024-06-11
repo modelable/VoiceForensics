@@ -1,0 +1,42 @@
+extends ./layout.pug
+
+block content
+  div(class='container')
+    div(class="row mt-5")
+      div(class="col-md-6 m-auto text-center")
+        h1(class="mt-4 text-center") Training Progress
+
+        div(class="card")
+          div(class="card-body")
+            div(class="progress mt-3")
+              div(id="progress-bar" class="progress-bar", role="progressbar", style="width: 0%; height: 20px; background-color: green;", aria-valuenow="0", aria-valuemin="0", aria-valuemax="100") 0%
+            div(id="step-name" class="mt-3")
+  
+  br
+  form(action="/dashboard" method="GET")
+    button(type='submit' class="btn btn-outline-success") Back to the Dashboard
+  
+  script.
+    // 서버에서 보내는 이벤트를 수신합니다.
+    const source = new EventSource('/upload_wait_events');
+
+    // 진행 단계를 나타내는 배열을 선언합니다.
+    const steps = ['import_dataset', 'mfcc_bar_graph', 'mfcc_spectrum', 'label_setting', 'training', 'model_predict'];
+
+    source.onmessage = function(event) {
+        if (event.data === 'done') {
+            // SSE 연결을 닫습니다.
+            source.close();
+        } else {
+            // 이벤트 데이터를 사용하여 프로그레스 바를 업데이트합니다.
+            const progressBar = document.getElementById('progress-bar');
+            const progressIndex = steps.indexOf(event.data) + 1;
+            const progressPercentage = (progressIndex / steps.length) * 100;
+            progressBar.style.width = progressPercentage + '%';
+            progressBar.setAttribute('aria-valuenow', progressPercentage);
+            progressBar.textContent = progressPercentage + '%';
+
+            const stepNameDiv = document.getElementById('step-name');
+            stepNameDiv.innerHTML = `<h3>${event.data} 단계 완료 </h3>`;
+        }
+    };

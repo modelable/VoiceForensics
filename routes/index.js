@@ -21,53 +21,38 @@ router.get('/dashboard', ensureAuthenticated, (req, res) => {
     })
 })
 
-router.get('/upload_wait', ensureAuthenticated, async (req, res) => {
-    // 클라이언트에 train_progress 페이지를 렌더링
-    res.render('train_progress');
+// HTML 페이지 렌더링 라우트 -> 라우트 페이지
+router.get('/train_process', ensureAuthenticated, (req, res) => {
+    res.render('train_process');
+});
 
-    // Flask 서버의 라우트를 호출하는 함수
+// SSE 이벤트 전송 라우트
+router.get('/upload_wait_events', ensureAuthenticated, async (req, res) => {
+    // SSE 설정
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.flushHeaders(); // 헤더를 즉시 전송
+
     const callFlaskRoutes = async () => {
-        const flaskUrl = 'http://127.0.0.1:5000';  // Flask 서버의 URL
-        try {
-            // '/' 라우터 호출
-            let response = await axios.get(`${flaskUrl}/`);
-            console.log("Response from '/':", response.data);
-    
-            // '/import_dataset' 라우터 호출
-            response = await axios.get(`${flaskUrl}/import_dataset`);
-            console.log("Response from '/import_dataset':", response.data);
+        const flaskUrl = 'http://127.0.0.1:5000';
+        const steps = ['import_dataset', 'mfcc_bar_graph', 'mfcc_spectrum', 'label_setting', 'training', 'model_predict'];
+        for (let i = 0; i < steps.length; i++) {
+            const response = await axios.get(`${flaskUrl}/${steps[i]}`);
+            console.log(`Response from '/${steps[i]}':`, response.data);
 
-            // '/mfcc_bar_graph' 라우터 호출
-            response = await axios.get(`${flaskUrl}/mfcc_bar_graph`);
-            console.log("Response from '/mfcc_bar_graph':", response.data);
+            // 각 단계가 완료될 때마다 클라이언트에게 이벤트를 보냅니다.
+            res.write(`data: ${steps[i]}\n\n`);
+        }
+        // 모든 단계가 완료되면 연결 종료를 알리는 이벤트를 보냅니다.
+        res.write('data: done\n\n');
+    };
 
-            // '/mfcc_spectrum' 라우터 호출
-            response = await axios.get(`${flaskUrl}/mfcc_spectrum`);
-            console.log("Response from '/mfcc_spectrum':", response.data);
-    
-            // '/label_setting' 라우터 호출
-            response = await axios.get(`${flaskUrl}/label_setting`);
-            console.log("Response from '/label_setting':", response.data);
-    
-            // '/training' 라우터 호출
-            response = await axios.get(`${flaskUrl}/training`);
-            console.log("Response from '/training':", response.data);
+    // Flask 서버의 라우트를 호출합니다.
+    await callFlaskRoutes();
 
-            // '/model_predict' 라우터 호출
-            response = await axios.get(`${flaskUrl}/model_predict`);
-            console.log("Response from '/model_predict':", response.data);
-    
-            // '/visual_result' 라우터 호출 (이미지 생성 및 전송) 
-            //response = await axios.get(`${flaskUrl}/visual_result`);
-            //console.log("Response from '/visual_result':", response.data);
-
-            } catch (error) {
-                console.error('Error calling Flask routes:', error);
-            }
-        };
-    
-        // Flask 서버의 라우트를 호출합니다.
-        await callFlaskRoutes();
+    // 모든 데이터가 전송되었음을 알리고 연결을 종료합니다.
+    res.end();
 });
 
 
@@ -155,7 +140,7 @@ router.get('/file_download', ensureAuthenticated, async (req, res) => {
         return res.render('no_result', { message: error });
     }
 
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ args: ['--font-render-hinting=none'] });
     const page = await browser.newPage();
 
     // 로그인 쿠키 가져오기
@@ -167,7 +152,7 @@ router.get('/file_download', ensureAuthenticated, async (req, res) => {
     // Puppeteer에 쿠키 설정
     await page.setCookie(...cookies);
 
-    await page.goto('http://localhost:3000/result_visual', { waitUntil: 'networkidle2' });
+    await page.goto('http://localhost:3000/result_visual', { waitUntil: 'networkidle0' });
 
     // PDF로 렌더링
     const pdf = await page.pdf({ format: 'A4' });

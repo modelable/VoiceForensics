@@ -19,6 +19,8 @@ const userSockets = new Map();
 const coeffieRecordAvgSchema = require('./models/CoeffieRecordAvg');
 const coeffieControlAvgSchema = require('./models/CoeffieControlAvg');
 
+// module.exports.io = io; //index.js에서 소켓 이용할 수 있도록 추가
+
 //추가
 server.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
@@ -26,16 +28,16 @@ server.listen(port, () => {
 
 //====================multer 선언부======================//
 //images dir에 flask에서 호출한 이미지들을 저장 
-const imageStorage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, 'images/');
-    },
-    filename: function(req, file, cb) {
-        cb(null, file.originalname);
-    }
-});
+// const imageStorage = multer.diskStorage({
+//     destination: function(req, file, cb) {
+//         cb(null, 'images/');
+//     },
+//     filename: function(req, file, cb) {
+//         cb(null, file.originalname);
+//     }
+// });
 
-const images_load = multer({storage: imageStorage});
+// const images_load = multer({storage: imageStorage});
 
 // 음성 파일 업로드를 위한 multer 설정
 const audiostorage = multer.diskStorage({

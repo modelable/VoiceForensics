@@ -6,18 +6,32 @@ block content
             div(class="col-md-6 m-auto text-center")
                 h1(class="mt-2 text-center") 결과 보고서
 
-                div(class="card text-center" style="width: 100%;")
-                    p 음성 유사도: #{result.MAE_similarity}
-                    p 검사 날짜: #{result.timestamp.toLocaleDateString()}
-                    img(src=`train_acc_loss_${result.files_control_id}.png`, alt="Train accuracy and loss graph")
-                    p 훈련 횟수에 따른 모델의 오차율과 훈련 정확도를 보여줍니다.
-                    img(src=`clustering_label_${result.files_control_id}.png`, alt="Clustering graph")
-                    p AI모델 학습 전, 실시간/녹취록 음성에서 추출한 MFCC 계수들을 2차원 좌표평면에 나타내고,
-                      |  분포에 따라 레이블을 부여한 결과입니다.
-                    img(src=`mfcc_spectrum_graph_${result.files_control_id}.png`, alt="Spectrogram of recorded and live speech")
-                    P 각 프레임에 따른 MFCC 계수값들의 세기를 색깔로 표현한 스펙트럼입니다.
-                    img(src=`mfcc_bar_graph_${result.files_control_id}.png`, alt="MFCC coefficients average values graph")
-                    P 실시간 음성과 녹취록의 MFCC 계수 별 평균값을 비교한 막대 그래프입니다.
+                div(class="row my-4")
+                    div(class="col-12")
+                        p 음성 유사도: #{result.MAE_similarity}
+                        p 검사 날짜: #{result.timestamp.toLocaleDateString()}
+
+                div(class="row my-4")
+                    div(class="col-12")
+                        img(src=`clustering_label_${result.files_control_id}.png`, alt="Clustering graph", class="img-fluid")
+                        p AI모델 학습 전, 실시간/녹취록 음성에서 추출한 MFCC 계수들을 2차원 좌표평면에 나타내고,
+                          |  분포에 따라 레이블을 부여한 결과입니다.
+
+                div(class="row my-4")
+                    div(class="col-12")
+                        img(src=`train_acc_loss_${result.files_control_id}.png`, alt="Train accuracy and loss graph", class="img-fluid")
+                        p 훈련 횟수에 따른 모델의 오차율과 훈련 정확도를 보여줍니다.
+                
+                div(class="row my-4")
+                    div(class="col-12")
+                        img(src=`mfcc_spectrum_graph_${result.files_control_id}.png`, alt="Spectrogram of recorded and live speech", class="img-fluid")
+                        P 각 프레임에 따른 MFCC 계수값들의 세기를 색깔로 표현한 스펙트럼입니다.
+                
+                div(class="row my-4")
+                    div(class="col-12")
+                        img(src=`mfcc_bar_graph_${result.files_control_id}.png`, alt="MFCC coefficients average values graph", class="img-fluid")
+                        P 실시간 음성과 녹취록의 MFCC 계수 별 평균값을 비교한 막대 그래프입니다.
+                        
                     //표
                 table(class="table mt-2" style="width: 100%; table-layout: auto;")
                     thead
