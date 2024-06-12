@@ -44,12 +44,15 @@ record_mfcc_avg = db['coeffie_record_avg']
 file_record_db = db['file_record']
 file_control_db = db['file_control']
 
-#모델 훈련 관련
+#모델 훈련 관련 파라미터
 batch_size = 64
 pca = PCA(n_components=2)
 
+# - 부호 깨지는 문제 ->  유니코드 설정
+plt.rcParams['axes.unicode_minus'] = False
+
 # 한글 폰트 경로 설정
-font_path = r'C:\Windows\Fonts\H2GTRE.TTF'  # Windows의 윤고딕 폰트 파일 불러옴
+font_path = r'C:\Windows\Fonts\HMFMMUEX.TTC'  # Windows의 윤고딕 폰트 파일 불러옴
 
 # 폰트 속성 설정
 font_prop = fm.FontProperties(fname=font_path, size=12)
@@ -219,16 +222,16 @@ def training():
 
     # 학습 손실 값
     ax[0].plot(history.history['loss'], label='실제 값과 모델의 예측값 간의 오차율')
-    ax[0].set_xlabel('훈련 횟수')
-    ax[0].set_ylabel('오차율')
-    ax[0].set_title('훈련 횟수에 따른 모델의 오차율')
+    ax[0].set_xlabel('훈련 횟수', fontsize=14)
+    ax[0].set_ylabel('오차율', fontsize=14)
+    ax[0].set_title('훈련 횟수에 따른 모델의 오차율', fontsize=14)
     ax[0].legend()
 
     # 학습 정확도 값
     ax[1].plot(history.history['accuracy'], label='모델의 정확도', color='red')
-    ax[1].set_xlabel('훈련 횟수')
-    ax[1].set_ylabel('정확도')  # 수정: 정확도에 맞는 y축 레이블
-    ax[1].set_title('훈련 횟수에 따른 모델의 정확도')
+    ax[1].set_xlabel('훈련 횟수', fontsize=14)
+    ax[1].set_ylabel('정확도', fontsize=14)  # 수정: 정확도에 맞는 y축 레이블
+    ax[1].set_title('훈련 횟수에 따른 모델의 정확도', fontsize=14)
     ax[1].legend()
 
     fig.tight_layout()
@@ -283,19 +286,19 @@ def mfcc_spectrum():
     # 시각화
     fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(14, 6))
     img1 = librosa.display.specshow(mfccs1, sr=sr, x_axis='time', ax=axes[0], cmap='coolwarm')
-    axes[0].set_title('증거물 녹취 파일 MFCC Spectrum')
-    axes[0].set_xlabel('Time')
-    axes[0].set_ylabel('MFCC Coefficients')
+    axes[0].set_title('증거물 녹취 파일 MFCC Spectrum', fontsize=14)
+    axes[0].set_xlabel('Time', fontsize=14)
+    axes[0].set_ylabel('MFCC Coefficients', fontsize=14)
     fig.colorbar(img1, ax=axes[0])
 
     img2 = librosa.display.specshow(mfccs2, sr=sr, x_axis='time', ax=axes[1], cmap='coolwarm')
-    axes[1].set_title('실시간 파일 MFCC Spectrum')
-    axes[1].set_xlabel('Time')
-    axes[1].set_ylabel('MFCC Coefficients')
+    axes[1].set_title('실시간 파일 MFCC Spectrum', fontsize=14)
+    axes[1].set_xlabel('Time', fontsize=14)
+    axes[1].set_ylabel('MFCC Coefficients', fontsize=14)
     fig.colorbar(img2, ax=axes[1])
 
     # 전체 그림에 대한 서브 타이틀 설정
-    fig.suptitle('위 그래프는 MFCC 계수값들을 정규화하여 최소 0, 최대 1의 실수값들의 분포를 표현한 것입니다', fontsize=12)
+    fig.suptitle('위 그래프는 MFCC 계수값들을 정규화하여 최소 0, 최대 1의 실수값들의 분포를 표현한 것입니다', fontsize=16)
     # Layout 조정 전에 서브 타이틀이 그래프에 영향을 주지 않도록 조정
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])  # rect는 [left, bottom, right, top] 형태로 조정
     plt.tight_layout()
@@ -376,9 +379,9 @@ def mfcc_bar_graph():
     bars2 = ax.bar(x + width / 2, means2, width, label='녹취록 파일 MFCC 평균값')
 
     # 레이블, 제목 및 눈금 설정
-    ax.set_xlabel('MFCC 계수들')
-    ax.set_ylabel('평균 값')
-    ax.set_title('녹취록과 실시간 음성 파일 간 MFCC 계수 평균값 비교')
+    ax.set_xlabel('MFCC 계수들', fontsize=14)
+    ax.set_ylabel('평균 값', fontsize=14)
+    ax.set_title('녹취록과 실시간 음성 파일 간 MFCC 계수 평균값 비교', fontsize=16)
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
     ax.legend()
@@ -456,20 +459,20 @@ def fft_spectrum():
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
 
     ax1.plot(record_x, record_dB, label='녹취 파일', color='orange')
-    ax1.set_title('녹취 파일 FFT 스펙트럼')
-    ax1.set_xlabel('Frequency (Hz)')
-    ax1.set_ylabel('Amplitude (dB)')
+    ax1.set_title('녹취 파일 주파수 스펙트럼', fontsize=14)
+    ax1.set_xlabel('Frequency (Hz)', fontsize=14)
+    ax1.set_ylabel('Amplitude (dB)', fontsize=14)
     ax1.set_ylim([-80, 30])  # y축 범위 설정
     ax1.grid(True)
 
     ax2.plot(control_x, control_dB, label='실시간 음성 파일', color='green', alpha=0.75)
-    ax2.set_title('실시간 음성 파일 FFT 스펙트럼')
-    ax2.set_xlabel('Frequency (Hz)')
-    ax2.set_ylabel('Amplitude (dB)')
+    ax2.set_title('실시간 음성 파일 주파수 스펙트럼', fontsize=14)
+    ax2.set_xlabel('Frequency (Hz)', fontsize=14)
+    ax2.set_ylabel('Amplitude (dB)', fontsize=14)
     ax2.set_ylim([-80, 30])  # y축 범위 설정
     ax2.grid(True)
 
-    plt.suptitle('FFT Comparison of Two Audio Files')
+    plt.suptitle('녹취록 / 실시간 음성의 주파수 스펙트럼 비교', fontsize=16)
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     
     # 이미지를 메모리에 저장
