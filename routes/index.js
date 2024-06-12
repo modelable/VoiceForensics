@@ -115,10 +115,9 @@ router.get('/result_visual', ensureAuthenticated, async (req, res) => {
         // 결과가 없는 경우
         return res.render('no_result', { message: error });
     }
-    //console.log(result.files_record_id)
+    
     const recordAvg = await CoeffieRecordAvg.findOne({ files_record_id: result.files_record_id }).lean();
     const controlAvg = await CoeffieControlAvg.findOne({ files_control_id: result.files_control_id }).lean();
-    console.log(result.files_control_id)
 
     // 결과가 있으면 결과 시각화 페이지 렌더링
     res.render('result_visual', {
