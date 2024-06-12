@@ -6,31 +6,30 @@ block content
             div(class="col-md-9 m-auto")
                 h2(class="mt-2 text-center") 음성 위변조 탐지 보고서
 
-                div(class="card mt-4")
+                div(class="card mt-4 mb-4 px-4")
                     div(class="card-body")
                         div(class="row my-4")
                             div(class="col-12")
                                 p(class="strong-text text-center") 모델 예측 결과: #{result.live_data_prediction} (실시간 음성), #{result.record_data_prediction} (녹취록)
                                 p(class="strong-text text-center") 유사도: #{result.MAE_similarity}%
 
-                                // 판정 기준표
-                                div(class="row my-4")
-                                    div(class="col-12")
-                                        table.table.table-bordered
+                                div(class="row my-4 justify-content-center")
+                                    div(class="col-auto")
+                                        table.table.table-bordered.table-striped(style="width: auto;")
                                             thead
                                                 tr
                                                     th 유사도
                                                     th 판정 결과
                                             tbody
                                                 tr
-                                                    td 95% 이상
-                                                    td 동일 인물일 가능성이 매우 높습니다.
+                                                    td(style=`color: ${result.MAE_similarity >= 95 ? 'red' : ''}`) 95% 이상
+                                                    td(style=`color: ${result.MAE_similarity >= 95 ? 'red' : ''}`) 동일 인물일 가능성이 매우 높습니다.
                                                 tr
-                                                    td 75% ~ 95%
-                                                    td 변조 가능성이 존재하며 시각화 자료를 통해 세밀한 분석이 필요합니다.
+                                                    td(style=`color: ${result.MAE_similarity >= 75 && result.MAE_similarity < 95 ? 'red' : ''}`) 75% ~ 95%
+                                                    td(style=`color: ${result.MAE_similarity >= 75 && result.MAE_similarity < 95 ? 'red' : ''}`) 변조 가능성이 존재하며 시각화 자료를 통해 세밀한 분석이 필요합니다.
                                                 tr
-                                                    td 75% 미만
-                                                    td 다른 인물일 가능성이 매우 높습니다.
+                                                    td(style=`color: ${result.MAE_similarity < 75 ? 'red' : ''}`) 75% 미만
+                                                    td(style=`color: ${result.MAE_similarity < 75 ? 'red' : ''}`) 다른 인물일 가능성이 매우 높습니다.
 
                                 p(class="text-center") 검사 날짜: #{result.timestamp.toLocaleDateString()}
                     hr
@@ -57,6 +56,48 @@ block content
                         div(class="col-12")
                             img(src=`mfcc_spectrum_graph_${result.files_control_id}.png`, alt="Spectrogram of recorded and live speech", class="img-fluid")
                             p(class="strong-text text-center") 각 프레임에 따른 MFCC 계수값들의 세기를 색깔로 표현한 스펙트럼입니다.
+                    // 삽입할 위치
+                    div(class="row my-4 justify-content-center")
+                        div(class="col-auto")
+                            table.table.table-bordered.table-striped(style="width: auto;")
+                                thead
+                                    tr
+                                        th MFCC 계수
+                                        th 설명
+                                tbody
+                                    tr
+                                        td MFCC1
+                                        td 음성 신호의 전반적인 에너지 수준을 반영한다. MFCC1이 높으면 음성이 더 크거나 강하게 발성되었다는 것을 의미하여 해당 계수를 통해 화자의 감정 상태, 강조 등을 측정할 수 있다.
+                                    tr
+                                        td MFCC2
+                                        td 음성의 스펙트럼을 나타낸다. 음성 신호의 에너지가 집중되어 있는 위치를 알려주어, MFCC2가 높을수록 음성의 주파수가 높은 부분에 더 많은 에너지가 집중되어 있음을 의미한다. 이는 발성자의 성대의 조음 위치와 밀접한 관련이 있어, 음성의 높이변화를 포착하고, 발화자의 특징을 유추하는데 사용할 수 있다.
+                                    tr
+                                        td MFCC3
+                                        td 음성의 특정 발음 특성을 반영하여 특정 모음의 발음 방식을 포착한다. MFCC3가 높은 값을 가지면 특정 발음 패턴이 강조된다는 것을 의미하여 해당 계수를 바탕으로 발음의 정확성, 언어의 변형 등을 분석한다.
+                                    tr
+                                        td MFCC4
+                                        td 음성의 중간 주파수 대역에서 복잡성을 알려준다. 일반적으로 MFCC4는 발음의 전환 부분에서 에너지의 변화를 포착한다. MFCC4가 높다면, 음성에서 중간 주파수 대역의 발음 변화가 활발하다는 것을 의미하며 이는 발음의 강조 또는 음성의 변조가 포함되어 있을 수 있다.
+                                    tr
+                                        td MFCC5
+                                        td 음성의 중주파수 범위에서의 세부적인 특성을 잡아낸다. MFCC5가 높을 경우, 특정 발음 패턴이나 음절의 변화가 강조됨을 알려주게 되고, 이 특징을 바탕으로 발음의 섬세함이나 발화의 독특함을 알 수 있다.
+                                    tr
+                                        td MFCC6
+                                        td 음성 신호에서 더 미세한 중주파수 세부사항을 포착한다. 주로 발음의 연결이나 음절 간의 변화를 나타낸다. MFCC6의 값이 높으면, 음성의 흐름에서 복잡성이나 특정 발음의 빈번한 전환을 나타낼 수 있다.
+                                    tr
+                                        td MFCC7
+                                        td 중간 주파수 대역의 최고 세부사항을 나타내며, 특히 발음의 미묘한 변화를 포착한다. MFCC7이 높다면, 발화자가 발음을 매우 섬세하게 조절하고 있음을 의미하여, 발화자의 감정이나 강조표현을 알 수 있다.
+                                    tr
+                                        td MFCC8
+                                        td 고주파수 대역에서의 세부 변화를 포착하는데, 특히 입술과 혀의 빠른 움직임이나 미세한 발음의 변화를 반영하여 발음의 빠르기를 나타낸다.
+                                    tr
+                                        td MFCC9
+                                        td 음성의 매우 높은 주파수 영역에서의 변화를 감지하여, 발음의 끝맺음 또는 강세의 위치와 관련이 있을 수 있어 해당 계수값을 통해 발음의 섬세함 정도를 알 수 있다.
+                                    tr
+                                        td MFCC10, MFCC11
+                                        td 음성의 가장 미세한 주파수 변화를 포착하고, 특히 높은 음역대에서의 발음 세부사항을 잘 나타낸다. 이들 계수의 높은 값은 말하는 사람이 음성의 피치나 높이를 세밀하게 조절하고 있음을 의미한다.
+                                    tr
+                                        td MFCC12
+                                        td 음성의 가장 높은 주파수에서의 세밀한 특징을 포착해 음성의 질감, 미세한 발음의 변화, 그리고 발음의 매우 섬세한 부분을 포착한다.
                     hr
                     
                     div(class="row my-4")
@@ -65,9 +106,9 @@ block content
                             p(class="strong-text text-center") 실시간 음성과 녹취록의 MFCC 계수 별 평균값을 비교한 막대 그래프입니다.
 
                     //MFCC 평균 비교표
-                    div(class="row my-4")
-                        div(class="col-12")
-                            table(class="table table-bordered")
+                    div(class="row my-4 justify-content-center")
+                        div(class="col-auto")
+                            table.table.table-bordered.table-striped(style="width: auto;")
                                 thead
                                     tr
                                         th MFCC 계수
@@ -84,6 +125,8 @@ block content
                                         each num in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
                                             - let value = controlAvg && controlAvg[`MFCC${num}`] ? controlAvg[`MFCC${num}`].toFixed(2) : ''
                                             td= value
-        br
-        form(action="/dashboard" method="GET")
-            button(type='submit' class="btn btn-outline-success") Back to the Dashboard
+                    hr
+
+                    form(action="/dashboard" method="GET")
+                        button(type='submit' class="btn btn-outline-success") Back to the Dashboard
+                    br
