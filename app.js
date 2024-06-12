@@ -127,6 +127,7 @@ const CoeffieRecord = mongoose.model('CoeffieRecord', require('./models/CoeffieR
 // 파일 업로드 및 MongoDB 저장
 app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file2', maxCount: 1 }]), async (req, res) => {
     try {
+        console.log('== upload files ==')
         const { file1, file2 } = req.files;
         const userId = req.user._id.toString();
         const socket = userSockets.get(userId); // 맵에서 사용자의 소켓 가져오기
