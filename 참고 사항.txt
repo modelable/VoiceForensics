@@ -1,0 +1,72 @@
+1. Tensorflow.js 설치 
+- 호환성 문제로 인해 nvm 설치 및 node.js 다운그레이드 해야함 (nvm 설치되어있으면 건너뛰기)
+  https://github.com/coreybutler/nvm-windows/releases 접속 -> nvm-setup.zip 파일을 다운로드
+  다운로드한 nvm-setup.zip 파일을 압축 해제하고, 설치 프로그램(nvm-setup.exe)을 실행
+- power shell 등의 터미널에서 
+	- nvm install 14.18.0
+	- nvm use 14.18.0
+- npm install -g node-gyp
+- npm install @tensorflow/tfjs-node : 텐서플로우 c++ 바인딩 모듈 설치 -> 포기 ...
+
+2. MongoDB 클라우드 Atlas 활용 및 MFCC CSV 파일 뽑아내기
+Mongo DB 새로운 file_record / file_control id가 들어왔을 때만 csv 파일로 내보냄 -> 코랩으로 가져다 주는 기능 활용해야 됨
+알고리즘 : mongo db coeffie 컬렉션에 다 넣음 -> find() 를 이용해서 id 구함
+	     특정 file id인 놈들만 다 가져와서 csv 로 내보내기 작업
+	    mongoexport --uri="mongodb://yourMongoDBURI" --collection=yourCollectionName --db=yourDatabaseName --query='{ "files_record_id": "ObjectId(\"66386756ee019cd052539768\")" }' --type=csv --fields="MFCC1,MFCC2,MFCC3,MFCC4,MFCC5,MFCC6,MFCC7,MFCC8,MFCC9,MFCC10,MFCC11" --out="output.csv"
+csv 파일을 저장 -> 현재 작업중인 디렉토리에 저장됨 
+-out 옵션의 경로를 명시적으로 지정해주면 됩니다. 예를 들어, /home/user/myexports/output.csv와 같이 지정할 수 있습니다.
+
+=========================================
+현재 상태 : 코랩에서 학습시킴 -> 몽고 디비에 저장해야함 -> MongoDB Atlas를 사용하면 클라우드에서 MongoDB 데이터베이스를 손쉽게 관리하고 연동할 수 있습니다 -> 이방법을 이용해서 results 컬렉션에 저장해야할듯
+
+*모델의 입력 불러오는 방법(수정) : 몽고 DB Atlas에서 가장 최근에 저장된 files_control_id, files_record_id를 불러와서 특정 변수에 저장하고
+id에 해당하는 MFCC 계수들을 불러와서 Data Frame 생성 -> 모델의 입력으로 들어감
+---------------------------------------------------------
+모델 : 이진 분류 모델 (녹취록 + 실시간 학습시키고, 평가했을 때 잘 분류(판별)하는지)
+손실 함수 : Sigmoid 함수 -> 0 ~ 1의 출력값을 도출, 0에 가까울 수록 클래스 0에 가까움, 1에 가까울수록 1에 가까움
+클래스 0 : 서형님 목소리 녹취록 / 클래스 1 : 캡스톤 지원금 설명회 음성 mfcc 뽑아낸거 -> 수정 : 녹취록/실시간 MFCC 다 합치고 클러스트링 진행한 뒤, 레이블 부여
+========================================
+*** 학습시킬 때 실시간 음성 파일 + 녹취록 둘 다 같은 비중으로 학습시켜야 함
+   (현재 : record / control : 50000개 추출해서 concat 함 -> 십만개 , train:test 비율을 8:2로 설정함)
+  -> 이유 : 실시간 + 녹취록 둘 다 학습시켜야 인공지능 모델이 다양한 데이터를 학습하고 알맞게 분류할 수 있기 때문(오해의 소지가 있었)
+ * 추론(평가)할 때는 전체 데이터셋의 20%인 20000개를 가지고 T/F 여부를 평가한 다음 결과를 냄 -> 현재는 성능이 안 좋음
+  -> 레이어 노드 튜닝, 과적합 방지하는 기법 등 적용해야 함
+
+* 녹취록 A / 실시간 음성 파일 여러 개 (sh1 ~ sh10)
+  녹취록 A 가 약 1분가량의 음성 녹음 파일이라고 가정하면
+  실시간 음성 파일도 그와 비슷한 분량의 파일이어야 함 (예를 들어, 1분 가량의 파일 1개 or 30초 가량의 파일 2개 정도)
+  -> 굳이 실시간 음성 파일이 여러개일 필요는 없을 듯.. (번거롭기 때문)
+=========================================
+[mongo DB Atlas 클라우드 설정]
+connection string : mongodb+srv://hansunguniv001:hansung@cluster0.hlw86l4.mongodb.net/
+비번 : hansung
+
+mongoexport --db mydatabase --collection file_record --out file_record.json : 내보내기
+mongoimport --uri "mongodb+srv://hansunguniv001:hansung@cluster0.hlw86l4.mongodb.net/" --collection file_record --file file_record.json : 가져오기 
+
+M0: 512MB의 스토리지를 제공합니다. -> 무료
+M2: 2GB의 스토리지를 제공합니다. -> 다 쓰고 나서 가격이 책정됨 
+M5: 5GB의 스토리지를 제공합니다. -> $25
+
+[고려 사항]
+Mongo Atlas에 타인이 접근하기 위해서는 Security -> Network Access에 IP주소를 추가해주어야
+================================================================
+05.08
+캡스톤 디자인 설명회 20초 -> 6300개 프레임 / 
+1분 이상의 음성 파일이면 시간이 너무 오래걸림 (로딩 답답함) 
+
+record : 남자 20초
+control : 서형님 목소리로 시도 1분 19초
+=================================================================
+05.13 다시 시도
+record (녹취 파일) : 남자 목소리(3분 12초로 자름) -> 법원에서 받은 녹취록 
+control (비교 파일 -> 실시간) : 원본 서형님 목소리(3분 12초) -> 실시간 녹음한 파일
+=================================================================
+05.15 회의 및 참고사항
+평가 지표
+모델의 추론 결과를 평가할 때 다음과 같은 지표들이 중요합니다:
+
+정확도(Accuracy): 모델이 얼마나 많은 샘플을 정확히 분류했는지 측정합니다.
+정밀도(Precision): 실제 화자라고 예측된 샘플 중 실제로 실제 화자인 샘플의 비율.
+재현율(Recall): 실제 화자인 샘플 중에서 모델이 실제 화자라고 정확히 예측한 샘플의 비율.
+F1 점수(F1 Score): 정밀도와 재현율의 조화 평균으로, 두 지표를 동시에 고려할 때 유용합니다.
