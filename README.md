@@ -22,6 +22,8 @@
        AudioSegment.ffmpeg = "C:\\ffmpeg\\bin\\ffmpeg.exe"
        AudioSegment.ffprobe = "C:\\ffmpeg\\bin\\ffprobe.exe"
 
+### 음성 위변조 탐지 포렌식 시스템 구조도
+    <img src="https://github.com/modelable/VoiceForensics/assets/123307856/e914b85d-cf16-4253-8b0a-22887c71a211" width="500" height="300"></img>
 # mfcc
 Node.JS implementation of the MFCC (Mel Frequency Cepstrum Coefficients) algorithm.
 
