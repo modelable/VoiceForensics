@@ -23,7 +23,7 @@ from threading import Thread
 import io
 import os
 
-#전역변수 선언부
+#flask 및 몽고디비 connection string 선언
 app = Flask(__name__)
 connection_string = 'mongodb+srv://hansunguniv001:hansung@cluster0.hlw86l4.mongodb.net/'
 
@@ -32,12 +32,10 @@ AudioSegment.converter = "C:\\Users\\sohee\\ffmpeg\\ffmpeg-n7.0-latest-win64-gpl
 AudioSegment.ffmpeg = "C:\\Users\\sohee\\ffmpeg\\ffmpeg-n7.0-latest-win64-gpl-7.0\\bin\\ffmpeg.exe"
 AudioSegment.ffprobe = "C:\\Users\\sohee\\ffmpeg\\ffmpeg-n7.0-latest-win64-gpl-7.0\\bin\\ffprobe.exe"
 
-# MongoDB 클라이언트 설정
+# MongoDB 클라이언트 설정 및 컬렉션 선언
 client = MongoClient(connection_string, tls=True, tlsAllowInvalidCertificates=True)
 db = client['test']  # 데이터베이스 이름
-# coeffie_control 컬렉션 선언
 control_collection = db['coeffie_control']
-# coeffie_record 컬렉션 선언
 record_collection = db['coeffie_record']
 control_mfcc_avg = db['coeffie_control_avg']
 record_mfcc_avg = db['coeffie_record_avg']
@@ -60,17 +58,16 @@ plt.rc('font', family=font_prop.get_name())
 
 # 모델 구성
 model = tf.keras.Sequential([
-    tf.keras.layers.Dense(64, activation='relu', input_shape=(12,)),  # 입력 형태는 12개의 특징을 가진 벡터
+    tf.keras.layers.Dense(64, activation='relu', input_shape=(12,)),  # 입력 형태는 12개의 특징을 가진 MFCC 벡터
     tf.keras.layers.BatchNormalization(),
     tf.keras.layers.LeakyReLU(alpha=0.01),
     tf.keras.layers.Dense(32, activation='tanh'),
-    # tf.keras.layers.Dense(64, activation='relu'),
     tf.keras.layers.Dropout(0.4),
     tf.keras.layers.Dense(16, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(0.001)),
     tf.keras.layers.Dense(1, activation='sigmoid')
 ])
 
-# 필요한 데이터 전역변수
+# 필요한 전역변수들
 mfcc_record_train_values = None
 mfcc_record_test_values = None
 mfcc_control_train_values = None
@@ -192,7 +189,7 @@ def labeling():
     #     response = requests.post('http://localhost:3000/upload_image', files={'image': f})  # Node.js 서버 포트는 3000입니다.
     #     print(response.text)
 
-    return "clustering_label.png processed and sent to Node.js server"
+    return "label setting completed!"
 
 @app.route('/training', methods=['GET'])
 def training():
@@ -241,11 +238,11 @@ def training():
     fig.savefig(img, format='png')
     img.seek(0)
 
-    # 이미지 파일로 저장
+    # 이미지 파일로 저장 -> files_control_id 참조할 수 있도록
     with open(f'images/train_acc_loss_{files_control_id}.png', 'wb') as f:
         f.write(img.getbuffer())
 
-    return "Training Image processed and sent to Node.js server"
+    return "Training completed!"
 
 @app.route('/mfcc_spectrum', methods=['GET'])
 def mfcc_spectrum():
@@ -312,13 +309,12 @@ def mfcc_spectrum():
     with open(f'images/mfcc_spectrum_graph_{files_control_id}.png', 'wb') as f:
         f.write(img.getbuffer())
 
-    return "mfcc_spectrum_graph.png processed and sent to Node.js server"
+    return "mfcc_spectrum_graph.png processed!"
 
 
 @app.route('/mfcc_bar_graph', methods=['GET'])
 def mfcc_bar_graph():
     global mfcc_control_data, mfcc_record_data
-    # 12개 열 각각의 평균을 계산합니다.
     control_means = {}
     record_means = {}
     control_avg_data = {}
@@ -347,7 +343,7 @@ def mfcc_bar_graph():
             # 변환할 수 없는 값이 있는 경우 예외 처리
             print(f'{column_name} 열에 변환할 수 없는 값이 있습니다.')
 
-    # MongoDB에 데이터 삽입
+    # MongoDB에 평균 MFCC 데이터들 삽입
     # 현재 시간을 UTC로 구하기
     current_time = datetime.datetime.utcnow()
     
@@ -358,7 +354,6 @@ def mfcc_bar_graph():
     # timestamp 필드 추가
     control_avg_data["timestamp"] = current_time
     record_avg_data["timestamp"] = current_time
-    
     
     control_result = control_mfcc_avg.insert_one(control_avg_data)
     record_result = record_mfcc_avg.insert_one(record_avg_data)
@@ -411,7 +406,7 @@ def mfcc_bar_graph():
     with open(f'images/mfcc_bar_graph_{files_control_id}.png', 'wb') as f:
         f.write(img.getbuffer())
 
-    return "mfcc_bar_graph.png processed and sent to Node.js server"
+    return "mfcc_bar_graph.png processed!"
 
 @app.route('/fft_spectrum', methods=['GET'])
 def fft_spectrum():
@@ -447,11 +442,11 @@ def fft_spectrum():
     record_y = fft(record_data)
     control_y = fft(control_data)
     
-    #주파수 축 생성 
+    #4. 주파수 축 생성 
     record_x = np.linspace(0.0, record_sample_rate / 2.0, len(record_data) // 2)
     control_x = np.linspace(0.0, control_sample_rate / 2.0, len(control_data) // 2)
     
-    # dB 단위 변환
+    #5. dB(데시벨) 단위 변환 -> y변수에 로그를 취하면 dB(데시벨) 단위가 됨
     record_dB = 20 * np.log10(2.0 / len(record_data) * np.abs(record_y[:len(record_data) // 2]))
     control_dB = 20 * np.log10(2.0 / len(control_data) * np.abs(control_y[:len(control_data) // 2]))
     
@@ -486,12 +481,12 @@ def fft_spectrum():
     
     plt.close()
     
-    return "fft_spectrum.png processed and sent to Node.js server"
+    return "fft_spectrum.png processed!"
     
 
 @app.route('/model_predict', methods=['GET'])
 def model_predict():
-    #전역 변수 선언
+    #global 전역 변수 선언
     global mfcc_control_test_values, mfcc_record_test_values, db, control_predicted_labels, record_predicted_labels, files_control_id, files_record_id
 
     control_predictions = model.predict(mfcc_control_test_values)
@@ -506,24 +501,6 @@ def model_predict():
 
     # 결과 출력
     print(f"증거 자료 녹음 화자에 대한 모델의 예측값 평균 : {record_average_prediction:.4f}")
-
-    # 두 벡터 정의
-    vector1 = np.unique(control_predictions)
-    vector2 = np.unique(record_predictions)
-
-    # 자카드 유사도 계산
-    def jaccard_similarity(v1, v2):
-        v1_set = set(v1)
-        v2_set = set(v2)
-        intersection = len(v1_set.intersection(v2_set))
-        union = len(v1_set) + len(v2_set) - intersection
-        return intersection / union
-
-    # 결과 출력
-    jaccard_sim = jaccard_similarity(vector1, vector2)
-
-    #"자카드 유사도 : 두 집합의 교집합의 크기를 합집합의 크기로 나눈 값으로 계산한 것\n1에 가까울수록 두 집합이 서로 유사함, 0에 가까우면 두 집합이 서로 다름을 의미함"
-    print(f"자카드 유사도: {jaccard_sim:.4f}")
 
     # 평균 절대 오차 계산
     mae = np.abs(control_average_prediction - record_average_prediction)
@@ -546,21 +523,20 @@ def model_predict():
 
     # 데이터 준비
     data = {
-        "live_data_prediction" : record_average_prediction,
-        "record_data_prediction" : control_average_prediction,
+        "live_data_prediction" : record_average_prediction, #녹취록에 대한 모델의 예측 평균
+        "record_data_prediction" : control_average_prediction, #실시간 데이터에 대한 모델의 예측 평균
         "MAE_similarity": similarity_score * 100,  # 계산된 정확도,
         "files_record_id" : ObjectId(files_record_id), #record_files_id에 해당 하는 값
         "files_control_id" : ObjectId(files_control_id), #control_files_id에 해당하는 값
         "timestamp" : current_time
     }
 
-    # 데이터 삽입
+    # 몽고 디비 results 컬렉션에 데이터 삽입
     result = db['results'].insert_one(data)
     return "Data inserted with record id : {}".format(result.inserted_id)
 
 if __name__ == '__main__':
     # ngrok을 통해 외부 접근 가능하도록 설정
-    #conf.get_default().config_path = "C:/Users/sohee/AppData/Local/ngrok/ngrok.yml"
     public_url = ngrok.connect(5000, bind_tls=True).public_url  # 포트 번호와 함께 bind_tls 옵션 설정
     print(f" * ngrok tunnel \"{public_url}\" -> \"http://127.0.0.1:5000\"")
 
