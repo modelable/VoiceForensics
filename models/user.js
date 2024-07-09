@@ -17,12 +17,10 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-
     files_record_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'FileRecord'
     },
-
     files_control_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'FileControl'
