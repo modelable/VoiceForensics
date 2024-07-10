@@ -63,6 +63,7 @@ router.get('/upload', ensureAuthenticated, (req, res) => {
     })
 })
 
+// async function checkUserResult(userId, flag) {
 async function checkUserResult(userId) {
     try {
         const user = await User.findById(userId);
@@ -76,7 +77,21 @@ async function checkUserResult(userId) {
                 { files_record_id: user.files_record_id.toString() }
             ]
         });
+/*
+        var ret;
 
+        if (flag == 1) {
+            return ret = result.result_MAE_similarity;
+        } else if (flag == 2) {
+            return ret = result.ai_voice_MAE_similarity;
+        } else if (flag == 3) €
+            return ret = result.announcer_MAE_similarity;
+        } else {
+            return { error: "invalid flag", status: 400 );
+        }
+        
+        return ret ? { result }: {error: "아직 결과가 출력되지 않았습니다.', status: 204 };
+*/
         return result ? { result } : { error: '아직 결과가 출력되지 않았습니다.', status: 204 };
     } catch (error) {
         console.error("Error fetching result:", error);
