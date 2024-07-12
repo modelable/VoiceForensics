@@ -14,6 +14,22 @@ const resultsSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  /* 
+  result_MAE_similarity: {
+    type: Number,
+    required: false // 변경
+  },
+
+  ai_voice_MAE_similarity: {
+    type: Number, 
+    required: false
+  },
+  
+  announcer_MAE_similarity: {
+    type: Number, 
+    required: false
+  },
+  */
   files_record_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'FileRecord',
