@@ -56,7 +56,8 @@ html(lang="ko")
       .header.mt-5
         img(src="./asset/logo.png" alt="VoiceForensic")
         h1 VoiceForensic
-        button.btn.btn-black 로그인
+        form(action=`${isAuthenticated ? "/users/logout" : "/users/login"}`)
+          button(type='submit').btn.btn-black #{isAuthenticated ? "로그아웃" : "로그인"}
       p.description VoiceForensic은 AI 음성 분석 기술을 활용하여 다양한 음성 데이터를 비교하고 분석하는 서비스입니다.
       .row.features.mt-5.justify-content-center
         .col-md-4.col-lg-3.feature

@@ -10,9 +10,18 @@ const Result = require('../models/Result');
 const CoeffieRecordAvg = require('../models/CoeffieRecordAvg');
 const CoeffieControlAvg = require('../models/CoeffieControlAvg');
 
-router.get('/', forwardAuthenticated, (req, res) => {
-    res.render('index')
-})
+router.get('/', (req, res) => {
+    // if (req.isAuthenticated()) {
+    //     res.render('index', {
+    //         isAuthenticated: req.isAuthenticated()
+    //     });  // 인증된 사용자는 인덱스 페이지로 렌더링
+    // } else {
+    //     res.render('index');  // 인증되지 않은 사용자는 인덱스 페이지로 렌더링
+    // }
+    res.render('index', {
+        isAuthenticated: req.isAuthenticated()
+    });  // 인증된 사용자는 인덱스 페이지로 렌더링
+});
 
 router.get('/dashboard', ensureAuthenticated, (req, res) => {
     res.render('dashboard', {
