@@ -1,40 +1,103 @@
-extends ./layout.pug
-block content
-    div(class='container mt-5')
-        div(class="row")
-            div(class="col-md-8 col-lg-6 m-auto")
-                h1(class="text-center mb-4") Dashboard  
-                div(class="card")
-                    div(class="card-body text-center")
-                        form(action="/upload" method="GET")
-                            button(type='submit' class="btn btn-outline-success btn-block btn-lg") Upload File
-                        br
-                        form(action="/result" method="GET")
-                            button(type='submit' class="btn btn-outline-success btn-block btn-lg") Show Result
-                        br
-                        form(action="/result_visual" method="GET")
-                            button(type='submit' class="btn btn-outline-success btn-block btn-lg") Visualize Result
-                        br
-                        form(action="/file_download" method="GET")
-                            button(type='submit' class="btn btn-outline-success btn-block btn-lg") Download File
+//- extends ./layout.pug
+//- block content
+//-     div(class='container mt-5')
+//-         div(class="row")
+//-             div(class="col-md-8 col-lg-6 m-auto")
+//-                 h1(class="text-center mb-4") Dashboard  
+//-                 div(class="card")
+//-                     div(class="card-body text-center")
+//-                         form(action="/upload" method="GET")
+//-                             button(type='submit' class="btn btn-outline-success btn-block btn-lg") Upload File
+//-                         br
+//-                         form(action="/result" method="GET")
+//-                             button(type='submit' class="btn btn-outline-success btn-block btn-lg") Show Result
+//-                         br
+//-                         form(action="/result_visual" method="GET")
+//-                             button(type='submit' class="btn btn-outline-success btn-block btn-lg") Visualize Result
+//-                         br
+//-                         form(action="/file_download" method="GET")
+//-                             button(type='submit' class="btn btn-outline-success btn-block btn-lg") Download File
 
-                br
-                a(href="/users/logout" class="btn btn-primary btn-lg") Logout
+//-                 br
+//-                 a(href="/users/logout" class="btn btn-primary btn-lg") Logout
 
-        script(src="/socket.io/socket.io.js")
-        script.
-            document.addEventListener('DOMContentLoaded', function() {
-                var userId = "#{userId}";  // Pug 템플릿에서 서버로부터 받은 userId
-                console.log('UserId:', userId);  // 콘솔에서 userId 확인
-                var socket = io();  // 소켓 연결 초기화
+//-         script(src="/socket.io/socket.io.js")
+//-         script.
+//-             document.addEventListener('DOMContentLoaded', function() {
+//-                 var userId = "#{userId}";  // Pug 템플릿에서 서버로부터 받은 userId
+//-                 console.log('UserId:', userId);  // 콘솔에서 userId 확인
+//-                 var socket = io();  // 소켓 연결 초기화
 
-                // 서버에 userId를 등록
-                socket.emit('register', userId);
+//-                 // 서버에 userId를 등록
+//-                 socket.emit('register', userId);
 
-                socket.on('someEvent', function(data) {
-                    // 서버로부터 데이터 받기
-                    console.log(data);
-                });
+//-                 socket.on('someEvent', function(data) {
+//-                     // 서버로부터 데이터 받기
+//-                     console.log(data);
+//-                 });
 
-                // 다른 필요한 이벤트 핸들링
-            });
+//-                 // 다른 필요한 이벤트 핸들링
+//-             });
+
+
+doctype html
+html(lang="ko")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+    title AI 가수 목소리 탐지
+    link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css")
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f8f8;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+      }
+      .container {
+        max-width: 400px;
+        padding: 2rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+      .avatar {
+        width: 100px;
+        margin-bottom: 1rem;
+      }
+      footer {
+        position: fixed;
+        bottom: 1rem;
+        width: 100%;
+        text-align: center;
+        font-size: 0.8rem;
+        color: #666;
+      }
+      .footer-links a {
+        color: #666;
+        margin: 0 0.5rem;
+        text-decoration: none;
+      }
+      .footer-links a:hover {
+        text-decoration: underline;
+      }
+  body
+    .container
+      img.avatar(src="path/to/avatar.png", alt="Avatar")
+      h1 DashBoard
+      p VoiceForensic에 좋아하는 가수의 음원과 의심되는 음원을 업로드하세요.
+      button.btn.btn-dark.btn-block(onclick="uploadFiles()") 파일 업로드
+      button.btn.btn-dark.btn-block(onclick="showResult()") 결과보기
+      button.btn.btn-dark.btn-block(onclick="downloadPDF()") PDF 다운로드
+    footer
+      p © Created By Park Sohee | Lee Keejung | Lee Seungjay
+      .footer-links
+        a(href="https://github.com", target="_blank") GitHub
+        a(href="https://linkedin.com", target="_blank") LinkedIn
+    script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js")
+    script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")

@@ -30,6 +30,7 @@ router.get('/dashboard', ensureAuthenticated, (req, res) => {
     })
 })
 
+
 // HTML 페이지 렌더링 라우트 -> 라우트 페이지
 router.get('/train_process', ensureAuthenticated, (req, res) => {
     res.render('train_process');
