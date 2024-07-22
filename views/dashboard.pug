@@ -58,7 +58,7 @@ html(lang="ko")
         margin: 0;
       }
       .container {
-        max-width: 400px;
+        max-width: 500px;
         padding: 2rem;
         background: white;
         border-radius: 8px;
@@ -66,8 +66,15 @@ html(lang="ko")
         text-align: center;
       }
       .avatar {
-        width: 100px;
-        margin-bottom: 1rem;
+        width: 10em;
+        height: 10em;
+        margin: 1em;
+      }
+      .container > * {
+        margin-bottom: 1.5rem; /* 각 요소의 하단에 3rem 간격을 추가 */
+      }
+      .btn {
+        height: 3rem; /* 버튼 높이를 3rem으로 설정 */
       }
       footer {
         position: fixed;
@@ -87,9 +94,8 @@ html(lang="ko")
       }
   body
     .container
-      img.avatar(src="path/to/avatar.png", alt="Avatar")
+      img.avatar(src=`${imgPath}`, alt="Avatar")
       h1 DashBoard
-      p VoiceForensic에 좋아하는 가수의 음원과 의심되는 음원을 업로드하세요.
       button.btn.btn-dark.btn-block(onclick="uploadFiles()") 파일 업로드
       button.btn.btn-dark.btn-block(onclick="showResult()") 결과보기
       button.btn.btn-dark.btn-block(onclick="downloadPDF()") PDF 다운로드

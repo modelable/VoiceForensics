@@ -23,12 +23,37 @@ router.get('/', (req, res) => {
     });  // 인증된 사용자는 인덱스 페이지로 렌더링
 });
 
-router.get('/dashboard', ensureAuthenticated, (req, res) => {
+// router.get('/dashboard', ensureAuthenticated, (req, res) => {
+//     res.render('dashboard', {
+//         name: req.user.name,
+//         userId: req.user._id
+//     })
+// })
+
+router.get('/dashboard_forensic', ensureAuthenticated, (req, res) => {
     res.render('dashboard', {
         name: req.user.name,
-        userId: req.user._id
+        userId: req.user._id,
+        imgPath: "./asset/forensic.png"
     })
 })
+
+router.get('/dashboard_ai_singer', ensureAuthenticated, (req, res) => {
+    res.render('dashboard', {
+        name: req.user.name,
+        userId: req.user._id,
+        imgPath: "./asset/ai_singer.png"
+    })
+})
+
+router.get('/dashboard_announce', ensureAuthenticated, (req, res) => {
+    res.render('dashboard', {
+        name: req.user.name,
+        userId: req.user._id,
+        imgPath: "./asset/announce.png"
+    })
+})
+
 
 
 // HTML 페이지 렌더링 라우트 -> 라우트 페이지
