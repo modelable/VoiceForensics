@@ -14,8 +14,10 @@ block content
                         br
                         form(action="/result_visual" method="GET")
                             button(type='submit' class="btn btn-outline-success btn-block btn-lg") Visualize Result
+                            
                         br
-                        form(action="/file_download" method="GET")
+                        form(action="/file_download" method="POST")
+                            input(type="hidden" name="number" value="1")
                             button(type='submit' class="btn btn-outline-success btn-block btn-lg") Download File
 
                 br

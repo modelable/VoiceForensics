@@ -102,6 +102,7 @@ async function checkUserResult(userId) {
 // 결과 페이지 라우트
 router.get('/result', ensureAuthenticated, async (req, res) => {
     
+    // const { result, error, status } = await checkUserResult(req.user._id, 1);
     const { result, error, status } = await checkUserResult(req.user._id);
 
     if (error) {
@@ -121,6 +122,8 @@ router.get('/result', ensureAuthenticated, async (req, res) => {
 
 // 결과 시각화 페이지 라우트
 router.get('/result_visual', ensureAuthenticated, async (req, res) => {
+
+    // const { result, error, status } = await checkUserResult(req.user._id, 1);
     const { result, error, status } = await checkUserResult(req.user._id);
 
     if (error) {
@@ -144,8 +147,9 @@ router.get('/result_visual', ensureAuthenticated, async (req, res) => {
     
 });
 
-router.get('/file_download', ensureAuthenticated, async (req, res) => {
-    const { result, error, status } = await checkUserResult(req.user._id);
+router.post('/file_download', ensureAuthenticated, async (req, res) => {
+    const { flag } = req.body;
+    const { result, error, status } = await checkUserResult(req.user._id, flag);
 
     if (error) {
         if (status === 404 || status === 500) {
@@ -167,7 +171,13 @@ router.get('/file_download', ensureAuthenticated, async (req, res) => {
     // Puppeteer에 쿠키 설정
     await page.setCookie(...cookies);
 
-    await page.goto('http://localhost:3000/result_visual', { waitUntil: 'networkidle0' });
+    switch(flag) {
+        case 1: await page.goto('http://localhost:3000/result_visual', { waitUntil: 'networkidle0' }); break;
+        // case 2: await page.goto('http://localhost:3000/singer_result_detail', { waitUntil: 'networkidle0' }); break;
+        // case 3: await page.goto('http://localhost:3000/announcer_result_detail', { waitUntil: 'networkidle0' }); break;
+        default: console.log('flag error in index.js');
+    }
+    
 
     // PDF로 렌더링
     const pdf = await page.pdf({ format: 'A4' });
