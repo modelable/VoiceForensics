@@ -225,7 +225,7 @@ router.get('/result_announce', ensureAuthenticated, async (req, res) => {
     }
 
     // 결과가 있으면 결과 페이지 렌더링
-    res.render('result', {
+    res.render('result_announce', {
         userId: req.user._id,
         result
     })
