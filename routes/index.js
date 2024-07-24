@@ -297,7 +297,7 @@ router.get('/announcer_result_detail', ensureAuthenticated, async (req, res) => 
     }
 
     // 결과가 있으면 결과 페이지 렌더링
-    res.render('announcer_result_detail', {
+    res.render('result_detail_announce', {
         userId: req.user._id,
         result
     })
@@ -319,7 +319,7 @@ router.get('/announcer_improvements', ensureAuthenticated, async (req, res) => {
     }
 
     // 결과가 있으면 결과 페이지 렌더링
-    res.render('announcer_improvements', {
+    res.render('improvements_announce', {
         userId: req.user._id,
         result
     })
