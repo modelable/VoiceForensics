@@ -1,3 +1,172 @@
+//- doctype html
+//- html(lang="ko")
+//-   head
+//-     meta(charset="UTF-8")
+//-     meta(name="viewport" content="width=device-width, initial-scale=1.0")
+//-     title VoiceForensic
+//-     link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css")
+//-     style.
+//-       body {
+//-         font-family: Arial, sans-serif;
+//-         text-align: center;
+//-         //- margin: 0;
+//-         //- padding: 0;
+//-       }
+//-       .header img {
+//-         width: 320px; //4
+//-         height: 240px; //3
+//-       }
+//-       .header h1 {
+//-         font-size: 3em;
+//-       }
+//-       .description {
+//-         font-size: 1.2em;
+//-         margin: 20px 0;
+//-       }
+//-       .feature {
+//-         border: 1px solid #ccc;
+//-         border-radius: 1em;
+//-         padding: 1em;
+//-         margin-bottom: 1em;
+//-         margin-left: 1em;
+//-         margin-right: 1em;
+//-       }
+//-       .feature img {
+//-         width: 10em;
+//-         height: 10em;
+//-         margin: 1em;
+//-       }
+//-       .footer {
+//-         display: flex;
+//-         justify-content: space-between;
+//-         align-items: center;
+//-         background-color: #f8f9fa;
+//-         margin: 0 auto;
+//-         padding: 1em;
+//-         font-size: 0.9em;
+//-         color: #212529;
+//-       }
+//-       .btn-black {
+//-         background-color: black;
+//-         border-color: black;
+//-         color: white;
+//-       }
+//-   body
+//-     .container
+//-       .header.mt-5
+//-         img(src="./asset/logo.png" alt="VoiceForensic")
+//-         h1 VoiceForensic
+//-         form(action=`${isAuthenticated ? "/users/logout" : "/users/login"}`)
+//-           button(type='submit').btn.btn-black #{isAuthenticated ? "로그아웃" : "로그인"}
+//-       p.description VoiceForensic은 AI 음성 분석 기술을 활용하여 다양한 음성 데이터를 비교하고 분석하는 서비스입니다.
+//-       .row.features.mt-5.justify-content-center
+//-         .col-md-4.col-lg-3.feature
+//-           img(src="./asset/blackboard_blackman.png" alt="음성 위변조 탐지" class="img-fluid")
+//-           h3 음성 위변조 탐지
+//-           p 의심되는 음성 파일을 업로드해서 위변조 여부를 확인해 보세요.
+//-         .col-md-4.col-lg-3.feature
+//-           img(src="./asset/insunni.png" alt="AI 가수 목소리 탐지" class="img-fluid")
+//-           h3 AI 가수 목소리 탐지
+//-           p VoiceForensic에 좋아하는 가수의 음원과 의심되는 음원을 업로드하세요.
+//-         .col-md-4.col-lg-3.feature
+//-           img(src="./asset/girl.png" alt="발성 연습 및 교정" class="img-fluid")
+//-           h3 발성 연습 및 교정
+//-           p 아나운서용 스피치 연습을 위해 VoiceForensic의 발성 교정을 받아보세요.
+//-     .footer.mt-5
+//-       p © Created By Park Sohee | Lee Keejung | Lee Seungjay
+//-       a(href="https://www.linkedin.com")
+//-         img(src="./asset/linkedin.png" alt="LinkedIn" class="img-fluid")
+//-     script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js")
+//-     script(src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js")
+//-     script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")
+
+//- doctype html
+//- html(lang="ko")
+//-   head
+//-     meta(charset="UTF-8")
+//-     meta(name="viewport" content="width=device-width, initial-scale=1.0")
+//-     title VoiceForensic
+//-     link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css")
+//-     style.
+//-       body {
+//-         font-family: Arial, sans-serif;
+//-         text-align: center;
+//-         //- margin: 0;
+//-         //- padding: 0;
+//-       }
+//-       .header img {
+//-         width: 320px; //4
+//-         height: 240px; //3
+//-       }
+//-       .header h1 {
+//-         font-size: 3em;
+//-       }
+//-       .description {
+//-         font-size: 1.2em;
+//-         margin: 20px 0;
+//-       }
+//-       .feature {
+//-         border: 1px solid #ccc;
+//-         border-radius: 1em;
+//-         padding: 1em;
+//-         margin-bottom: 1em;
+//-         margin-left: 1em;
+//-         margin-right: 1em;
+//-         text-decoration: none; /* 앵커 태그 기본 스타일 제거 */
+//-         color: inherit; /* 글자 색상 상속 */
+//-       }
+//-       .feature:hover {
+//-         background-color: #f0f0f0; /* 호버 시 배경색 변경 */
+//-       }
+//-       .feature img {
+//-         width: 10em;
+//-         height: 10em;
+//-         margin: 1em;
+//-       }
+//-       .footer {
+//-         display: flex;
+//-         justify-content: space-between;
+//-         align-items: center;
+//-         background-color: #f8f9fa;
+//-         margin: 0 auto;
+//-         padding: 1em;
+//-         font-size: 0.9em;
+//-         color: #212529;
+//-       }
+//-       .btn-black {
+//-         background-color: black;
+//-         border-color: black;
+//-         color: white;
+//-       }
+//-   body
+//-     .container
+//-       .header.mt-5
+//-         img(src="./asset/logo.png" alt="VoiceForensic")
+//-         h1 VoiceForensic
+//-         form(action=`${isAuthenticated ? "/users/logout" : "/users/login"}`)
+//-           button(type='submit').btn.btn-black #{isAuthenticated ? "로그아웃" : "로그인"}
+//-       p.description VoiceForensic은 AI 음성 분석 기술을 활용하여 다양한 음성 데이터를 비교하고 분석하는 서비스입니다.
+//-       .row.features.mt-5.justify-content-center
+//-         a(href="/dashboard", class="col-md-4 col-lg-3 feature")
+//-           img(src="./asset/blackboard_blackman.png" alt="음성 위변조 탐지" class="img-fluid")
+//-           h3 음성 위변조 탐지
+//-           p 의심되는 음성 파일을 업로드해서 위변조 여부를 확인해 보세요.
+//-         a(href="/dashboard", class="col-md-4 col-lg-3 feature")
+//-           img(src="./asset/insunni.png" alt="AI 가수 목소리 탐지" class="img-fluid")
+//-           h3 AI 가수 목소리 탐지
+//-           p VoiceForensic에 좋아하는 가수의 음원과 의심되는 음원을 업로드하세요.
+//-         a(href="/dashboard", class="col-md-4 col-lg-3 feature")
+//-           img(src="./asset/girl.png" alt="발성 연습 및 교정" class="img-fluid")
+//-           h3 발성 연습 및 교정
+//-           p 아나운서용 스피치 연습을 위해 VoiceForensic의 발성 교정을 받아보세요.
+//-     .footer.mt-5
+//-       p © Created By Park Sohee | Lee Keejung | Lee Seungjay
+//-       a(href="https://www.linkedin.com")
+//-         img(src="./asset/linkedin.png" alt="LinkedIn" class="img-fluid")
+//-     script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js")
+//-     script(src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js")
+//-     script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")
+
 doctype html
 html(lang="ko")
   head
@@ -30,6 +199,13 @@ html(lang="ko")
         margin-bottom: 1em;
         margin-left: 1em;
         margin-right: 1em;
+        text-decoration: none; /* 앵커 태그 기본 스타일 제거 */
+        color: inherit; /* 글자 색상 상속 */
+      }
+      .feature:hover {
+        background-color: #f0f0f0; /* 호버 시 배경색 변경 */
+        text-decoration: none; /* 호버 시 밑줄 제거 */
+        color: inherit; /* 호버 시 글자 색상 유지 */
       }
       .feature img {
         width: 10em;
@@ -56,19 +232,20 @@ html(lang="ko")
       .header.mt-5
         img(src="./asset/logo.png" alt="VoiceForensic")
         h1 VoiceForensic
-        button.btn.btn-black 로그인
+        form(action=`${isAuthenticated ? "/users/logout" : "/users/login"}`)
+          button(type='submit').btn.btn-black #{isAuthenticated ? "로그아웃" : "로그인"}
       p.description VoiceForensic은 AI 음성 분석 기술을 활용하여 다양한 음성 데이터를 비교하고 분석하는 서비스입니다.
       .row.features.mt-5.justify-content-center
-        .col-md-4.col-lg-3.feature
-          img(src="./asset/blackboard_blackman.png" alt="음성 위변조 탐지" class="img-fluid")
+        a(href="/dashboard_forensic", class="col-md-4 col-lg-3 feature")
+          img(src="./asset/forensic.png" alt="음성 위변조 탐지" class="img-fluid")
           h3 음성 위변조 탐지
           p 의심되는 음성 파일을 업로드해서 위변조 여부를 확인해 보세요.
-        .col-md-4.col-lg-3.feature
-          img(src="./asset/insunni.png" alt="AI 가수 목소리 탐지" class="img-fluid")
+        a(href="/dashboard_ai_singer", class="col-md-4 col-lg-3 feature")
+          img(src="./asset/ai_singer.png" alt="AI 가수 목소리 탐지" class="img-fluid")
           h3 AI 가수 목소리 탐지
           p VoiceForensic에 좋아하는 가수의 음원과 의심되는 음원을 업로드하세요.
-        .col-md-4.col-lg-3.feature
-          img(src="./asset/girl.png" alt="발성 연습 및 교정" class="img-fluid")
+        a(href="/dashboard_announce", class="col-md-4 col-lg-3 feature")
+          img(src="./asset/announce.png" alt="발성 연습 및 교정" class="img-fluid")
           h3 발성 연습 및 교정
           p 아나운서용 스피치 연습을 위해 VoiceForensic의 발성 교정을 받아보세요.
     .footer.mt-5

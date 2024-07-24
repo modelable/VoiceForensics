@@ -1,33 +1,68 @@
+//- extends ./layout.pug
+//- block content
+//-     div(class='container')
+//-         div(class="row mt-5")
+//-             div(class="col-md-6 m-auto")
+//-                 div(class="card card-body")
+//-                     h1(class="text-center mb-3")
+//-                         i(class="fas fa-user-plus")  Register
+//-                     if errors
+//-                         each error in errors
+//-                             div(class="alert alert-warning alert-dismissible fade show" role="alert")= error.msg
+//-                                 button(type="button" class="close" data-dismiss="alert" aria-label="Close")
+//-                                     span(aria-hidden="true") &times;
+//-                     form(action="/users/register" method="POST")
+//-                         div(class="form-group")
+//-                             label(for="name") Name
+//-                             input(type="name" id="name" name="name" class="form-control" placeholder="Enter Name" required value=name)
+//-                         div(class="form-group")
+//-                             label(for="email") Email
+//-                             input(type="email" id="email" name="email" class="form-control" placeholder="Enter Email" required value=email)
+//-                         div(class="form-group")
+//-                             label(for="password") Password
+//-                             input(type="password" id="password" name="password" class="form-control" placeholder="Enter Password" required value=password)
+//-                         div(class="form-group")
+//-                             label(for="password2") Confirm Password
+//-                             input(type="password" id="password2" name="password2" class="form-control" placeholder="Confirm Password" required value=password2)
+//-                         button(type='submit' class="btn btn-primary btn-block") Register
+//-                     p(class="lead mt-4") Have An Account? 
+//-                         a(href='/users/login') Login
+
+//-                 br
+//-                 form(action="/" method="GET")
+//-                     button(type='submit' class="btn btn-outline-info btn") Back to the Main
+
 extends ./layout.pug
 block content
-    div(class='container')
-        div(class="row mt-5")
-            div(class="col-md-6 m-auto")
-                div(class="card card-body")
-                    h1(class="text-center mb-3")
-                        i(class="fas fa-user-plus")  Register
-                    if errors
-                        each error in errors
-                            div(class="alert alert-warning alert-dismissible fade show" role="alert")= error.msg
-                                button(type="button" class="close" data-dismiss="alert" aria-label="Close")
-                                    span(aria-hidden="true") &times;
-                    form(action="/users/register" method="POST")
-                        div(class="form-group")
-                            label(for="name") Name
-                            input(type="name" id="name" name="name" class="form-control" placeholder="Enter Name" required value=name)
-                        div(class="form-group")
-                            label(for="email") Email
-                            input(type="email" id="email" name="email" class="form-control" placeholder="Enter Email" required value=email)
-                        div(class="form-group")
-                            label(for="password") Password
-                            input(type="password" id="password" name="password" class="form-control" placeholder="Enter Password" required value=password)
-                        div(class="form-group")
-                            label(for="password2") Confirm Password
-                            input(type="password" id="password2" name="password2" class="form-control" placeholder="Confirm Password" required value=password2)
-                        button(type='submit' class="btn btn-primary btn-block") Register
-                    p(class="lead mt-4") Have An Account? 
-                        a(href='/users/login') Login
-
-                br
-                form(action="/" method="GET")
-                    button(type='submit' class="btn btn-outline-info btn") Back to the Main
+    div(style='display: flex; align-items: center; justify-content: center; height: 100vh; background-color: black; color: white;')
+        div(class='container')
+            div(class="row mt-5")
+                div(class="col-md-6 m-auto")
+                    div(class="card card-body" style="background-color: #555; color: white;")
+                        h1(class="text-center mb-3" style="color: white;")
+                            i(class="fas fa-user-plus")  Register
+                        if errors
+                            each error in errors
+                                div(class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: #666; color: white;")
+                                    = error.msg
+                                    button(type="button" class="close" data-dismiss="alert" aria-label="Close" style="color: white;")
+                                        span(aria-hidden="true") &times;
+                        form(action="/users/register" method="POST")
+                            div(class="form-group")
+                                label(for="name" style="color: white;") Name
+                                input(type="text" id="name" name="name" class="form-control" placeholder="Enter Name" required value=name style="background-color: #777; color: white;")
+                            div(class="form-group")
+                                label(for="email" style="color: white;") Email
+                                input(type="email" id="email" name="email" class="form-control" placeholder="Enter Email" required value=email style="background-color: #777; color: white;")
+                            div(class="form-group")
+                                label(for="password" style="color: white;") Password
+                                input(type="password" id="password" name="password" class="form-control" placeholder="Enter Password" required value=password style="background-color: #777; color: white;")
+                            div(class="form-group")
+                                label(for="password2" style="color: white;") Confirm Password
+                                input(type="password" id="password2" name="password2" class="form-control" placeholder="Confirm Password" required value=password2 style="background-color: #777; color: white;")
+                            button(type='submit' class="btn btn-primary btn-block" style="background-color: #888; border-color: #888;") Register
+                        p(class="lead mt-4" style="color: white;") Have An Account? 
+                            a(href='/users/login' style="color: #bbb;") Login
+                    br
+                    form(action="/" method="GET")
+                        button(type='submit' class="btn btn-outline-info btn" style="color: white; border-color: white;") Back to the Main

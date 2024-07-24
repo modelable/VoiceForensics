@@ -35,7 +35,8 @@ router.post('/login', (req, res, next) => {
             }
             // 로그인 성공 후 사용자 ID를 세션에 저장
             req.session.userId = user._id;
-            return res.redirect('/dashboard');  // 성공적으로 로그인 처리 후 대시보드로 리다이렉트
+            //return res.redirect('/dashboard');  // 성공적으로 로그인 처리 후 대시보드로 리다이렉트
+            return res.redirect('/');
         });
     })(req, res, next);
 });
