@@ -1,0 +1,41 @@
+extends ./layout2.pug
+
+block content
+    .container-fluid.mt-5
+        .row.features.mt-5.justify-content-center
+            .col-md-8.col-lg-6.feature
+                img(src="./asset/girl.png" alt="발성 연습 및 교정" class="img-fluid")
+                h2 Result
+                p(class="strong-text text-center description")
+                    | 스피치 유사도: 
+                    span(style=`color: ${result.MAE_similarity >= 95 ? 'green' : result.MAE_similarity >= 80 ? 'orange' : 'red'}; font-size: 1.5em`)
+                        | #{result.MAE_similarity}%
+                p 발성 연습이 필요합니다!
+
+                .row.my-4.justify-content-center
+                    table.table.table-bordered.table-striped(style="width: auto;")
+                        thead
+                            tr
+                                th 유사도
+                                th 평가
+                                th 설명
+                        tbody
+                            tr
+                                td 95% ~
+                                td 우수
+                                td 발음 정확도 및 억양 조절이 매우 뛰어납니다. 청취자에게 강한 신뢰감을 제공합니다.
+                            tr
+                                td 80% ~ 94%
+                                td 양호
+                                td 전달력과 표현력이 양호합니다. 다소 개선이 필요할 수 있습니다.
+                            tr
+                                td ~ 75%
+                                td 미흡
+                                td 발음과 억양이 미흡합니다. 연습과 교정이 필요합니다.
+                form(action="/announcer_result_detail" method="GET")
+                    button(type='submit' class="btn btn-outline-success btn-black") 상세 보기
+
+        .footer.mt-5
+            p © Created By Park Sohee | Lee Keejung | Lee Seungjay
+            a(href="https://www.linkedin.com")
+                img(src="./asset/linkedin.png" alt="LinkedIn" class="img-fluid")

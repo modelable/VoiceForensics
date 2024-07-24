@@ -144,7 +144,72 @@ router.get('/result_visual', ensureAuthenticated, async (req, res) => {
         recordAvg: recordAvg || {}, // recordAvg가 null이면 빈 객체를 할당
         controlAvg: controlAvg || {} // controlAvg가 null이면 빈 객체를 할당
     });
+});
+
+/**
+ *  아나운서 결과 페이지 라우트
+ */
+router.get('/announcer_result', ensureAuthenticated, async (req, res) => {
     
+    const { result, error, status } = await checkUserResult(req.user._id, 3);
+
+    if (error) {
+        if (status === 404 || status === 500) {
+            return res.status(status).send(error);
+        }
+        // 결과가 없는 경우
+        return res.render('no_result', { message: error });
+    }
+
+    // 결과가 있으면 결과 페이지 렌더링
+    res.render('announcer_result', {
+        userId: req.user._id,
+        result
+    })
+});
+
+/**
+ *  아나운서 상세보기 페이지 라우트
+ */
+router.get('/announcer_result_detail', ensureAuthenticated, async (req, res) => {
+    
+    const { result, error, status } = await checkUserResult(req.user._id, 3);
+
+    if (error) {
+        if (status === 404 || status === 500) {
+            return res.status(status).send(error);
+        }
+        // 결과가 없는 경우
+        return res.render('no_result', { message: error });
+    }
+
+    // 결과가 있으면 결과 페이지 렌더링
+    res.render('announcer_result_detail', {
+        userId: req.user._id,
+        result
+    })
+});
+
+/**
+ *  아나운서 개선연습 페이지 라우트
+ */
+router.get('/announcer_improvements', ensureAuthenticated, async (req, res) => {
+    
+    const { result, error, status } = await checkUserResult(req.user._id, 3);
+
+    if (error) {
+        if (status === 404 || status === 500) {
+            return res.status(status).send(error);
+        }
+        // 결과가 없는 경우
+        return res.render('no_result', { message: error });
+    }
+
+    // 결과가 있으면 결과 페이지 렌더링
+    res.render('announcer_improvements', {
+        userId: req.user._id,
+        result
+    })
 });
 
 router.post('/file_download', ensureAuthenticated, async (req, res) => {

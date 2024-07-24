@@ -1,0 +1,41 @@
+extends ./layout2.pug
+
+block content
+    .container-fluid.mt-5
+        .row.features.mt-5.justify-content-center
+            .col-md-8.col-lg-6.feature
+                h3(class="text-left indent-text") 📎 요약
+                p(class="description-left")
+                    span 우수: 음성의 피치 변화(MFCC2), 특정 음소의 발음 전달(MFCC5)
+                    br
+                    span 양호: 발음 속도(MFCC8)
+                    br
+                    span 미흡: 발음의 정확성(MFCC3), 발음의 연결성(MFCC6)
+                hr
+                
+                h3(class="text-left indent-text") ✏️ 개선 연습
+
+                p(class="description-left bold-text")
+                    | 1. 모음 발음 연습
+
+                p(style="text-align: left; margin-left: 4em;")
+                    span(class="bold-text") 목적: 
+                    span 모음 발음 방식을 개선하여 명확한 발음을 할 수 있도록 함.
+                    br
+                    span(class="bold-text") 연습 방법
+                    br
+                    span(class="indent-text") • 모음 사운드 카드: 각 모음(A, E, I, O, U)의 사운드를 적은 카드를 사용하여 각 모음을 반복적으로 발음합니다.
+                    br
+                    span(class="indent-text") • 입 모양과 혀 위치 연습: 거울을 보며 올바른 입 모양과 혀 위치를 확인하고 연습합니다. 예를 들어, "A"는 입을 넓게 벌리고, "E"는 입을 양옆으로 벌리는 형태로 연습합니다.
+                    br
+                    span(class="indent-text") • 단어와 문장: 모음이 포함된 단어와 문장을 반복적으로 발음합니다. 예를 들어, "애플", "오렌지", "새우로얄뉴료얄" 등의 단어를 연습할 수 있습니다.
+
+                p(class="bold-text") 사용자는 발음의 정확성이 낮은 편입니다. 사용자의 모음 발음 방식 및 언어의 변형이 원활히 이루어지지 않아 보다 명확한 발음이 요구됩니다.
+
+                form(action="/index" method="GET")
+                    button(type='submit' class="btn btn-outline-success btn-black") Voice Forensic 홈페이지
+
+        .footer.mt-5
+            p © Created By Park Sohee | Lee Keejung | Lee Seungjay
+            a(href="https://www.linkedin.com")
+                img(src="./asset/linkedin.png" alt="LinkedIn" class="img-fluid")

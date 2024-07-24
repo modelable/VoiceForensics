@@ -1,0 +1,74 @@
+extends ./layout2.pug
+
+block content
+    .container-fluid.mt-5
+        .row.features.mt-5.justify-content-center
+            .col-md-8.col-lg-6.feature
+                h2 🎤 MFCC란?
+                p(class="strong-text text-center description")
+                | MFCC(Mel-Frequency Cepstral Coefficients)란 음성 신호의 다양한 특징을 추출하는 기법입니다. 음성 신호 스펙트럼을 사람의 청각 인식 패턴과 유사한 주파수 척도인 Mel-Frequency로 변환한 뒤, 스펙트럼의 주기적 패턴을 분석하여 추출한 12개의 계수들을 의미합니다.
+
+                hr
+                
+                p(class="description-left bold-text")
+                    | MFCC2: 음성 스펙트럼 - 
+                    span(style=`color: ${result.MAE_similarity >= 95 ? 'green' : result.MAE_similarity >= 80 ? 'orange' : 'red'};`)
+                        | #{result.MAE_similarity}%
+
+                p(class="description-left")
+                    span(class="bold-text indent-text") 설명: 
+                    span 음성의 높이 변화를 포착하고 발화자 특징을 유추하는데 유용합니다.
+                    br
+                    span(class="indent-text") 사용자가 말하는 동안 바람직한 음성의 피치(높낮이) 변화가 이루어집니다. 사용자는 정확한 억양을 유지하고 있으며, 발음의 양상이 일관적입니다.
+
+                p(class="description-left bold-text")
+                    | MFCC3: 특정 발음 특성 - 
+                    span(style=`color: ${result.MAE_similarity >= 95 ? 'green' : result.MAE_similarity >= 80 ? 'orange' : 'red'};`)
+                        | #{result.MAE_similarity}%
+
+                p(class="description-left")
+                    span(class="bold-text indent-text") 설명: 
+                    span 음성의 특정 발음 특성을 반영하여 특정 모음의 발음 방식을 포착합니다.
+                    br
+                    span(class="indent-text") 발음의 정확성이 낮은 편입니다. 사용자의 모음 발음 방식 및 언어의 변형이 원활히 이루어지지 않아 보다 명확한 발음이 요구됩니다.
+
+                p(class="description-left bold-text")
+                    | MFCC5: 중주파수 범위의 세부 특성 – 
+                    span(style=`color: ${result.MAE_similarity >= 95 ? 'green' : result.MAE_similarity >= 80 ? 'orange' : 'red'};`)
+                        | #{result.MAE_similarity}%
+
+                p(class="description-left")
+                    span(class="bold-text indent-text") 설명: 
+                    span 중주파수 범위에서의 발음, 감정 등의 세부적인 특성을 잡아냅니다.
+                    br
+                    span(class="indent-text") ‘ㄷ’, ‘ㅜ’ 등 특정 음소의 발음 전달이 우수한 편입니다. 기쁨, 슬픔 등의 감정이 발화에 반영되지 않으며, 사용자가 미세한 주파수 변화를 우수하게 통제하고 명확한 발음을 구사하고 있음을 알 수 있습니다.
+
+                p(class="description-left bold-text")
+                    | MFCC6: 발음의 연결 및 음절 간의 변화 - 
+                    span(style=`color: ${result.MAE_similarity >= 95 ? 'green' : result.MAE_similarity >= 80 ? 'orange' : 'red'};`)
+                        | #{result.MAE_similarity}%
+
+                p(class="description-left")
+                    span(class="bold-text indent-text") 설명: 
+                    span 음성 신호에서 더 미세한 세부사항을 포착하며, 주로 발음의 연결이나 음절 간의 변화를 나타냅니다.
+                    br
+                    span(class="indent-text") 연속된 발음 사이의 연결성이 낮습니다. 사용자의 말이 끊기지 않고 자연스럽게 이어질 필요가 있습니다. 이는 말의 유창성이 부족하다는 것을 의미합니다.
+
+                p(class="description-left bold-text")
+                    | MFCC8: 고주파수 대역의 변화를 반영 - 
+                    span(style=`color: ${result.MAE_similarity >= 95 ? 'green' : result.MAE_similarity >= 80 ? 'orange' : 'red'};`)
+                        | #{result.MAE_similarity}%
+
+                p(class="description-left")
+                    span(class="bold-text indent-text") 설명: 
+                    span 고주파수 대역에서의 세부 변화를 반영하여 발음 속도를 유추합니다.
+                    br
+                    span(class="indent-text") 사용자의 발음 속도가 적당한 편입니다. 혀의 움직임이 준수하며, 빠르고 명확한 발음을 문제없이 구사합니다. 뉴스 속보와 같이 빠른 발음을 요구하는 상황에 적합합니다.
+
+                form(action="/announcer_improvements" method="GET")
+                    button(type='submit' class="btn btn-outline-success btn-black") 개선 연습 방안
+
+        .footer.mt-5
+            p © Created By Park Sohee | Lee Keejung | Lee Seungjay
+            a(href="https://www.linkedin.com")
+                img(src="./asset/linkedin.png" alt="LinkedIn" class="img-fluid")
