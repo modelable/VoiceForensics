@@ -34,7 +34,8 @@ router.get('/dashboard_forensic', ensureAuthenticated, (req, res) => {
     res.render('dashboard', {
         name: req.user.name,
         userId: req.user._id,
-        imgPath: "./asset/forensic.png"
+        imgPath: "./asset/forensic.png",
+        menu: "forensic",
     })
 })
 
@@ -42,7 +43,8 @@ router.get('/dashboard_ai_singer', ensureAuthenticated, (req, res) => {
     res.render('dashboard', {
         name: req.user.name,
         userId: req.user._id,
-        imgPath: "./asset/ai_singer.png"
+        imgPath: "./asset/ai_singer.png",
+        menu: "ai_singer",
     })
 })
 
@@ -50,10 +52,31 @@ router.get('/dashboard_announce', ensureAuthenticated, (req, res) => {
     res.render('dashboard', {
         name: req.user.name,
         userId: req.user._id,
-        imgPath: "./asset/announce.png"
+        imgPath: "./asset/announce.png",
+        menu: "announce",
     })
 })
 
+router.get('/upload_forensic', ensureAuthenticated, (req, res) => {
+    res.render('upload', {
+        userId: req.user._id,
+        imgPath: "./asset/forensic.png"
+    })
+})
+
+router.get('/upload_ai_singer', ensureAuthenticated, (req, res) => {
+    res.render('upload', {
+        userId: req.user._id,
+        imgPath: "./asset/ai_singer.png"
+    })
+})
+
+router.get('/upload_announce', ensureAuthenticated, (req, res) => {
+    res.render('upload', {
+        userId: req.user._id,
+        imgPath: "./asset/announce.png"
+    })
+})
 
 
 // HTML 페이지 렌더링 라우트 -> 라우트 페이지
@@ -90,13 +113,6 @@ router.get('/upload_wait_events', ensureAuthenticated, async (req, res) => {
     // 모든 데이터가 전송되었음을 알리고 연결을 종료합니다.
     res.end();
 });
-
-
-router.get('/upload', ensureAuthenticated, (req, res) => {
-    res.render('upload', {
-        userId: req.user._id
-    })
-})
 
 // async function checkUserResult(userId, flag) {
 async function checkUserResult(userId) {
@@ -153,6 +169,68 @@ router.get('/result', ensureAuthenticated, async (req, res) => {
         result
     })
 });
+
+// 결과 페이지 라우트
+router.get('/result_forensic', ensureAuthenticated, async (req, res) => {
+    
+    const { result, error, status } = await checkUserResult(req.user._id);
+
+    if (error) {
+        if (status === 404 || status === 500) {
+            return res.status(status).send(error);
+        }
+        // 결과가 없는 경우
+        return res.render('no_result', { message: error });
+    }
+
+    // 결과가 있으면 결과 페이지 렌더링
+    res.render('result', {
+        userId: req.user._id,
+        result
+    })
+});
+
+// 결과 페이지 라우트
+router.get('/result_ai_singer', ensureAuthenticated, async (req, res) => {
+    
+    const { result, error, status } = await checkUserResult(req.user._id);
+
+    if (error) {
+        if (status === 404 || status === 500) {
+            return res.status(status).send(error);
+        }
+        // 결과가 없는 경우
+        return res.render('no_result', { message: error });
+    }
+
+    // 결과가 있으면 결과 페이지 렌더링
+    res.render('result', {
+        userId: req.user._id,
+        result
+    })
+});
+
+// 결과 페이지 라우트
+router.get('/result_announce', ensureAuthenticated, async (req, res) => {
+    
+    const { result, error, status } = await checkUserResult(req.user._id);
+
+    if (error) {
+        if (status === 404 || status === 500) {
+            return res.status(status).send(error);
+        }
+        // 결과가 없는 경우
+        return res.render('no_result', { message: error });
+    }
+
+    // 결과가 있으면 결과 페이지 렌더링
+    res.render('result', {
+        userId: req.user._id,
+        result
+    })
+});
+
+
 
 // 결과 시각화 페이지 라우트
 router.get('/result_visual', ensureAuthenticated, async (req, res) => {

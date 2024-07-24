@@ -96,9 +96,12 @@ html(lang="ko")
     .container
       img.avatar(src=`${imgPath}`, alt="Avatar")
       h1 DashBoard
-      button.btn.btn-dark.btn-block(onclick="uploadFiles()") 파일 업로드
-      button.btn.btn-dark.btn-block(onclick="showResult()") 결과보기
-      button.btn.btn-dark.btn-block(onclick="downloadPDF()") PDF 다운로드
+      form(action="/upload_" + `${menu}` method="GET")
+        button.btn.btn-dark.btn-block(type="submit") 파일 업로드
+      form(action="/result_" + `${menu}` method="GET")
+        button.btn.btn-dark.btn-block(type="submit") 결과보기
+      form(action="/file_download_" + `${menu}` method="GET")
+        button.btn.btn-dark.btn-block(type="submit") PDF 다운로드
     footer
       p © Created By Park Sohee | Lee Keejung | Lee Seungjay
       .footer-links
@@ -107,3 +110,20 @@ html(lang="ko")
     script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js")
     script(src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js")
     script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")
+    script(src="/socket.io/socket.io.js")
+    script.
+      document.addEventListener('DOMContentLoaded', function() {
+        var userId = "#{userId}";  // Pug 템플릿에서 서버로부터 받은 userId
+        console.log('UserId:', userId);  // 콘솔에서 userId 확인
+        var socket = io();  // 소켓 연결 초기화
+
+        // 서버에 userId를 등록
+        socket.emit('register', userId);
+
+        socket.on('someEvent', function(data) {
+          // 서버로부터 데이터 받기
+          console.log(data);
+        });
+
+        // 다른 필요한 이벤트 핸들링
+      });

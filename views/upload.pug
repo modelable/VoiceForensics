@@ -1,61 +1,228 @@
-extends ./layout.pug
-block content
-    div(class='container mt-5')
-        div(class="row")
-            div(class="col-md-8 col-lg-6 m-auto")
-                h1(class="text-center mb-4") Upload File
+//- extends ./layout.pug
+//- block content
+//-     div(class='container mt-5')
+//-         div(class="row")
+//-             div(class="col-md-8 col-lg-6 m-auto")
+//-                 h1(class="text-center mb-4") Upload File
 
-                div(class="card")
-                    div(class="card-body")
-                        form(action="/upload" method="post" enctype="multipart/form-data" id="uploadForm")
-                            div(class="form-group text-center")
-                                label(for="voice1" class="form-label") 실시간 녹음 음성:
-                                div
-                                    input(type="file" id="voice1" name="file1" accept="audio/*" class="form-control")
-                            div(class="form-group text-center")
-                                label(for="voice2" class="form-label") 녹취 파일 음성:
-                                div
-                                    input(type="file" id="voice2" name="file2" accept="audio/*" class="form-control")
-                            div(class="text-muted text-center mt-3") 비교 음성: control file, 원본 음성: record file
-                            div(class="text-center mt-4")
-                                input(type="submit" value="upload" class="btn btn-primary")
-                            br
-                            h6(class="text-center text-primary text-sm") 업로드 바가 완성될 때까지 기다려 주세요
-                                span(class="spinner-grow spinner-grow-sm text-info") 
-                            div(class="progress mt-3")
-                                div(class="progress-bar", role="progressbar", style="width: 0%", aria-valuenow="0", aria-valuemin="0", aria-valuemax="100")
-                br
-                form(action="/dashboard" method="GET")
-                    button(type='submit' class="btn btn-outline-success") Back to the Dashboard
+//-                 div(class="card")
+//-                     div(class="card-body")
+//-                         form(action="/upload" method="post" enctype="multipart/form-data" id="uploadForm")
+//-                             div(class="form-group text-center")
+//-                                 label(for="voice1" class="form-label") 실시간 녹음 음성:
+//-                                 div
+//-                                     input(type="file" id="voice1" name="file1" accept="audio/*" class="form-control")
+//-                             div(class="form-group text-center")
+//-                                 label(for="voice2" class="form-label") 녹취 파일 음성:
+//-                                 div
+//-                                     input(type="file" id="voice2" name="file2" accept="audio/*" class="form-control")
+//-                             div(class="text-muted text-center mt-3") 비교 음성: control file, 원본 음성: record file
+//-                             div(class="text-center mt-4")
+//-                                 input(type="submit" value="upload" class="btn btn-primary")
+//-                             br
+//-                             h6(class="text-center text-primary text-sm") 업로드 바가 완성될 때까지 기다려 주세요
+//-                                 span(class="spinner-grow spinner-grow-sm text-info") 
+//-                             div(class="progress mt-3")
+//-                                 div(class="progress-bar", role="progressbar", style="width: 0%", aria-valuenow="0", aria-valuemin="0", aria-valuemax="100")
+//-                 br
+//-                 form(action="/dashboard" method="GET")
+//-                     button(type='submit' class="btn btn-outline-success") Back to the Dashboard
 
-                        script(src="/socket.io/socket.io.js")
-                        script.
-                            document.addEventListener('DOMContentLoaded', function() {
-                                var userId = "#{userId}";  // Pug 템플릿에서 서버로부터 받은 userId
-                                var socket = io();  // 소켓 연결 초기화
+//-                         script(src="/socket.io/socket.io.js")
+//-                         script.
+//-                             document.addEventListener('DOMContentLoaded', function() {
+//-                                 var userId = "#{userId}";  // Pug 템플릿에서 서버로부터 받은 userId
+//-                                 var socket = io();  // 소켓 연결 초기화
 
-                                // 서버에 userId를 등록
-                                socket.emit('register', userId);
+//-                                 // 서버에 userId를 등록
+//-                                 socket.emit('register', userId);
 
-                                socket.on('uploadProgress', function(data) {
-                                    var progress = document.querySelector('.progress-bar');
-                                    progress.style.width = data.progress + '%';
-                                    progress.setAttribute('aria-valuenow', data.progress);
-                                });
+//-                                 socket.on('uploadProgress', function(data) {
+//-                                     var progress = document.querySelector('.progress-bar');
+//-                                     progress.style.width = data.progress + '%';
+//-                                     progress.setAttribute('aria-valuenow', data.progress);
+//-                                 });
 
-                                var form = document.getElementById('uploadForm');
-                                form.onsubmit = function(e) {
-                                    e.preventDefault();
-                                    var formData = new FormData(form);
-                                    var xhr = new XMLHttpRequest();
-                                    xhr.open('POST', '/upload', true);
-                                    xhr.onload = function() {
-                                        if (xhr.status === 200) {
-                                            window.location.href = '/train_process'; // 성공 시 upload_wait 라우터 호출
-                                        } else {
-                                            console.error('Upload failed.');
-                                        }
-                                    };
-                                    xhr.send(formData);
-                                };
-                            });
+//-                                 var form = document.getElementById('uploadForm');
+//-                                 form.onsubmit = function(e) {
+//-                                     e.preventDefault();
+//-                                     var formData = new FormData(form);
+//-                                     var xhr = new XMLHttpRequest();
+//-                                     xhr.open('POST', '/upload', true);
+//-                                     xhr.onload = function() {
+//-                                         if (xhr.status === 200) {
+//-                                             window.location.href = '/train_process'; // 성공 시 upload_wait 라우터 호출
+//-                                         } else {
+//-                                             console.error('Upload failed.');
+//-                                         }
+//-                                     };
+//-                                     xhr.send(formData);
+//-                                 };
+//-                             });
+
+
+//- doctype html
+//- html
+//-   head
+//-     title AI 가수 목소리 탐지
+//-     meta(charset="UTF-8")
+//-     meta(name="viewport" content="width=device-width, initial-scale=1.0")
+//-     link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css")
+//-     style.
+//-       body {
+//-         padding: 20px;
+//-         font-family: Arial, sans-serif;
+//-         background-color: #f8f9fa;
+//-       }
+//-       .upload-section {
+//-         margin: 20px 0;
+//-       }
+//-       .avatar {
+//-         width: 10em;
+//-         height: 10em;
+//-         margin: 1em;
+//-       }
+//-       .processing-bar {
+//-         height: 20px;
+//-         background-color: #000;
+//-         width: 50%;
+//-         margin: 20px 0;
+//-       }
+//-       .card {
+//-         margin-top: 20px;
+//-         padding: 20px;
+//-         border-radius: 10px;
+//-       }
+//-       .file_input::-webkit-file-upload-button {
+//-         width: 150px;
+//-         height: 30px;
+//-         background: rgb(0, 122, 255);
+//-         border: none;
+//-         border-radius: 40px;
+//-         cursor: pointer;
+//-         color: white;
+//-       }
+//-       .file_input::-webkit-file-upload-button:hover {
+//-         background: rgb(255, 255, 255);
+//-         border: 1px solid rgb(0, 122, 255);
+//-         color: black;
+//-       }
+//-   body
+//-     .container
+//-       .text-center
+//-         h1 음성 위변조 탐지
+
+//-       .card
+//-         .text-center
+//-           img.avatar(src=`${imgPath}`, alt="Avatar")
+//-           h2 Upload File
+          
+//-         .row.upload-section
+//-           .col-md-6
+//-             h3 원본
+//-             input(type = "file").file_input
+//-             button.btn.btn-secondary Play
+//-           .col-md-6
+//-             h3 의심되는 파일
+//-             input(type = "file").file_input
+//-             button.btn.btn-secondary Play
+//-         .text-center
+//-             button.btn.btn-primary 제출
+
+//-       footer.text-center
+//-         p © Created By Park Sohee | Lee Keejung | Lee Seungjay
+//-         a(href="https://github.com") 
+//-           i(class="fab fa-github")
+//-         a(href="https://linkedin.com") 
+//-           i(class="fab fa-linkedin")
+    
+//-     script(src="https://kit.fontawesome.com/a076d05399.js")
+//-     script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js")
+//-     script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js")
+//-     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")
+
+doctype html
+html
+  head
+    title AI 가수 목소리 탐지
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css")
+    style.
+      body {
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+      }
+      .upload-section {
+        margin: 20px 0;
+      }
+      .avatar {
+        width: 10em;
+        height: 10em;
+        margin: 1em;
+      }
+      .processing-bar {
+        height: 20px;
+        background-color: #000;
+        width: 50%;
+        margin: 20px 0;
+      }
+      .card {
+        width: 500px;
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: 10px;
+      }
+      .file_input::-webkit-file-upload-button {
+        width: 150px;
+        height: 30px;
+        background: rgb(0, 122, 255);
+        border: none;
+        border-radius: 40px;
+        cursor: pointer;
+        color: white;
+      }
+      .file_input::-webkit-file-upload-button:hover {
+        background: rgb(255, 255, 255);
+        border: 1px solid rgb(0, 122, 255);
+        color: black;
+      }
+      .upload_title{
+        margin: 0px 0px 40px 40px;
+      }
+  body
+    .container
+      .text-center
+      .d-flex.justify-content-center
+        .card
+          .text-center
+            img.avatar(src=`${imgPath}`, alt="Avatar")
+            h2 Upload File
+            
+          .upload-section
+            h3.upload_title 원본
+            .col.text-center
+              input(type="file").file_input
+              button.btn.btn-secondary Play
+              br
+              hr
+              br
+            h3.upload_title 의심되는 파일
+            .col.text-center
+              input(type="file").file_input
+              button.btn.btn-secondary Play
+          .text-center
+            button.btn.btn-primary 제출
+      br
+      footer.text-center
+        p © Created By Park Sohee | Lee Keejung | Lee Seungjay
+        a(href="https://github.com")
+          i(class="fab fa-github")
+        a(href="https://linkedin.com")
+          i(class="fab fa-linkedin")
+    
+    script(src="https://kit.fontawesome.com/a076d05399.js")
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")
