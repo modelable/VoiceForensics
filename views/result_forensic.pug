@@ -1,0 +1,37 @@
+extends ./layout2.pug
+
+block content
+    .container-fluid.mt-5
+        .row.features.mt-5.justify-content-center
+            .col-md-8.col-lg-6.feature
+                img(src="./asset/forensic.png" alt="발성 연습 및 교정" class="img-fluid")
+                h2 Result
+                p(class="strong-text text-center description")
+                    | 유사도: 
+                    span(style=`color: ${result.MAE_similarity >= 95 ? 'green' : result.MAE_similarity >= 80 ? 'orange' : 'red'}; font-size: 1.5em`)
+                        | #{result.MAE_similarity}%
+                p #{result.MAE_similarity >= 95 ? '변조된 목소리일 가능성이 매우 낮습니다.' : result.MAE_similarity >= 80 ? '변조 가능성이 존재하며 시각화 자료를 통해 세밀한 분석이 필요합니다.' : '변조된 목소리일 가능성이 매우 높습니다.'}
+
+                .row.my-4.justify-content-center
+                    table.table.table-bordered.table-striped(style="width: auto;")
+                        thead
+                            tr
+                                th 유사도
+                                th 판정 결과
+                        tbody
+                            tr
+                                td 95% ~
+                                td 변조된 목소리일 가능성이 매우 낮습니다.
+                            tr
+                                td 75% ~ 94%
+                                td 변조 가능성이 존재하며 시각화 자료를 통해 세밀한 분석이 필요합니다.
+                            tr
+                                td ~ 75%
+                                td 변조된 목소리일 가능성이 매우 높습니다.
+                form(action="/forensic_result_detail" method="GET")
+                    button(type='submit' class="btn btn-outline-success btn-black") 상세 보기
+
+        .footer.mt-5
+            p © Created By Park Sohee | Lee Keejung | Lee Seungjay
+            a(href="https://www.linkedin.com")
+                img(src="./asset/linkedin.png" alt="LinkedIn" class="img-fluid")

@@ -1,0 +1,45 @@
+extends ./layout2.pug
+
+block content
+    .container-fluid.mt-5
+        .row.features.mt-5.justify-content-center
+            .col-md-8.col-lg-6.feature
+                img(src="./asset/ai_singer.png" alt="발성 연습 및 교정" class="img-fluid")
+                h2 Result
+                p(class="strong-text text-center description")
+                    | 유사도: 
+                    span(style=`color: ${result.MAE_similarity >= 95 ? 'green' : result.MAE_similarity >= 80 ? 'orange' : 'red'}; font-size: 1.5em`)
+                        | #{result.MAE_similarity}%
+                p #{result.MAE_similarity >= 95 ? '가수 본인의 목소리입니다.' : result.MAE_similarity >= 80 ? 'AI 합성가능성이 존재합니다.' : '전혀 다른 목소리입니다.'}
+
+                .row.my-4.justify-content-center
+                    table.table.table-bordered.table-striped(style="width: auto;")
+                        thead
+                            tr
+                                th 유사도
+                                th 평가 등급
+                                th 설명
+                        tbody
+                            tr
+                                td 95% ~
+                                td A
+                                td 가수 본인의 목소리입니다.
+                            tr
+                                td 80% ~ 94%
+                                td B
+                                td AI 합성가능성이 존재합니다.
+                            tr
+                                td ~ 80%
+                                td C
+                                td 전혀 다른 목소리입니다.
+                p    
+                    form(action="/result_detail_ai_singer" method="GET")
+                        button(type='submit' class="btn btn-outline-success btn-black") 상세 보기
+                p
+                    form(action="/result_overall_ai_singer" method="GET")
+                        button(type='submit' class="btn btn-outline-success btn-black") 종합 분석 보기
+
+        .footer.mt-5
+            p © Created By Park Sohee | Lee Keejung | Lee Seungjay
+            a(href="https://www.linkedin.com")
+                img(src="./asset/linkedin.png" alt="LinkedIn" class="img-fluid")

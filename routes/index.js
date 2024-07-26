@@ -185,7 +185,7 @@ router.get('/result_forensic', ensureAuthenticated, async (req, res) => {
     }
 
     // 결과가 있으면 결과 페이지 렌더링
-    res.render('result', {
+    res.render('result_forensic', {
         userId: req.user._id,
         result
     })
@@ -205,7 +205,7 @@ router.get('/result_ai_singer', ensureAuthenticated, async (req, res) => {
     }
 
     // 결과가 있으면 결과 페이지 렌더링
-    res.render('result', {
+    res.render('result_ai_singer', {
         userId: req.user._id,
         result
     })
