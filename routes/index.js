@@ -23,13 +23,6 @@ router.get('/', (req, res) => {
     });  // 인증된 사용자는 인덱스 페이지로 렌더링
 });
 
-// router.get('/dashboard', ensureAuthenticated, (req, res) => {
-//     res.render('dashboard', {
-//         name: req.user.name,
-//         userId: req.user._id
-//     })
-// })
-
 router.get('/dashboard_forensic', ensureAuthenticated, (req, res) => {
     res.render('dashboard', {
         name: req.user.name,
@@ -324,6 +317,65 @@ router.get('/announcer_improvements', ensureAuthenticated, async (req, res) => {
         result
     })
 });
+
+router.get('/forensic_result_detail', ensureAuthenticated, async (req, res) => {
+    
+    const { result, error, status } = await checkUserResult(req.user._id, 3);
+
+    if (error) {
+        if (status === 404 || status === 500) {
+            return res.status(status).send(error);
+        }
+        // 결과가 없는 경우
+        return res.render('no_result', { message: error });
+    }
+
+    // 결과가 있으면 결과 페이지 렌더링
+    res.render('result_detail_forensic', {
+        userId: req.user._id,
+        result
+    })
+});
+
+router.get('/result_detail_ai_singer', ensureAuthenticated, async (req, res) => {
+    
+    const { result, error, status } = await checkUserResult(req.user._id, 3);
+
+    if (error) {
+        if (status === 404 || status === 500) {
+            return res.status(status).send(error);
+        }
+        // 결과가 없는 경우
+        return res.render('no_result', { message: error });
+    }
+
+    // 결과가 있으면 결과 페이지 렌더링
+    res.render('result_detail_ai_singer', {
+        userId: req.user._id,
+        result
+    })
+});
+
+router.get('/result_overall_ai_singer', ensureAuthenticated, async (req, res) => {
+    
+    const { result, error, status } = await checkUserResult(req.user._id, 3);
+
+    if (error) {
+        if (status === 404 || status === 500) {
+            return res.status(status).send(error);
+        }
+        // 결과가 없는 경우
+        return res.render('no_result', { message: error });
+    }
+
+    // 결과가 있으면 결과 페이지 렌더링
+    res.render('result_overall_ai_singer', {
+        userId: req.user._id,
+        result
+    })
+});
+
+
 
 router.post('/file_download', ensureAuthenticated, async (req, res) => {
     const { flag } = req.body;
