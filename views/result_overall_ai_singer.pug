@@ -1,1 +1,62 @@
-div ㅋㅋ
+doctype html
+html(lang="ko")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title AI 가수 목소리 탐지
+    // 부트스트랩 CSS
+    link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css")
+    style.
+      .result-container {
+        margin-top: 50px;
+      }
+      .similarity-score {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+  body
+    .container
+      .row.justify-content-center
+        .col-md-8
+          .text-center
+            h1.mb-4 🕵️‍♂️ AI 가수 목소리 탐지
+            p VoiceForensic에 좋아하는 가수의 음원과 의심되는 음원을 업로드하세요.
+      .row.justify-content-center.result-container
+        .col-md-6
+          .card
+            .card-body
+              h3 종합 분석
+              .table-responsive
+                table.table.table-bordered
+                  thead.thead-light
+                    tr
+                      th(scope="col") 원본 음성 예측값
+                      th(scope="col") 녹취 음성 예측값
+                  tbody
+                    tr
+                      td 0.567
+                      td 0.476
+                  tfoot
+                    tr
+                      th(colspan="2") 유사도
+                    tr
+                      td(colspan="2").text-center.similarity-score 92.31% (B등급)
+              p.mt-3.text-danger
+                | 원본 가수 음성과 비교 음성의 유사도는 약 92%로, B등급이며 
+                | AI 합성 가능성이 존재합니다. 특히, 중주파수 대역에서 
+                | 주파수 변동성, 음성의 질감 정도가 약 3.05 정도 차이 납니다.
+              .text-center.mt-4
+                a.btn.btn-primary(href="https://your-voiceforensic-homepage-link.com") Voice Forensic 홈페이지
+      .text-center.mt-5
+        p © Created By Park Sohee | Lee Keejung | Lee Seungjay
+        a(href="https://linkedin.com").mr-2
+          i.fab.fa-linkedin
+        a(href="https://github.com")
+          i.fab.fa-github
+
+    // 부트스트랩 JS 및 종속성
+    script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js")
+    script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")
+    // 폰트어썸 (아이콘 사용을 위함)
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css")
