@@ -5,7 +5,7 @@ block content
       .row.justify-content-center
         .col-md-8
           .text-center
-            h1.mb-4 AI 가수 목소리 탐지
+            h1.mb-4.mt-4 AI 가수 목소리 탐지
             p VoiceForensic에 좋아하는 가수의 음원과 의심되는 음원을 업로드하세요.
       .row.justify-content-center.result-container
         .col-md-6
@@ -20,15 +20,15 @@ block content
                       th(scope="col") 녹취 음성 예측값
                   tbody
                     tr
-                      td 0.567
-                      td 0.476
+                      td #{result.live_data_prediction}
+                      td #{result.record_data_prediction}
                   tfoot
                     tr
                       th(colspan="2") 유사도
                     tr
-                      td(colspan="2").text-center.similarity-score 92.31% (B등급)
-              p.mt-3.text-danger
-                | 원본 가수 음성과 비교 음성의 유사도는 약 92%로, B등급이며 
+                      td(colspan="2").text-center.similarity-score #{result.MAE_similarity}% (#{result.MAE_similarity >= 95 ? "A" : result.MAE_similarity >= 80 ? "B" : "C"}등급)
+              p.mt-3
+                | 원본 가수 음성과 비교 음성의 유사도는 약 #{result.MAE_similarity}%로, #{result.MAE_similarity >= 95 ? "A" : result.MAE_similarity >= 80 ? "B" : "C"}등급이며 
                 | AI 합성 가능성이 존재합니다. 특히, 중주파수 대역에서 
                 | 주파수 변동성, 음성의 질감 정도가 약 3.05 정도 차이 납니다.
               .text-center.mt-4
