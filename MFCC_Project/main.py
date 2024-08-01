@@ -519,7 +519,7 @@ def model_predict():
     record_average_prediction = round(record_average_prediction, 4)
     control_average_prediction = round(control_average_prediction, 4)
     similarity_score = round(similarity_score, 4)
-    jaccard_sim = round(jaccard_sim, 4)
+    #jaccard_sim = round(jaccard_sim, 4)
 
     # 데이터 준비
     data = {

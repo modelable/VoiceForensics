@@ -86,7 +86,7 @@ router.get('/upload_wait_events', ensureAuthenticated, async (req, res) => {
     res.flushHeaders(); // 헤더를 즉시 전송
 
     const callFlaskRoutes = async () => {
-        const flaskUrl = 'https://2903-223-194-159-214.ngrok-free.app';
+        const flaskUrl = 'http://127.0.0.1:5000';
         const eng_steps = ['import_dataset', 'mfcc_bar_graph', 'mfcc_spectrum', 'fft_spectrum', 'label_setting', 'training', 'model_predict'];
         const kor_steps = ['음성 추출 데이터셋 불러오기', '음성 특징 평균값 시각화', 'MFCC 스펙트럼 시각화', '주파수 스펙트럼 시각화', '클러스트링(데이터 분류)', 'AI 모델 학습', '유사도 측정'];
         for (let i = 0; i < eng_steps.length; i++) {
