@@ -17,6 +17,25 @@ block content
                 button(type='submit' class="btn btn-outline-success") Back to the Dashboard
 
   script.
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var flag = !{flag}; // 서버로부터 받은 flag
+
+        var form = document.querySelector('form');
+        switch(flag) {
+            case 1:
+                form.action = "/dashboard_forensic";
+                break;
+            case 2:
+                form.action = "/dashboard_ai_singer";
+                break;
+            case 3:
+                form.action = "dashboard_announce";
+            default:
+                form.action = "/";
+        }
+    });
+    
     // 서버에서 보내는 이벤트를 수신합니다.
     const source = new EventSource('/upload_wait_events');
 

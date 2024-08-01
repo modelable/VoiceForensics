@@ -53,6 +53,7 @@ router.get('/dashboard_announce', ensureAuthenticated, (req, res) => {
 router.get('/upload_forensic', ensureAuthenticated, (req, res) => {
     res.render('upload', {
         userId: req.user._id,
+        flag : 1,
         imgPath: "./asset/forensic.png"
     })
 })
@@ -60,6 +61,7 @@ router.get('/upload_forensic', ensureAuthenticated, (req, res) => {
 router.get('/upload_ai_singer', ensureAuthenticated, (req, res) => {
     res.render('upload', {
         userId: req.user._id,
+        flag: 2,
         imgPath: "./asset/ai_singer.png"
     })
 })
@@ -67,6 +69,7 @@ router.get('/upload_ai_singer', ensureAuthenticated, (req, res) => {
 router.get('/upload_announce', ensureAuthenticated, (req, res) => {
     res.render('upload', {
         userId: req.user._id,
+        flag: 3,
         imgPath: "./asset/announce.png"
     })
 })
@@ -74,7 +77,9 @@ router.get('/upload_announce', ensureAuthenticated, (req, res) => {
 
 // HTML 페이지 렌더링 라우트 -> 라우트 페이지
 router.get('/train_process', ensureAuthenticated, (req, res) => {
-    res.render('train_process');
+    res.render('train_process', {
+        flag: req.query.flag
+    });
 });
 
 // SSE 이벤트 전송 라우트
