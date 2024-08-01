@@ -1,0 +1,51 @@
+extends ./layout2.pug
+
+block content
+    .container
+      .row.mt-5
+        .col-12.text-center
+          h1 음성 위변조 탐지
+
+      .row.mt-4
+        .col-12
+          img(src="path/to/your/image.png" alt="음성 위변조 탐지 차트" class="img-fluid")
+          br
+          img(src="path/to/your/image.png" alt="음성 위변조 탐지 차트" class="img-fluid")
+          br
+          img(src="path/to/your/image.png" alt="음성 위변조 탐지 차트" class="img-fluid")
+          br
+          img(src="path/to/your/image.png" alt="음성 위변조 탐지 차트" class="img-fluid")
+          br
+          img(src="path/to/your/image.png" alt="음성 위변조 탐지 차트" class="img-fluid")
+
+      .row.mt-4
+        .col-12
+          table.table.table-bordered
+            thead.thead-dark
+              tr
+                th MFCC 계수
+                each val in [1,2,3,4,5,6,7,8,9,10,11,12]
+                  th= val
+            tbody
+              tr
+                th 녹취록
+                each val in [29.43, 3.66, 0.28, 0.22, -2.94, -1.06, 0.25, 0.59, 0.58, 1.14, -0.43, -0.57]
+                  td= val
+              tr
+                th 실시간
+                each val in [31.74, 2.81, 1.71, 0.64, 0.71, 0.19, -0.39, -0.20, 0.12, 0.71, 0.39, 0.74]
+                  td= val
+
+      .row.mt-4
+        .col-12.text-center
+                form(action="/" method="GET")
+                    button(type='submit' class="btn btn-outline-success btn-black") Voice Forensic 홈페이지
+
+    footer
+        p © Created By Park Sohee | Lee Keejung | Lee Seungjay
+        .footer-links
+          a(href="https://github.com", target="_blank") GitHub
+          a(href="https://linkedin.com", target="_blank") LinkedIn
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")

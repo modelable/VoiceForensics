@@ -1,0 +1,84 @@
+extends ./layout2.pug
+
+block content
+    .container
+      .row.mt-5
+        .col-12.text-center
+          h1 AI 가수 목소리 탐지
+
+      .row.mt-4
+        .col-12
+          h2 🎤 MFCC란?
+          span MFCC(Mel-Frequency Cepstral Coefficients)란 음성 신호의 다양한 특징을 추출하는 기법입니다. 음성 신호 스펙트럼을 사람의 청각 인식 패턴과 유사한 주파수 척도인 Mel-Frequency로 변환한 뒤, 스펙트럼의 주기적 패턴을 분석하여 추출한 12개의 계수들을 의미합니다.
+          hr
+        
+      .row.mt-4
+        .col-12
+          div
+            p 
+              img(src="asdf")
+            p
+              h4.text-left MFCC2
+              p.text-left MFCC2 계수는 에너지가 집중되어 있는 위치를 알려줍니다. 계수 값이 높을수록 높은 주파수 대역에 더 많은 에너지가 집중되어 있음을 의미하며, 낮을수록 낮은 주파수 대역에 더 많은 에너지가 분포하고 있음을 의미합니다.
+            p
+              h4.text-left MFCC3
+              p.text-left MFCC3 계수는 에너지가 집중되어 있는 위치를 알려줍니다. 계수 값이 높을수록 높은 주파수 대역에 더 많은 에너지가 집중되어 있음을 의미하며, 낮을수록 낮은 주파수 대역에 더 많은 에너지가 분포하고 있음을 의미합니다.
+            p 
+              img(src="asdf")
+
+              
+      .row.mt-5
+        .col-12
+          h2.text-center 7x4 표
+          table.table.table-bordered
+            thead.thead-dark
+              tr
+                th MFCC
+                th 원본 평균값
+                th 녹취 평균값
+                th 해석
+            tbody
+              tr
+                td MFCC2
+                td 셀1-2
+                td 셀1-3
+                td.text-left 에너지의 집중도: 거의 일치함
+              tr
+                td MFCC3
+                td 셀2-2
+                td 셀2-3
+                td.text-left 특정 발음 패턴의 강조도: 거의 일치함
+              tr
+                td MFCC4
+                td 셀3-2
+                td 셀3-3
+                td.text-left 중주파수 대역에서 주파수 변동성, 음성의 질감 정도: 많이 차이 남
+              tr
+                td MFCC8
+                td 셀4-2
+                td 셀4-3
+                td.text-left 고주파수 대역에서 미세한 발음 변화: 다소 차이 남
+              tr
+                td MFCC9
+                td 셀5-2
+                td 셀5-3
+                td.text-left 고주파수 대역에서 강세 위치: 다소 차이 남
+              tr
+                td MFCC11
+                td 셀6-2
+                td 셀6-3
+                td.text-left 고주파수 대역에서 끝맺음 발음: 다소 차이 남
+
+      .row.mt-4
+        .col-12.text-center
+                form(action="/" method="GET")
+                    button(type='submit' class="btn btn-outline-success btn-black") Voice Forensic 홈페이지
+
+    footer
+        p © Created By Park Sohee | Lee Keejung | Lee Seungjay
+        .footer-links
+          a(href="https://github.com", target="_blank") GitHub
+          a(href="https://linkedin.com", target="_blank") LinkedIn
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")
