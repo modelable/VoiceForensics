@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const fileControlSchema = new mongoose.Schema({
   filename: String,
   path: String,
+  flag: Number, //0801 추가
   date: {
     type: Date,
     default: Date.now

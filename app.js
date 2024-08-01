@@ -130,6 +130,7 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
         console.log('== upload files ==')
         const { file1, file2 } = req.files;
         const userId = req.user._id.toString();
+        const flag = req.body.flag; //0801 추가, db에 flag도 같이 저장해야 어떤 기능인지 알 수 있
         const socket = userSockets.get(userId); // 맵에서 사용자의 소켓 가져오기
 
         if (!socket) {
@@ -140,7 +141,8 @@ app.post('/upload', upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file
         // 파일1을 files_control 테이블에 저장
         const newFile1 = new FileControl({
             filename: file1[0].originalname,
-            path: file1[0].path
+            path: file1[0].path,
+            flag: flag
         });
 
         await newFile1.save();

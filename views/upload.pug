@@ -168,6 +168,7 @@ html
                         document.getElementById('progress_div').style.display = "block";
 
                         var formData = new FormData(form);
+                        formData.append('flag', flag); //0801 수정 -> flag 같이 전달
                         var xhr = new XMLHttpRequest();
                         xhr.open('POST', '/upload', true);
                         xhr.onload = function() {
