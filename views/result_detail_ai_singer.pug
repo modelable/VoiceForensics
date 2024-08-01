@@ -33,13 +33,41 @@ block content
           table.table.table-bordered
             thead.thead-dark
               tr
-                each val in [1, 2, 3, 4]
-                  th= '헤더' + val
+                th MFCC
+                th 원본 평균값
+                th 녹취 평균값
+                th 해석
             tbody
-              each row in [1, 2, 3, 4, 5, 6, 7]
-                tr
-                  each col in [1, 2, 3, 4]
-                    td= '셀' + row + '-' + col
+              tr
+                td MFCC2
+                td 셀1-2
+                td 셀1-3
+                td.text-left 에너지의 집중도: 거의 일치함
+              tr
+                td MFCC3
+                td 셀2-2
+                td 셀2-3
+                td.text-left 특정 발음 패턴의 강조도: 거의 일치함
+              tr
+                td MFCC4
+                td 셀3-2
+                td 셀3-3
+                td.text-left 중주파수 대역에서 주파수 변동성, 음성의 질감 정도: 많이 차이 남
+              tr
+                td MFCC8
+                td 셀4-2
+                td 셀4-3
+                td.text-left 고주파수 대역에서 미세한 발음 변화: 다소 차이 남
+              tr
+                td MFCC9
+                td 셀5-2
+                td 셀5-3
+                td.text-left 고주파수 대역에서 강세 위치: 다소 차이 남
+              tr
+                td MFCC11
+                td 셀6-2
+                td 셀6-3
+                td.text-left 고주파수 대역에서 끝맺음 발음: 다소 차이 남
 
       .row.mt-4
         .col-12.text-center
