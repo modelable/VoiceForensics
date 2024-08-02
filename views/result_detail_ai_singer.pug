@@ -56,27 +56,38 @@ block content
                 td MFCC2
                 - let value = recordAvg && recordAvg[`MFCC${2}`] ? recordAvg[`MFCC${2}`].toFixed(2) : ''
                 td= value
-                td 셀1-3
+                - let value = controlAvg && controlAvg[`MFCC${2}`] ? controlAvg[`MFCC${2}`].toFixed(2) : ''
+                td= value
               tr
                 td MFCC3
-                td 셀2-2
-                td 셀2-3
+                - let value = recordAvg && recordAvg[`MFCC${3}`] ? recordAvg[`MFCC${3}`].toFixed(2) : ''
+                td= value
+                - let value = controlAvg && controlAvg[`MFCC${3}`] ? controlAvg[`MFCC${3}`].toFixed(2) : ''
+                td= value
               tr
                 td MFCC4
-                td 셀3-2
-                td 셀3-3
+                - let value = recordAvg && recordAvg[`MFCC${4}`] ? recordAvg[`MFCC${4}`].toFixed(2) : ''
+                td= value
+                - let value = controlAvg && controlAvg[`MFCC${4}`] ? controlAvg[`MFCC${4}`].toFixed(2) : ''
+                td= value
               tr
                 td MFCC8
-                td 셀4-2
-                td 셀4-3
+                - let value = recordAvg && recordAvg[`MFCC${8}`] ? recordAvg[`MFCC${8}`].toFixed(2) : ''
+                td= value
+                - let value = controlAvg && controlAvg[`MFCC${8}`] ? controlAvg[`MFCC${8}`].toFixed(2) : ''
+                td= value
               tr
                 td MFCC9
-                td 셀5-2
-                td 셀5-3
+                - let value = recordAvg && recordAvg[`MFCC${9}`] ? recordAvg[`MFCC${9}`].toFixed(2) : ''
+                td= value
+                - let value = controlAvg && controlAvg[`MFCC${9}`] ? controlAvg[`MFCC${9}`].toFixed(2) : ''
+                td= value
               tr
                 td MFCC11
-                td 셀6-2
-                td 셀6-3
+                - let value = recordAvg && recordAvg[`MFCC${11}`] ? recordAvg[`MFCC${11}`].toFixed(2) : ''
+                td= value
+                - let value = controlAvg && controlAvg[`MFCC${11}`] ? controlAvg[`MFCC${11}`].toFixed(2) : ''
+                td= value
 
       .row.mt-4
         .col-12.text-center
