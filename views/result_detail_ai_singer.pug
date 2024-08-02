@@ -49,13 +49,13 @@ block content
 
         .row.mt-5
             .col-12
-                h2.text-center MFCC 표
+                h4.text-center 원본 가수 음성과 대조군 MFCC 평균값 비교
                 table.table.table-bordered
                     thead.thead-dark
                         tr
-                            th MFCC
-                            th 원본 평균값
-                            th 의심되는 파일 평균값
+                            th MFCC 계수
+                            th 원본 가수 MFCC 평균값
+                            th 의심 파일 MFCC 평균값
                     tbody
                         tr
                             td MFCC2
@@ -96,8 +96,12 @@ block content
 
         .row.mt-4
             .col-12.text-center
+                form(action="/result_ai_singer" method="GET")
+                    button(type='submit' class="btn btn-outline-success btn-black") 이전 화면 가기
+                br
                 form(action="/" method="GET")
                     button(type='submit' class="btn btn-outline-success btn-black") Voice Forensic 홈페이지
+
 
     footer
         p © Created By Park Sohee | Lee Keejung | Lee Seungjay

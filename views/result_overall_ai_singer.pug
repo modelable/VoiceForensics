@@ -26,13 +26,14 @@ block content
                     tr
                       th(colspan="2") 유사도
                     tr
-                      td(colspan="2").text-center.similarity-score #{result.MAE_similarity}% (#{result.MAE_similarity >= 95 ? "A" : result.MAE_similarity >= 80 ? "B" : "C"}등급)
+                      td(colspan="2").text-center.similarity-score #{result.ai_voice_MAE_similarity}% (#{result.ai_voice_MAE_similarity >= 95 ? "A" : result.ai_voice_MAE_similarity >= 80 ? "B" : "C"}등급)
               p.mt-3
-                | 원본 가수 음성과 비교 음성의 유사도는 약 #{result.MAE_similarity}%로, #{result.MAE_similarity >= 95 ? "A" : result.MAE_similarity >= 80 ? "B" : "C"}등급이며 
-                | AI 합성 가능성이 존재합니다. 특히, 중주파수 대역에서 
+                | 원본 가수 음성과 비교 음성의 유사도는 약 #{result.ai_voice_MAE_similarity}%로, #{result.ai_voice_MAE_similarity >= 95 ? "A" : result.ai_voice_MAE_similarity >= 80 ? "B" : "C"}등급이며 
+                | #{result.ai_voice_MAE_similarity >= 95 ? '가수 본인의 목소리입니다.' : result.ai_voice_MAE_similarity >= 80 ? 'AI 합성가능성이 존재합니다.' : '전혀 다른 목소리입니다.'} 특히, 중주파수 대역에서 
                 | 주파수 변동성, 음성의 질감 정도가 약 3.05 정도 차이 납니다.
               .text-center.mt-4
-                a.btn.btn-black(href="/") Voice Forensic 홈페이지
+               a.btn.btn-black(href="/result_ai_singer") 이전 화면으로 돌아가기
+               a.btn.btn-black(href="/dashboard_ai_singer") 대시보드로 가기
                 
       footer.text-center
         p © Created By Park Sohee | Lee Keejung | Lee Seungjay
