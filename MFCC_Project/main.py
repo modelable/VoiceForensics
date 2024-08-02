@@ -32,6 +32,9 @@ AudioSegment.converter = "C:\\Users\\sohee\\ffmpeg\\ffmpeg-n7.0-latest-win64-gpl
 AudioSegment.ffmpeg = "C:\\Users\\sohee\\ffmpeg\\ffmpeg-n7.0-latest-win64-gpl-7.0\\bin\\ffmpeg.exe"
 AudioSegment.ffprobe = "C:\\Users\\sohee\\ffmpeg\\ffmpeg-n7.0-latest-win64-gpl-7.0\\bin\\ffprobe.exe"
 
+#0802 추가
+flag = None
+
 # MongoDB 클라이언트 설정 및 컬렉션 선언
 client = MongoClient(connection_string, tls=True, tlsAllowInvalidCertificates=True)
 db = client['test']  # 데이터베이스 이름
@@ -102,59 +105,65 @@ def start():
 
 @app.route('/import_dataset', methods=['GET'])
 def import_dataset():
-    global mfcc_control_test_values, mfcc_control_train_values, mfcc_record_test_values, mfcc_record_train_values, mfcc_control_data, mfcc_record_data, files_control_id, files_record_id,
-    mfcc2_record_values, mfcc2_control_values, mfcc2_record_train_values, mfcc2_record_test_values, mfcc2_control_train_values, mfcc2_control_test_values
+    global mfcc_control_test_values, mfcc_control_train_values, mfcc_record_test_values, mfcc_record_train_values, mfcc_control_data, mfcc_record_data, files_control_id, files_record_id, \
+           mfcc2_record_values, mfcc2_control_values, mfcc2_record_train_values, mfcc2_record_test_values, mfcc2_control_train_values, mfcc2_control_test_values, \
+           flag
+    
+    # 표준화 선언
+    scaler = StandardScaler()
+    
+    # file_control_db에서 가장 최근 레코드 하나 조회
+    latest_file_control = file_control_db.find_one(sort=[('_id', -1)])
+    flag = latest_file_control['flag'] if latest_file_control and 'flag' in latest_file_control else None
+    print(f"flag value: {flag}")  # flag 값 출력
     
     # 가장 최근 데이터 하나만 조회
     latest_coef_control = control_collection.find_one(sort=[('_id', -1)])
-    # 'files_control_id' 필드의 값을 변수에 저장
     files_control_id = latest_coef_control['files_control_id'] if latest_coef_control and 'files_control_id' in latest_coef_control else None
     print(files_control_id)  # id 테스트 출력
+    
     control_cursor = control_collection.find({'files_control_id': files_control_id})  # id에 해당하는 레코드들만 가져옴
-    # Cursor에서 데이터를 리스트로 변환 후 DataFrame 생성
     mfcc_control_data = pd.DataFrame(list(control_cursor))
 
     # 가장 최근 레코드 가져오기
     latest_coef_record = record_collection.find_one(sort=[('_id', -1)])
-    # 'files_record_id' 필드의 값을 변수에 저장
     files_record_id = latest_coef_record['files_record_id'] if latest_coef_record and 'files_record_id' in latest_coef_record else None
     print(files_record_id)  # id 테스트 출력
+    
     record_cursor = record_collection.find({'files_record_id': files_record_id})  # id에 해당하는 레코드들만 가져옴
-    # Cursor에서 데이터를 리스트로 변환 후 DataFrame 생성
     mfcc_record_data = pd.DataFrame(list(record_cursor))
-
+    
+    #default -> 모든 MFCC 계수 학습
     #필요한 열만 선택 (예: MFCC1부터 MFCC12까지) -> 추후 그래프 만드는데 쓰임 -> 건들지 말기
     mfcc_control_data = mfcc_control_data.loc[:, 'MFCC1':'MFCC12']
-    mfcc_record_data = mfcc_record_data.loc[:, 'MFCC1':'MFCC12']
-    
-    #0801 수정, 특정 MFCC 계수만 추출하기 -> 특정 계수는 라우트 따로 만들어서 처리 or if-else 문 만들기
-    mfcc2_record_values = mfcc_control_data[:, ['MFCC2']].to_numpy()
-    mfcc2_control_values = mfcc_record_data[:, ['MFCC2']].to_numpy()
-    
-    
+    mfcc_record_data = mfcc_record_data.loc[:, 'MFCC1':'MFCC12'] 
+        
     # DataFrame에서 numpy 배열로 변환
     mfcc_record_values = mfcc_record_data.to_numpy()
     mfcc_control_values = mfcc_control_data.to_numpy()
-
-    # 표준화
-    scaler = StandardScaler()
+        
     normalized_record_values = scaler.fit_transform(mfcc_record_values)
     normalized_control_values = scaler.transform(mfcc_control_values)
-    
-    # 표준화 2
-    mfcc2_record_values = scaler.fit_transform(mfcc2_record_values)
-    mfcc2_control_values = scaler.transform(mfcc2_control_values)
-
+        
     # 데이터를 8:2 비율로 train과 test로 분리
     mfcc_record_train_values, mfcc_record_test_values = train_test_split(normalized_record_values, test_size=0.2,
                                                                          random_state=42)
     mfcc_control_train_values, mfcc_control_test_values = train_test_split(normalized_control_values, test_size=0.2,
                                                                            random_state=42)
     
-    # 데이터를 8:2 비율로 train과 test로 분리 2
-    mfcc2_record_train_values, mfcc2_record_test_values = train_test_split(mfcc2_record_values, test_size=0.2,
+    #아나운서 기능인 경우
+    if(flag == 3):
+        #0801 수정, 특정 MFCC 계수만 추출하기 -> 특정 계수는 라우트 따로 만들어서 처리 or if-else 문 만들기
+        mfcc2_record_values = mfcc_control_data['MFCC2'].to_numpy()
+        mfcc2_control_values = mfcc_record_data['MFCC2'].to_numpy()
+    
+        mfcc2_record_values = scaler.fit_transform(mfcc2_record_values.reshape(-1, 1)).flatten()
+        mfcc2_control_values = scaler.transform(mfcc2_control_values.reshape(-1, 1)).flatten()
+    
+        # 데이터를 8:2 비율로 train과 test로 분리 2
+        mfcc2_record_train_values, mfcc2_record_test_values = train_test_split(mfcc2_record_values, test_size=0.2,
                                                                          random_state=42)
-    mfcc2_control_train_values, mfcc2_control_test_values = train_test_split(mfcc2_control_values, test_size=0.2,
+        mfcc2_control_train_values, mfcc2_control_test_values = train_test_split(mfcc2_control_values, test_size=0.2,
                                                                            random_state=42)
     return "import label completed!"
 
@@ -568,7 +577,19 @@ if __name__ == '__main__':
     # Flask 서버가 시작될 시간을 기다림
     time.sleep(2)  # 필요한 경우 더 길게 조정
     
+    # Flask 앱을 별도의 스레드에서 실행합니다.
+    from threading import Thread
+    def run_flask():
+        app.run(port=5000)
+
+    flask_thread = Thread(target=run_flask)
+    flask_thread.start()
+    
     #Run the Flask app in the main thread
-    app.run(port=5000)
+    # app.run(port=5000)
+    
+    #라우트를 자동으로 호출
+    # response = requests.get(public_url + '/import_dataset')
+    # print("Response from /import_dataset route:", response.text)
 
     print("Flask server is running and ngrok tunnel is established.")
