@@ -59,13 +59,13 @@ html
             h2 Upload File
             
           form(action="/upload" method="post" enctype="multipart/form-data" id="uploadForm").upload-section
-            h3.upload_title 원본
+            h3.upload_title #{imgPath == "./asset/announce.png" ? "발음 표준 파일" : "원본"}
             .col.text-center            
               input(type="file" id="voice1" name="file1" accept="audio/*").file_input
               br
               hr
               br
-            h3.upload_title 의심되는 파일
+            h3.upload_title #{imgPath == "./asset/announce.png" ? "발음 연습 파일" :"의심되는 파일"}
             .col.text-center
               input(type="file" id="voice2" name="file2" accept="audio/*").file_input
             .text-center
