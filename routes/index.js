@@ -333,6 +333,9 @@ router.get('/forensic_result_detail', ensureAuthenticated, async (req, res) => {
     
     const { result, error, status } = await checkUserResult(req.user._id, 1);
 
+    const recordAvg = await CoeffieRecordAvg.findOne({ files_record_id: result.files_record_id }).lean();
+    const controlAvg = await CoeffieControlAvg.findOne({ files_control_id: result.files_control_id }).lean();
+    
     if (error) {
         if (status === 404 || status === 500) {
             return res.status(status).send(error);
@@ -344,7 +347,9 @@ router.get('/forensic_result_detail', ensureAuthenticated, async (req, res) => {
     // 결과가 있으면 결과 페이지 렌더링
     res.render('result_detail_forensic', {
         userId: req.user._id,
-        result
+        result,
+        recordAvg: recordAvg || {}, // recordAvg가 null이면 빈 객체를 할당
+        controlAvg: controlAvg || {} // controlAvg가 null이면 빈 객체를 할당
     })
 });
 
@@ -371,13 +376,8 @@ router.get('/result_overall_ai_singer', ensureAuthenticated, async (req, res) =>
     
     const { result, error, status } = await checkUserResult(req.user._id, 2);
 
-    const coeffieControlAvg = await CoeffieControlAvg.findOne({
-        files_control_id: user.files_control_id.toString()
-    });
-
-    const coeffieRecordAvg = await CoeffieRecordAvg.findOne({
-        files_control_id: user.files_control_id.toString()
-    });
+    const recordAvg = await CoeffieRecordAvg.findOne({ files_record_id: result.files_record_id }).lean();
+    const controlAvg = await CoeffieControlAvg.findOne({ files_control_id: result.files_control_id }).lean();
 
     if (error) {
         if (status === 404 || status === 500) {
@@ -391,8 +391,8 @@ router.get('/result_overall_ai_singer', ensureAuthenticated, async (req, res) =>
     res.render('result_overall_ai_singer', {
         userId: req.user._id,
         result,
-        coeffieControlAvg,
-        coeffieRecordAvg
+        recordAvg: recordAvg || {}, // recordAvg가 null이면 빈 객체를 할당
+        controlAvg: controlAvg || {} // controlAvg가 null이면 빈 객체를 할당
     })
 });
 

@@ -6,11 +6,31 @@ block content
             .col-md-8.col-lg-6.feature
                 h3(class="text-left indent-text") 📎 요약
                 p(class="description-left")
-                    span 우수: 음성의 피치 변화(MFCC2), 특정 음소의 발음 전달(MFCC5)
+                    - var mfccDescriptions = [
+                    -   {name: "음성의 피치 변화", mfcc: "MFCC2", value: result.mfcc_acc_list[0]},
+                    -   {name: "특정 음소의 발음 전달", mfcc: "MFCC5", value: result.mfcc_acc_list[2]},
+                    -   {name: "발음 속도", mfcc: "MFCC8", value: result.mfcc_acc_list[4]},
+                    -   {name: "발음의 정확성", mfcc: "MFCC3", value: result.mfcc_acc_list[1]},
+                    -   {name: "발음의 연결성", mfcc: "MFCC6", value: result.mfcc_acc_list[3]}
+                    - ];
+                    - var excellent = [];
+                    - var good = [];
+                    - var poor = [];
+                    - var thresholds = [95, 75];  // 우수: 95 이상, 양호: 75-94, 미흡: 75 미만
+                    - mfccDescriptions.forEach(desc => {
+                    -   if (desc.value >= thresholds[0]) {
+                    -     excellent.push(`${desc.name}(${desc.mfcc})`);
+                    -   } else if (desc.value >= thresholds[1]) {
+                    -     good.push(`${desc.name}(${desc.mfcc})`);
+                    -   } else {
+                    -     poor.push(`${desc.name}(${desc.mfcc})`);
+                    -   }
+                    - });
+                    span 우수: #{excellent.join(', ')}
                     br
-                    span 양호: 발음 속도(MFCC8)
+                    span 양호: #{good.join(', ')}
                     br
-                    span 미흡: 발음의 정확성(MFCC3), 발음의 연결성(MFCC6)
+                    span 미흡: #{poor.join(', ')}
                 hr
                 
                 h3(class="text-left indent-text") ✏️ 개선 연습
