@@ -371,6 +371,14 @@ router.get('/result_overall_ai_singer', ensureAuthenticated, async (req, res) =>
     
     const { result, error, status } = await checkUserResult(req.user._id, 2);
 
+    const coeffieControlAvg = await CoeffieControlAvg.findOne({
+        files_control_id: user.files_control_id.toString()
+    });
+
+    const coeffieRecordAvg = await CoeffieRecordAvg.findOne({
+        files_control_id: user.files_control_id.toString()
+    });
+
     if (error) {
         if (status === 404 || status === 500) {
             return res.status(status).send(error);
@@ -382,7 +390,9 @@ router.get('/result_overall_ai_singer', ensureAuthenticated, async (req, res) =>
     // 결과가 있으면 결과 페이지 렌더링
     res.render('result_overall_ai_singer', {
         userId: req.user._id,
-        result
+        result,
+        coeffieControlAvg,
+        coeffieRecordAvg
     })
 });
 
