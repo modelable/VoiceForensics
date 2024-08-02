@@ -70,6 +70,14 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dense(1, activation='sigmoid')
 ])
 
+model2 = tf.keras.Sequential([
+    tf.keras.layers.Dense(32, activation='relu', input_shape=(1,)),  # 입력 형태는 1개의 특징
+    tf.keras.layers.Dropout(0.3),  
+    tf.keras.layers.Dense(16, activation='relu'),  
+    tf.keras.layers.Dense(1, activation='sigmoid')  # 이진 분류를 위한 출력 레이어
+])
+
+
 # 필요한 전역변수들
 mfcc_record_train_values = None
 mfcc_record_test_values = None
@@ -91,6 +99,9 @@ mfcc2_record_train_values = None
 mfcc2_record_test_values = None
 mfcc2_control_train_values = None
 mfcc2_control_test_values = None
+combined2_labels = None
+combined2_mfcc = None
+
 
 def read_wav_file(file_path):
     audio = AudioSegment.from_file(file_path)
@@ -170,13 +181,21 @@ def import_dataset():
 @app.route('/label_setting', methods=['GET'])
 def labeling():
     #전역 변수 선언
-    global combined_labels, combined_mfcc, mfcc_control_train_values, mfcc_record_train_values
-
-    # control_mfcc와 record_mfcc를 합친 데이터셋 생성
-    combined_mfcc = np.concatenate((mfcc_control_train_values, mfcc_record_train_values), axis=0)
+    global combined_labels, combined_mfcc, mfcc_control_train_values, mfcc_record_train_values, flag, \
+        combined2_mfcc, combined2_labels, mfcc2_record_train_values, mfcc2_record_test_values, mfcc2_control_train_values, mfcc2_control_test_values
 
     # 클러스터링을 위한 KMeans 모델 생성
     kmeans = KMeans(n_clusters=2, n_init = 12)
+    
+    #아나운서 기능인 경우
+    if(flag == 3):
+        combined2_mfcc = np.concatenate((mfcc2_control_train_values.reshape(-1, 1), mfcc2_record_train_values.reshape(-1, 1)), axis=0)
+        kmeans.fit(combined2_mfcc)
+        combined2_labels = kmeans.labels_
+        print(combined2_labels)
+        
+    # control_mfcc와 record_mfcc를 합친 데이터셋 생성
+    combined_mfcc = np.concatenate((mfcc_control_train_values, mfcc_record_train_values), axis=0)
 
     # combined_mfcc에 대해 클러스터링 수행
     kmeans.fit(combined_mfcc)
@@ -227,11 +246,12 @@ def labeling():
 
 @app.route('/training', methods=['GET'])
 def training():
-    global combined_labels, combined_mfcc
+    global combined_labels, combined_mfcc, flag, combined2_mfcc, combined2_labels
 
     if combined_labels is None:
         return jsonify({"error": "Labels not set. Please run /label_setting first."}), 400
-
+    
+    #================================== default training ===============================#
     # 데이터 분리 없이 전체 데이터를 사용
     train_data = combined_mfcc
     train_labels = combined_labels
@@ -247,6 +267,24 @@ def training():
 
     # 모델 컴파일 및 학습
     history = model.fit(train_dataset, epochs=10)
+    
+    #================================== default training ===============================#
+    
+    #================================== 추가 training ===============================#
+    #flag == 3일 때 (아나운서 기능일 때)
+    if(flag == 3):
+        # TensorFlow 데이터셋 생성
+        train2_dataset = tf.data.Dataset.from_tensor_slices((combined2_mfcc, combined2_labels)).batch(batch_size)
+        
+        # 모델 컴파일
+        model2.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.008),  # 학습률 조정
+                    loss='binary_crossentropy',
+                    metrics=['accuracy'])
+        
+        # 모델 컴파일 및 학습
+        history2 = model2.fit(train2_dataset, epochs=10)
+    #================================== 추가 training ===============================#
+    
 
     # 두 번째 그래프 생성 (학습 손실과 정확도)
     fig, ax = plt.subplots(1, 2, figsize=(20, 6))  # 가로로 길고 세로로 짧게 설정
@@ -277,6 +315,62 @@ def training():
         f.write(img.getbuffer())
 
     return "Training completed!"
+
+@app.route('/model_predict', methods=['GET'])
+def model_predict():
+    #global 전역 변수 선언
+    global mfcc_control_test_values, mfcc_record_test_values, db, control_predicted_labels, record_predicted_labels, files_control_id, files_record_id, \
+           flag, mfcc2_control_test_values, mfcc2_record_test_values
+
+    #================================== default prediction =====================================//
+    control_predictions = model.predict(mfcc_control_test_values)
+    control_predicted_labels = (control_predictions > 0.5).astype(int).flatten()
+    control_average_prediction = np.mean(control_predicted_labels)
+    print(f"실시간 음성 녹음 화자에 대한 모델의 예측값 평균 : {control_average_prediction:.4f}")
+
+    # record_mfcc 데이터셋에서 모델 예측
+    record_predictions = model.predict(mfcc_record_test_values)
+    record_predicted_labels = (record_predictions > 0.5).astype(int).flatten()
+    record_average_prediction = np.mean(record_predicted_labels)
+    print(f"증거 자료 녹음 화자에 대한 모델의 예측값 평균 : {record_average_prediction:.4f}")
+
+    # 평균 절대 오차 계산
+    mae = np.abs(control_average_prediction - record_average_prediction)
+
+    # 유사도 점수 계산
+    # 가정: 최대 MAE는 1 (예측값의 범위가 0에서 1일 때)
+    max_mae = 1
+    similarity_score = 1 - (mae / max_mae)
+
+    print(f"평균 절대 오차(MAE): {mae:.4f}")
+    print(f"유사도 점수: {similarity_score:.4f}")
+    #================================== default prediction =====================================//
+    
+    #flag == 3인 경우 추가 
+    if(flag == 3):
+        control2_predictions = model.predict(mfcc2_control_test_values)
+        #리스트 만들어서 관리 (추가 예정)
+
+    # 현재 시간을 UTC로 구하기
+    current_time = datetime.datetime.utcnow()
+    # 소수점 네 자리까지 반올림
+    record_average_prediction = round(record_average_prediction, 4)
+    control_average_prediction = round(control_average_prediction, 4)
+    similarity_score = round(similarity_score, 4)
+
+    # 데이터 준비
+    data = {
+        "live_data_prediction" : record_average_prediction, #녹취록에 대한 모델의 예측 평균
+        "record_data_prediction" : control_average_prediction, #실시간 데이터에 대한 모델의 예측 평균
+        "MAE_similarity": similarity_score * 100,  # 계산된 정확도,
+        "files_record_id" : ObjectId(files_record_id), #record_files_id에 해당 하는 값
+        "files_control_id" : ObjectId(files_control_id), #control_files_id에 해당하는 값
+        "timestamp" : current_time
+    }
+
+    # 몽고 디비 results 컬렉션에 데이터 삽입
+    result = db['results'].insert_one(data)
+    return "Data inserted with record id : {}".format(result.inserted_id)
 
 @app.route('/mfcc_spectrum', methods=['GET'])
 def mfcc_spectrum():
@@ -517,58 +611,6 @@ def fft_spectrum():
     
     return "fft_spectrum.png processed!"
     
-
-@app.route('/model_predict', methods=['GET'])
-def model_predict():
-    #global 전역 변수 선언
-    global mfcc_control_test_values, mfcc_record_test_values, db, control_predicted_labels, record_predicted_labels, files_control_id, files_record_id
-
-    control_predictions = model.predict(mfcc_control_test_values)
-    control_predicted_labels = (control_predictions > 0.5).astype(int).flatten()
-    control_average_prediction = np.mean(control_predicted_labels)
-    print(f"실시간 음성 녹음 화자에 대한 모델의 예측값 평균 : {control_average_prediction:.4f}")
-
-    # record_mfcc 데이터셋에서 모델 예측
-    record_predictions = model.predict(mfcc_record_test_values)
-    record_predicted_labels = (record_predictions > 0.5).astype(int).flatten()
-    record_average_prediction = np.mean(record_predicted_labels)
-
-    # 결과 출력
-    print(f"증거 자료 녹음 화자에 대한 모델의 예측값 평균 : {record_average_prediction:.4f}")
-
-    # 평균 절대 오차 계산
-    mae = np.abs(control_average_prediction - record_average_prediction)
-
-    # 유사도 점수 계산
-    # 가정: 최대 MAE는 1 (예측값의 범위가 0에서 1일 때)
-    max_mae = 1
-    similarity_score = 1 - (mae / max_mae)
-
-    print(f"평균 절대 오차(MAE): {mae:.4f}")
-    print(f"유사도 점수: {similarity_score:.4f}")
-
-    # 현재 시간을 UTC로 구하기
-    current_time = datetime.datetime.utcnow()
-    # 소수점 네 자리까지 반올림
-    record_average_prediction = round(record_average_prediction, 4)
-    control_average_prediction = round(control_average_prediction, 4)
-    similarity_score = round(similarity_score, 4)
-    #jaccard_sim = round(jaccard_sim, 4)
-
-    # 데이터 준비
-    data = {
-        "live_data_prediction" : record_average_prediction, #녹취록에 대한 모델의 예측 평균
-        "record_data_prediction" : control_average_prediction, #실시간 데이터에 대한 모델의 예측 평균
-        "MAE_similarity": similarity_score * 100,  # 계산된 정확도,
-        "files_record_id" : ObjectId(files_record_id), #record_files_id에 해당 하는 값
-        "files_control_id" : ObjectId(files_control_id), #control_files_id에 해당하는 값
-        "timestamp" : current_time
-    }
-
-    # 몽고 디비 results 컬렉션에 데이터 삽입
-    result = db['results'].insert_one(data)
-    return "Data inserted with record id : {}".format(result.inserted_id)
-
 if __name__ == '__main__':
     # ngrok을 통해 외부 접근 가능하도록 설정
     public_url = ngrok.connect(5000, bind_tls=True).public_url  # 포트 번호와 함께 bind_tls 옵션 설정
@@ -591,5 +633,11 @@ if __name__ == '__main__':
     #라우트를 자동으로 호출
     # response = requests.get(public_url + '/import_dataset')
     # print("Response from /import_dataset route:", response.text)
+    
+    # response = requests.get(public_url + '/label_setting')
+    # print("Response from /label_setting route:", response.text)
+    
+    # response = requests.get(public_url + '/training')
+    # print("Response from /training route:", response.text)
 
     print("Flask server is running and ngrok tunnel is established.")
