@@ -19,55 +19,64 @@ block content
               img(src=`fft_spectrum_${result.files_control_id}.png`, alt="MFCC spectrum graph", class="img-fluid")
             p
               h4.text-left MFCC2
-              p.text-left MFCC2 계수는 에너지가 집중되어 있는 위치를 알려줍니다. 계수 값이 높을수록 높은 주파수 대역에 더 많은 에너지가 집중되어 있음을 의미하며, 낮을수록 낮은 주파수 대역에 더 많은 에너지가 분포하고 있음을 의미합니다.
+              p.text-left MFCC2 계수는 에너지가 집중되어 있는 위치를 알려줍니다.
+                          |계수 값이 높을수록 높은 주파수 대역에 더 많은 에너지가 집중되어 있음을 의미하며, 낮을수록 낮은 주파수 대역에 더 많은 에너지가 분포하고 있음을 의미합니다.
             p
               h4.text-left MFCC3
-              p.text-left MFCC3 계수는 에너지가 집중되어 있는 위치를 알려줍니다. 계수 값이 높을수록 높은 주파수 대역에 더 많은 에너지가 집중되어 있음을 의미하며, 낮을수록 낮은 주파수 대역에 더 많은 에너지가 분포하고 있음을 의미합니다.
+              p.text-left MFCC3 계수는 발음 특성을 반영하여 특정 모음의 발음 방식을 포착합니다.
+                          |높은 값을 가질수록 특정 발음 패턴이 강조된다는 것을 의미합니다.
+            p
+              h4.text-left MFCC4
+              p.text-left MFCC4 계수는 중간 주파수 대역에서의 주파수 변동성, 음성 신호의 매끄럽거나 거친 정도, 톤의 다양성 등의 복잡성 정보를 반영합니다.
+                          |발화자의 발음 습관을 인식하는데 도움이 됩니다.
+            p
+              h4.text-left MFCC8
+              p.text-left MFCC8 계수는 고주파수 대역에서 입술과 혀의 움직임 정도, 미세한 발음의 변화와 같은 세부 변화를 포착합니다
+            p
+              h4.text-left MFCC9
+              p.text-left MFCC9 계수는 3000hHz 이상의 고주파수 대역에서 발음의 끝맺음과 강세 위치에 대한 정보를 제공합니다. 강세가 있는 부분에서 고주파 성분이 두드러지게 나타납니다.
+            p
+              h4.text-left MFCC11
+              p.text-left MFCC11 계수는 4000Hz 이상의 고주파수 대역에서 “ㅅ” 자음과 같은 무성음의 끝맺음 발음을 반영합니다. 특히, “ㅌ”, “ㅋ”과 같은 끝맺음 소리의 세밀한 정도를 반영합니다.
             p 
               img(src=`mfcc_bar_graph_${result.files_control_id}.png`, alt="MFCC coefficients average values graph", class="img-fluid")
 
               
       .row.mt-5
         .col-12
-          h2.text-center 7x4 표
+          h2.text-center MFCC 표
           table.table.table-bordered
             thead.thead-dark
               tr
                 th MFCC
                 th 원본 평균값
-                th 녹취 평균값
-                th 해석
+                th 의심되는 파일 평균값
             tbody
               tr
                 td MFCC2
-                td 셀1-2
+                - let value = recordAvg && recordAvg[`MFCC${2}`] ? recordAvg[`MFCC${2}`].toFixed(2) : ''
+                td= value
                 td 셀1-3
-                td.text-left 에너지의 집중도: 거의 일치함
               tr
                 td MFCC3
                 td 셀2-2
                 td 셀2-3
-                td.text-left 특정 발음 패턴의 강조도: 거의 일치함
               tr
                 td MFCC4
                 td 셀3-2
                 td 셀3-3
-                td.text-left 중주파수 대역에서 주파수 변동성, 음성의 질감 정도: 많이 차이 남
               tr
                 td MFCC8
                 td 셀4-2
                 td 셀4-3
-                td.text-left 고주파수 대역에서 미세한 발음 변화: 다소 차이 남
               tr
                 td MFCC9
                 td 셀5-2
                 td 셀5-3
-                td.text-left 고주파수 대역에서 강세 위치: 다소 차이 남
               tr
                 td MFCC11
                 td 셀6-2
                 td 셀6-3
-                td.text-left 고주파수 대역에서 끝맺음 발음: 다소 차이 남
 
       .row.mt-4
         .col-12.text-center
