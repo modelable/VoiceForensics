@@ -81,6 +81,14 @@ files_record_id = None
 mfcc_control_data = None
 mfcc_record_data = None
 
+#0801 추가
+mfcc2_record_values = None
+mfcc2_control_values = None
+mfcc2_record_train_values = None
+mfcc2_record_test_values = None
+mfcc2_control_train_values = None
+mfcc2_control_test_values = None
+
 def read_wav_file(file_path):
     audio = AudioSegment.from_file(file_path)
     audio = audio.set_frame_rate(44100).set_channels(1).set_sample_width(2)
@@ -94,7 +102,9 @@ def start():
 
 @app.route('/import_dataset', methods=['GET'])
 def import_dataset():
-    global mfcc_control_test_values, mfcc_control_train_values, mfcc_record_test_values, mfcc_record_train_values, mfcc_control_data, mfcc_record_data, files_control_id, files_record_id
+    global mfcc_control_test_values, mfcc_control_train_values, mfcc_record_test_values, mfcc_record_train_values, mfcc_control_data, mfcc_record_data, files_control_id, files_record_id,
+    mfcc2_record_values, mfcc2_control_values, mfcc2_record_train_values, mfcc2_record_test_values, mfcc2_control_train_values, mfcc2_control_test_values
+    
     # 가장 최근 데이터 하나만 조회
     latest_coef_control = control_collection.find_one(sort=[('_id', -1)])
     # 'files_control_id' 필드의 값을 변수에 저장
@@ -113,10 +123,15 @@ def import_dataset():
     # Cursor에서 데이터를 리스트로 변환 후 DataFrame 생성
     mfcc_record_data = pd.DataFrame(list(record_cursor))
 
-    # 필요한 열만 선택 (예: MFCC1부터 MFCC12까지)
+    #필요한 열만 선택 (예: MFCC1부터 MFCC12까지) -> 추후 그래프 만드는데 쓰임 -> 건들지 말기
     mfcc_control_data = mfcc_control_data.loc[:, 'MFCC1':'MFCC12']
     mfcc_record_data = mfcc_record_data.loc[:, 'MFCC1':'MFCC12']
-
+    
+    #0801 수정, 특정 MFCC 계수만 추출하기 -> 특정 계수는 라우트 따로 만들어서 처리 or if-else 문 만들기
+    mfcc2_record_values = mfcc_control_data[:, ['MFCC2']].to_numpy()
+    mfcc2_control_values = mfcc_record_data[:, ['MFCC2']].to_numpy()
+    
+    
     # DataFrame에서 numpy 배열로 변환
     mfcc_record_values = mfcc_record_data.to_numpy()
     mfcc_control_values = mfcc_control_data.to_numpy()
@@ -125,11 +140,21 @@ def import_dataset():
     scaler = StandardScaler()
     normalized_record_values = scaler.fit_transform(mfcc_record_values)
     normalized_control_values = scaler.transform(mfcc_control_values)
+    
+    # 표준화 2
+    mfcc2_record_values = scaler.fit_transform(mfcc2_record_values)
+    mfcc2_control_values = scaler.transform(mfcc2_control_values)
 
     # 데이터를 8:2 비율로 train과 test로 분리
     mfcc_record_train_values, mfcc_record_test_values = train_test_split(normalized_record_values, test_size=0.2,
                                                                          random_state=42)
     mfcc_control_train_values, mfcc_control_test_values = train_test_split(normalized_control_values, test_size=0.2,
+                                                                           random_state=42)
+    
+    # 데이터를 8:2 비율로 train과 test로 분리 2
+    mfcc2_record_train_values, mfcc2_record_test_values = train_test_split(mfcc2_record_values, test_size=0.2,
+                                                                         random_state=42)
+    mfcc2_control_train_values, mfcc2_control_test_values = train_test_split(mfcc2_control_values, test_size=0.2,
                                                                            random_state=42)
     return "import label completed!"
 
