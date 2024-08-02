@@ -16,7 +16,7 @@ block content
         .col-12
           div
             p 
-              img(src="asdf")
+              img(src=`fft_spectrum_${result.files_control_id}.png`, alt="MFCC spectrum graph", class="img-fluid")
             p
               h4.text-left MFCC2
               p.text-left MFCC2 계수는 에너지가 집중되어 있는 위치를 알려줍니다. 계수 값이 높을수록 높은 주파수 대역에 더 많은 에너지가 집중되어 있음을 의미하며, 낮을수록 낮은 주파수 대역에 더 많은 에너지가 분포하고 있음을 의미합니다.
@@ -24,7 +24,7 @@ block content
               h4.text-left MFCC3
               p.text-left MFCC3 계수는 에너지가 집중되어 있는 위치를 알려줍니다. 계수 값이 높을수록 높은 주파수 대역에 더 많은 에너지가 집중되어 있음을 의미하며, 낮을수록 낮은 주파수 대역에 더 많은 에너지가 분포하고 있음을 의미합니다.
             p 
-              img(src="asdf")
+              img(src=`mfcc_bar_graph_${result.files_control_id}.png`, alt="MFCC coefficients average values graph", class="img-fluid")
 
               
       .row.mt-5

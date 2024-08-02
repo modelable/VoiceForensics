@@ -8,16 +8,23 @@ block content
 
       .row.mt-4
         .col-12
-          img(src="path/to/your/image.png" alt="음성 위변조 탐지 차트" class="img-fluid")
-          br
-          img(src="path/to/your/image.png" alt="음성 위변조 탐지 차트" class="img-fluid")
-          br
-          img(src="path/to/your/image.png" alt="음성 위변조 탐지 차트" class="img-fluid")
-          br
-          img(src="path/to/your/image.png" alt="음성 위변조 탐지 차트" class="img-fluid")
-          br
-          img(src="path/to/your/image.png" alt="음성 위변조 탐지 차트" class="img-fluid")
+          img(src=`clustering_label_${result.files_control_id}.png`, alt="Clustering graph", class="image-small mx-auto d-block")
+          p(class="strong-text text-center") AI모델 학습 전 실시간/녹취록 음성에서 추출한 MFCC 계수들을 2차원 좌표평면에 나타내고 분포에 따라 레이블을 부여한 결과입니다.
+          hr
 
+          img(src=`train_acc_loss_${result.files_control_id}.png`, alt="Train accuracy and loss graph", class="img-fluid")
+          p(class="strong-text text-center") 훈련 횟수에 따른 모델의 오차율과 훈련 정확도를 보여줍니다.
+          hr
+                              
+          img(src=`fft_spectrum_${result.files_control_id}.png`, alt="MFCC spectrum graph", class="img-fluid")
+          p(class="strong-text text-center") 실시간 음성과 녹취록의 주파수 대역별 데시벨을 비교한 그래프입니다. 
+          hr
+                              
+          img(src=`mfcc_spectrum_graph_${result.files_control_id}.png`, alt="Spectrogram of recorded and live speech", class="img-fluid")
+          p(class="strong-text text-center") 각 프레임에 따른 MFCC 계수값들의 세기를 색깔로 표현한 스펙트럼입니다.
+
+          img(src=`mfcc_bar_graph_${result.files_control_id}.png`, alt="MFCC coefficients average values graph", class="img-fluid")
+          p(class="strong-text text-center") 실시간 음성과 녹취록의 MFCC 계수 별 평균값을 비교한 막대 그래프입니다.
       .row.mt-4
         .col-12
           table.table.table-bordered
@@ -49,22 +56,3 @@ block content
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js")
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")
-
-
-//- img(src=`clustering_label_${result.files_control_id}.png`, alt="Clustering graph", class="image-small mx-auto d-block")
-//- p(class="strong-text text-center") AI모델 학습 전 실시간/녹취록 음성에서 추출한 MFCC 계수들을 2차원 좌표평면에 나타내고 분포에 따라 레이블을 부여한 결과입니다.
-//- hr
-
-//- img(src=`train_acc_loss_${result.files_control_id}.png`, alt="Train accuracy and loss graph", class="img-fluid")
-//- p(class="strong-text text-center") 훈련 횟수에 따른 모델의 오차율과 훈련 정확도를 보여줍니다.
-//- hr
-                    
-//- img(src=`fft_spectrum_${result.files_control_id}.png`, alt="MFCC spectrum graph", class="img-fluid")
-//- p(class="strong-text text-center") 실시간 음성과 녹취록의 주파수 대역별 데시벨을 비교한 그래프입니다. 
-//- hr
-                    
-//- mg(src=`mfcc_spectrum_graph_${result.files_control_id}.png`, alt="Spectrogram of recorded and live speech", class="img-fluid")
-//- p(class="strong-text text-center") 각 프레임에 따른 MFCC 계수값들의 세기를 색깔로 표현한 스펙트럼입니다.
-
-//- img(src=`mfcc_bar_graph_${result.files_control_id}.png`, alt="MFCC coefficients average values graph", class="img-fluid")
-//- p(class="strong-text text-center") 실시간 음성과 녹취록의 MFCC 계수 별 평균값을 비교한 막대 그래프입니다.

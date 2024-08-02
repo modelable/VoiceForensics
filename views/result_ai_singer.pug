@@ -8,10 +8,10 @@ block content
                 h2 Result
                 p(class="strong-text text-center description")
                     | 유사도: 
-                    span(style=`color: ${result.MAE_similarity >= 95 ? 'green' : result.MAE_similarity >= 80 ? 'orange' : 'red'}; font-size: 1.5em`)
-                        | #{result.MAE_similarity}%
-                p #{result.MAE_similarity >= 95 ? '가수 본인의 목소리입니다.' : result.MAE_similarity >= 80 ? 'AI 합성가능성이 존재합니다.' : '전혀 다른 목소리입니다.'}
-
+                    span(style=`color: ${result.ai_voice_MAE_similarity >= 95 ? 'green' : result.ai_voice_MAE_similarity >= 80 ? 'orange' : 'red'}; font-size: 1.5em`)
+                        | #{result.ai_voice_MAE_similarity}%
+                p #{result.ai_voice_MAE_similarity >= 95 ? '가수 본인의 목소리입니다.' : result.ai_voice_MAE_similarity >= 80 ? 'AI 합성가능성이 존재합니다.' : '전혀 다른 목소리입니다.'}
+                #{console.log(result)}
                 .row.my-4.justify-content-center
                     table.table.table-bordered.table-striped(style="width: auto;")
                         thead
