@@ -12,8 +12,8 @@ block content
                 
                 p(class="description-left bold-text")
                     | MFCC2: 음성 스펙트럼 - 
-                    span(style=`color: ${result.MAE_similarity >= 95 ? 'green' : result.MAE_similarity >= 80 ? 'orange' : 'red'};`)
-                        | #{result.MAE_similarity}%
+                    span(style=`color: ${result.mfcc_acc_list[0] >= 95 ? 'green' : result.mfcc_acc_list[0] >= 80 ? 'orange' : 'red'};`)
+                        | #{result.mfcc_acc_list[0]}%
 
                 p(class="description-left")
                     span(class="bold-text indent-text") 설명: 
@@ -23,8 +23,8 @@ block content
 
                 p(class="description-left bold-text")
                     | MFCC3: 특정 발음 특성 - 
-                    span(style=`color: ${result.MAE_similarity >= 95 ? 'green' : result.MAE_similarity >= 80 ? 'orange' : 'red'};`)
-                        | #{result.MAE_similarity}%
+                    span(style=`color: ${result.mfcc_acc_list[1] >= 95 ? 'green' : result.mfcc_acc_list[1] >= 80 ? 'orange' : 'red'};`)
+                        | #{result.mfcc_acc_list[1]}%
 
                 p(class="description-left")
                     span(class="bold-text indent-text") 설명: 
@@ -34,8 +34,8 @@ block content
 
                 p(class="description-left bold-text")
                     | MFCC5: 중주파수 범위의 세부 특성 – 
-                    span(style=`color: ${result.MAE_similarity >= 95 ? 'green' : result.MAE_similarity >= 80 ? 'orange' : 'red'};`)
-                        | #{result.MAE_similarity}%
+                    span(style=`color: ${result.mfcc_acc_list[2] >= 95 ? 'green' : result.mfcc_acc_list[2] >= 80 ? 'orange' : 'red'};`)
+                        | #{result.mfcc_acc_list[2]}%
 
                 p(class="description-left")
                     span(class="bold-text indent-text") 설명: 
@@ -45,8 +45,8 @@ block content
 
                 p(class="description-left bold-text")
                     | MFCC6: 발음의 연결 및 음절 간의 변화 - 
-                    span(style=`color: ${result.MAE_similarity >= 95 ? 'green' : result.MAE_similarity >= 80 ? 'orange' : 'red'};`)
-                        | #{result.MAE_similarity}%
+                    span(style=`color: ${result.mfcc_acc_list[3] >= 95 ? 'green' : result.mfcc_acc_list[3] >= 80 ? 'orange' : 'red'};`)
+                        | #{result.mfcc_acc_list[3]}%
 
                 p(class="description-left")
                     span(class="bold-text indent-text") 설명: 
@@ -56,8 +56,8 @@ block content
 
                 p(class="description-left bold-text")
                     | MFCC8: 고주파수 대역의 변화를 반영 - 
-                    span(style=`color: ${result.MAE_similarity >= 95 ? 'green' : result.MAE_similarity >= 80 ? 'orange' : 'red'};`)
-                        | #{result.MAE_similarity}%
+                    span(style=`color: ${result.mfcc_acc_list[4] >= 95 ? 'green' : result.mfcc_acc_list[4] >= 80 ? 'orange' : 'red'};`)
+                        | #{result.mfcc_acc_list[4]}%
 
                 p(class="description-left")
                     span(class="bold-text indent-text") 설명: 
@@ -67,6 +67,9 @@ block content
 
                 form(action="/announcer_improvements" method="GET")
                     button(type='submit' class="btn btn-outline-success btn-black") 개선 연습 방안
+                br
+                form(action="/result_announce" method="GET")
+                    button(type='submit' class="btn btn-outline-success btn-black") 이전 화면으로 가기
 
         .footer.mt-5
             p © Created By Park Sohee | Lee Keejung | Lee Seungjay

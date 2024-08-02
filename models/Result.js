@@ -10,11 +10,23 @@ const resultsSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  MAE_similarity: {
+  /*MAE_similarity: {
     type: Number,
     required: true
+  },*/
+
+  files_record_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'FileRecord',
+    required: true
   },
-  /* 
+
+  files_control_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'FileControl',
+    required: true
+  },
+
   result_MAE_similarity: {
     type: Number,
     required: false // 변경
@@ -29,17 +41,12 @@ const resultsSchema = new mongoose.Schema({
     type: Number, 
     required: false
   },
-  */
-  files_record_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'FileRecord',
-    required: true
+
+  mfcc_acc_list: {
+    type: [Number], 
+    required: false
   },
-  files_control_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'FileControl',
-    required: true
-  },
+
   timestamp: {
     type: Date,
     default: Date.now,

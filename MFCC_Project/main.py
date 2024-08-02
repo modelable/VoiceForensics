@@ -469,7 +469,7 @@ def model_predict():
         "record_data_prediction" : control_average_prediction, #실시간 데이터에 대한 모델의 예측 평균
         "files_record_id" : ObjectId(files_record_id), #record_files_id에 해당 하는 값
         "files_control_id" : ObjectId(files_control_id), #control_files_id에 해당하는 값
-        "timestamp" : current_time
+        #"timestamp" : current_time
     }
     
     # flag 값에 따라서 필드에 값을 할당합니다.
@@ -477,14 +477,19 @@ def model_predict():
         data["result_MAE_similarity"] = similarity_score * 100  # 계산된 정확도
         data["ai_voice_MAE_similarity"] = None
         data["announcer_MAE_similarity"] = None
+        data["mfcc_acc_list"] = None
     elif flag == 2:
         data["result_MAE_similarity"] = None
         data["ai_voice_MAE_similarity"] = similarity_score * 100  # 계산된 정확도
         data["announcer_MAE_similarity"] = None
+        data["mfcc_acc_list"] = None
     elif flag == 3:
         data["result_MAE_similarity"] = None
         data["ai_voice_MAE_similarity"] = None
         data["announcer_MAE_similarity"] = similarity_score * 100  # 계산된 정확도
+        data["mfcc_acc_list"] = similarity_score_list
+    
+    data["timestamp"] = current_time
 
     # 몽고 디비 results 컬렉션에 데이터 삽입
     result = db['results'].insert_one(data)
@@ -749,16 +754,16 @@ if __name__ == '__main__':
     # app.run(port=5000)
     
     #라우트를 자동으로 호출
-    response = requests.get(public_url + '/import_dataset')
-    print("Response from /import_dataset route:", response.text)
+    # response = requests.get(public_url + '/import_dataset')
+    # print("Response from /import_dataset route:", response.text)
     
-    response = requests.get(public_url + '/label_setting')
-    print("Response from /label_setting route:", response.text)
+    # response = requests.get(public_url + '/label_setting')
+    # print("Response from /label_setting route:", response.text)
     
-    response = requests.get(public_url + '/training')
-    print("Response from /training route:", response.text)
+    # response = requests.get(public_url + '/training')
+    # print("Response from /training route:", response.text)
     
-    response = requests.get(public_url + '/model_predict')
-    print("Response from /model_predict route:", response.text)
+    # response = requests.get(public_url + '/model_predict')
+    # print("Response from /model_predict route:", response.text)
 
     print("Flask server is running and ngrok tunnel is established.")

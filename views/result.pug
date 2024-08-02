@@ -11,7 +11,7 @@ block content
                         div(class="row my-4")
                             div(class="col-12")
                                 p(class="strong-text text-center") 모델 예측 결과: #{result.live_data_prediction} (실시간 음성), #{result.record_data_prediction} (녹취록)
-                                p(class="strong-text text-center") 유사도: #{result.MAE_similarity}%
+                                p(class="strong-text text-center") 유사도: #{result.result_MAE_similarity}%
 
                                 div(class="row my-4 justify-content-center")
                                     div(class="col-auto")
@@ -22,14 +22,14 @@ block content
                                                     th 판정 결과
                                             tbody
                                                 tr
-                                                    td(style=`color: ${result.MAE_similarity >= 95 ? 'red' : ''}`) 95% 이상
-                                                    td(style=`color: ${result.MAE_similarity >= 95 ? 'red' : ''}`) 동일 인물일 가능성이 매우 높습니다.
+                                                    td(style=`color: ${result.result_MAE_similarity >= 95 ? 'red' : ''}`) 95% 이상
+                                                    td(style=`color: ${result.result_MAE_similarity >= 95 ? 'red' : ''}`) 동일 인물일 가능성이 매우 높습니다.
                                                 tr
-                                                    td(style=`color: ${result.MAE_similarity >= 75 && result.MAE_similarity < 95 ? 'red' : ''}`) 75% ~ 95%
-                                                    td(style=`color: ${result.MAE_similarity >= 75 && result.MAE_similarity < 95 ? 'red' : ''}`) 변조 가능성이 존재하며 시각화 자료를 통해 세밀한 분석이 필요합니다.
+                                                    td(style=`color: ${result.result_MAE_similarity >= 75 && result.result_MAE_similarity < 95 ? 'red' : ''}`) 75% ~ 95%
+                                                    td(style=`color: ${result.result_MAE_similarity >= 75 && result.result_MAE_similarity < 95 ? 'red' : ''}`) 변조 가능성이 존재하며 시각화 자료를 통해 세밀한 분석이 필요합니다.
                                                 tr
-                                                    td(style=`color: ${result.MAE_similarity < 75 ? 'red' : ''}`) 75% 미만
-                                                    td(style=`color: ${result.MAE_similarity < 75 ? 'red' : ''}`) 다른 인물일 가능성이 매우 높습니다.
+                                                    td(style=`color: ${result.result_MAE_similarity < 75 ? 'red' : ''}`) 75% 미만
+                                                    td(style=`color: ${result.result_MAE_similarity < 75 ? 'red' : ''}`) 다른 인물일 가능성이 매우 높습니다.
 
                                 p(class="text-center") 검사 날짜: #{result.timestamp.toLocaleDateString()}
                     hr

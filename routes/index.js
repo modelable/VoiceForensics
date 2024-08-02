@@ -112,8 +112,8 @@ router.get('/upload_wait_events', ensureAuthenticated, async (req, res) => {
     res.end();
 });
 
-// async function checkUserResult(userId, flag) {
-async function checkUserResult(userId) {
+//result 값 1/2/3 확인 -> 0802 수정
+async function checkUserResult(userId, flag) {
     try {
         const user = await User.findById(userId);
         if (!user) {
@@ -126,33 +126,40 @@ async function checkUserResult(userId) {
                 { files_record_id: user.files_record_id.toString() }
             ]
         });
-/*
-        var ret;
 
-        if (flag == 1) {
-            return ret = result.result_MAE_similarity;
-        } else if (flag == 2) {
-            return ret = result.ai_voice_MAE_similarity;
-        } else if (flag == 3) €
-            return ret = result.announcer_MAE_similarity;
-        } else {
-            return { error: "invalid flag", status: 400 );
+        if (!result) {
+            return { error: "Results not found", status: 204 };
         }
-        
-        return ret ? { result }: {error: "아직 결과가 출력되지 않았습니다.', status: 204 };
-*/
-        return result ? { result } : { error: '아직 결과가 출력되지 않았습니다.', status: 204 };
+
+        /*let ret; -> 굳이 필요없음, 그냥 result만 넘겨줘도 됨
+        //flag에 해당하지 않는 정확도는 어차피 null로 설정해놓음
+        if (flag === 1) {
+            ret = result.result_MAE_similarity;
+            console.log('flag 1')
+        } else if (flag === 2) {
+            ret = result.ai_voice_MAE_similarity;
+            console.log('flag 2')
+        } else if (flag === 3) {
+            ret = result.announcer_MAE_similarity;
+            console.log('flag 3')
+        } else {
+            return { error: "Invalid flag", status: 400 };
+        }*/
+
+        return { result: result, error: null, status: 200 };
+
     } catch (error) {
         console.error("Error fetching result:", error);
         return { error: "Server error", status: 500 };
     }
 }
 
+
 // 결과 페이지 라우트
 router.get('/result', ensureAuthenticated, async (req, res) => {
     
-    // const { result, error, status } = await checkUserResult(req.user._id, 1);
-    const { result, error, status } = await checkUserResult(req.user._id);
+    const { result, error, status } = await checkUserResult(req.user._id, 1);
+    //const { result, error, status } = await checkUserResult(req.user._id);
 
     if (error) {
         if (status === 404 || status === 500) {
@@ -172,7 +179,7 @@ router.get('/result', ensureAuthenticated, async (req, res) => {
 // 결과 페이지 라우트
 router.get('/result_forensic', ensureAuthenticated, async (req, res) => {
     
-    const { result, error, status } = await checkUserResult(req.user._id);
+    const { result, error, status } = await checkUserResult(req.user._id, 1);
 
     if (error) {
         if (status === 404 || status === 500) {
@@ -192,7 +199,7 @@ router.get('/result_forensic', ensureAuthenticated, async (req, res) => {
 // 결과 페이지 라우트
 router.get('/result_ai_singer', ensureAuthenticated, async (req, res) => {
     
-    const { result, error, status } = await checkUserResult(req.user._id);
+    const { result, error, status } = await checkUserResult(req.user._id, 2);
 
     if (error) {
         if (status === 404 || status === 500) {
@@ -212,8 +219,7 @@ router.get('/result_ai_singer', ensureAuthenticated, async (req, res) => {
 // 결과 페이지 라우트
 router.get('/result_announce', ensureAuthenticated, async (req, res) => {
     
-    const { result, error, status } = await checkUserResult(req.user._id);
-
+    const { result, error, status } = await checkUserResult(req.user._id, 3);
     if (error) {
         if (status === 404 || status === 500) {
             return res.status(status).send(error);
@@ -234,8 +240,8 @@ router.get('/result_announce', ensureAuthenticated, async (req, res) => {
 // 결과 시각화 페이지 라우트
 router.get('/result_visual', ensureAuthenticated, async (req, res) => {
 
-    // const { result, error, status } = await checkUserResult(req.user._id, 1);
-    const { result, error, status } = await checkUserResult(req.user._id);
+    const { result, error, status } = await checkUserResult(req.user._id, 1);
+    //const { result, error, status } = await checkUserResult(req.user._id);
 
     if (error) {
         if (status === 404 || status === 500) {
@@ -325,7 +331,7 @@ router.get('/announcer_improvements', ensureAuthenticated, async (req, res) => {
 
 router.get('/forensic_result_detail', ensureAuthenticated, async (req, res) => {
     
-    const { result, error, status } = await checkUserResult(req.user._id, 3);
+    const { result, error, status } = await checkUserResult(req.user._id, 1);
 
     if (error) {
         if (status === 404 || status === 500) {
@@ -344,7 +350,7 @@ router.get('/forensic_result_detail', ensureAuthenticated, async (req, res) => {
 
 router.get('/result_detail_ai_singer', ensureAuthenticated, async (req, res) => {
     
-    const { result, error, status } = await checkUserResult(req.user._id, 3);
+    const { result, error, status } = await checkUserResult(req.user._id, 2);
 
     if (error) {
         if (status === 404 || status === 500) {
@@ -363,7 +369,7 @@ router.get('/result_detail_ai_singer', ensureAuthenticated, async (req, res) => 
 
 router.get('/result_overall_ai_singer', ensureAuthenticated, async (req, res) => {
     
-    const { result, error, status } = await checkUserResult(req.user._id, 3);
+    const { result, error, status } = await checkUserResult(req.user._id, 2);
 
     if (error) {
         if (status === 404 || status === 500) {
