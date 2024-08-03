@@ -4,27 +4,50 @@ block content
     .container
       .row.mt-5
         .col-12.text-center
-          h1 음성 위변조 탐지
+          h1 음성 위변조 탐지 보고서 
+      hr
+      h2 🎤 MFCC란?
+      p(class="strong-text text-center description" style="font-size: 20px")
+          | MFCC(Mel-Frequency Cepstral Coefficients)란 음성 신호의 다양한 특징을 추출하는 기법입니다. 
+          br
+          | 음성 신호 스펙트럼을 사람의 청각 인식 패턴과 유사한 주파수 척도인 Mel-Frequency로 변환한 뒤, 
+          br
+          | 스펙트럼의 주기적 패턴을 분석하여 추출한 12개의 계수들을 의미합니다.
+
 
       .row.mt-4
         .col-12
-          img(src=`clustering_label_${result.files_control_id}.png`, alt="Clustering graph", class="image-small mx-auto d-block")
-          p(class="strong-text text-center") AI모델 학습 전 실시간/녹취록 음성에서 추출한 MFCC 계수들을 2차원 좌표평면에 나타내고 분포에 따라 레이블을 부여한 결과입니다.
+          img(src=`clustering_label_${result.files_control_id}.png`, alt="Clustering graph", class="image-small mx-auto d-block" width="500")
+          p(class="strong-text text-center" style="font-size: 20px;") 
+            | AI모델 학습 전 실시간/녹취록 음성에서 추출한 MFCC 계수들을 2차원 좌표평면에 나타내고 
+            br
+            | 분포에 따라 레이블을 부여한 결과입니다.
+          br
           hr
 
-          img(src=`train_acc_loss_${result.files_control_id}.png`, alt="Train accuracy and loss graph", class="img-fluid")
-          p(class="strong-text text-center") 훈련 횟수에 따른 모델의 오차율과 훈련 정확도를 보여줍니다.
+          br
+          img(src=`train_acc_loss_${result.files_control_id}.png`, alt="Train accuracy and loss graph", class="img-fluid" width="900")
+          p(class="strong-text text-center" style="font-size: 20px;" ) 훈련 횟수에 따른 모델의 오차율과 훈련 정확도를 보여줍니다.
+          br
           hr
-                              
-          img(src=`fft_spectrum_${result.files_control_id}.png`, alt="MFCC spectrum graph", class="img-fluid")
-          p(class="strong-text text-center") 의심되는 음성과 원본의 주파수 대역별 데시벨을 비교한 그래프입니다. 
+          
+          br
+          img(src=`fft_spectrum_${result.files_control_id}.png`, alt="MFCC spectrum graph", class="img-fluid" width="1000")
+          p(class="strong-text text-center" style="font-size: 20px;") 의심되는 음성과 원본의 주파수 대역별 데시벨을 비교한 그래프입니다. 
+          br
           hr
-                              
-          img(src=`mfcc_spectrum_graph_${result.files_control_id}.png`, alt="Spectrogram of recorded and live speech", class="img-fluid")
-          p(class="strong-text text-center") 각 프레임에 따른 MFCC 계수값들의 세기를 색깔로 표현한 스펙트럼입니다.
 
-          img(src=`mfcc_bar_graph_${result.files_control_id}.png`, alt="MFCC coefficients average values graph", class="img-fluid")
-          p(class="strong-text text-center") 의심되는 음성과 원본의 MFCC 계수 별 평균값을 비교한 막대 그래프입니다.
+          br                        
+          img(src=`mfcc_spectrum_graph_${result.files_control_id}.png`, alt="Spectrogram of recorded and live speech", class="img-fluid" width="860")
+          p(class="strong-text text-center" style="font-size: 20px;") 각 프레임에 따른 MFCC 계수값들의 세기를 색깔로 표현한 스펙트럼입니다.
+          br
+          hr
+
+          br
+          img(src=`mfcc_bar_graph_${result.files_control_id}.png`, alt="MFCC coefficients average values graph", class="img-fluid" width="800")
+          p(class="strong-text text-center" style="font-size: 20px;") 의심되는 음성과 원본 음성의 MFCC 계수별 평균값을 비교한 막대 그래프입니다.
+          br
+          hr
 
           #{console.log(recordAvg)}
       .row.mt-4
@@ -47,6 +70,8 @@ block content
                   - let value = controlAvg && controlAvg[`MFCC${num}`] ? controlAvg[`MFCC${num}`].toFixed(2) : ''
                   td= value
 
+      p(class="strong-text text-center" style="font-size: 20px;") 의심되는 음성과 원본 음성의 MFCC 계수별 평균값을 비교한 표 입니다.
+      br
       .row.mt-4
         .col-12.text-center
                 form(action="/result_forensic" method="GET")

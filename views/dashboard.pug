@@ -58,7 +58,8 @@ html(lang="ko")
         margin: 0;
       }
       .container {
-        max-width: 500px;
+        max-width: 600px;
+        max-height: 1500px;
         padding: 2rem;
         background: white;
         border-radius: 8px;
@@ -76,6 +77,10 @@ html(lang="ko")
       .btn {
         height: 3rem; /* 버튼 높이를 3rem으로 설정 */
         font-size: 1.3rem; /* 버튼 글자 크기를 1.3rem으로 설정 */
+        padding-left: 2rem; /* 왼쪽 공백을 1rem으로 설정 */
+        padding-right: 2rem; /* 오른쪽 공백을 1rem으로 설정 */
+        margin-top: 2rem; /* 위쪽 간격을 1rem으로 설정 */
+        margin-bottom: 2rem; /* 아래쪽 간격을 1rem으로 설정 */
       }
       footer {
         position: fixed;
@@ -97,6 +102,7 @@ html(lang="ko")
     .container
       img.avatar(src=`${imgPath}`, alt="Avatar")
       h2 #{title}
+      br
       form(action="/upload_" + `${menu}` method="GET")
         button.btn.btn-dark.btn-block(type="submit") 파일 업로드!
       form(action="/result_" + `${menu}` method="GET")
@@ -104,7 +110,7 @@ html(lang="ko")
       form(action="/file_download_" + `${menu}` method="POST")
         button.btn.btn-dark.btn-block(type="submit") 최근 결과를 PDF로 다운로드
       form(action="/" method="GET")
-        button(type='submit').btn.btn-dark 메인 화면 가기
+        button(type='submit' style="font-size: 18px;").btn.btn-dark 메인 화면 가기
     footer
       p © Created By Park Sohee | Lee Keejung | Lee Seungjay
       .footer-links
