@@ -4,10 +4,10 @@ block content
     .container-fluid.mt-5
         .row.features.mt-5.justify-content-center
             .col-md-8.col-lg-6.feature
-                h3(class="text-left indent-text font-weight-normal") 📎 요약
+                h3(class="text-left font-weight-normal") 📎 요약
                 p(class="description-left")
                 
-                table.table.table-bordered
+                table.table.table-bordered(style="font-size: 20px;")
                     thead.thead-dark
                         tr
                             th 항목
@@ -20,19 +20,18 @@ block content
                             td 양호
                             td.text-left !{good.length ? good.join('<br>') : '없음'}
                         tr(style="color: red;")
-                            td 미흡
-                            td.text-left !{poor.length ? poor.join('<br>') : '없음'}
+                            td 
+                              strong 미흡
+                            td.text-left 
+                              strong !{poor.length ? poor.join('<br>') : '없음'}
                 br
                 hr
                 #{console.log(poor_mfccs)}
                 
                 h3(class="text-left") ✏️ 개선 연습
-                br
-                br
                 p(class="description-left bold-text ", style = `${!poor_mfccs.includes("mfcc2") ? "display:none " : "font-size:22px"}`) ✅ 피치 조절 연습
                     br
                     span(style="text-align: left; font-size:17px")
-                        br
                         span(class="bold-text") 목적:
                         span(class="font-weight-normal") 음성의 피치 변화를 규칙적으로 만들고, 억양을 일관되게 유지하여 명확한 발음을 함.
                         br
@@ -70,22 +69,26 @@ block content
                 p(class="description-left bold-text", style = `${!poor_mfccs.includes("mfcc5") ? "display:none" : "font-size:22px"}`) ✅ 감정 표현 연습
                     br
                     span(style="text-align: left; font-size:17px")
-                        br
                         span(class="bold-text") 목적: 
+                        br
                         span(class="font-weight-normal") 발음의 세부 특성을 명확하게 하고, 감정을 풍부하게 표현할 수 있도록 함.
                         br
                         span(class="bold-text") 연습 방법:
                         br
-                        span(class="indent-text font-weight-normal") • 감정 단어 카드: 다양한 감정을 나타내는 단어를 카드에 적고, 각 단어를 해당 감정에 맞게 발음합니다. 예를 들어, "기쁨", "슬픔", "놀람" 등을 적절한 감정으로 표현하며 발음합니다.
+                        span(class="indent-text font-weight-normal") • 감정 단어 카드: 다양한 감정을 나타내는 단어를 카드에 적고, 각 단어를 해당 감정에 맞게 발음합니다. 
                         br
-                        span(class="indent-text font-weight-normal") • 중주파수 발음 연습: 중주파수 대역의 발음을 개선하기 위해 "ㅁ", "ㅂ", "ㅈ" 등의 음소를 포함한 단어를 반복적으로 발음합니다. 예를 들어, "마법", "밥상", "자전거" 등을 연습합니다.
+                        span(class="indent-text font-weight-normal") 예를 들어, "기쁨", "슬픔", "놀람" 등을 적절한 감정으로 표현하며 발음합니다.
                         br
-                        span(class="indent-text font-weight-normal") • 감정 표현 연기: 다양한 감정을 표현하는 짧은 문장을 연기해 보며, 감정에 따라 목소리의 톤과 억양을 조절합니다. 예를 들어, "난 정말 기뻐!"를 기쁨에 찬 목소리로 연기해 봅니다.
+                        span(class="indent-text font-weight-normal") • 중주파수 발음 연습: 중주파수 대역의 발음을 개선하기 위해 "ㅁ", "ㅂ", "ㅈ" 등의 음소를 포함한 단어를 
+                        br
+                        span(class="indent-text font-weight-normal") 반복적으로 발음합니다. 예를 들어, "마법", "밥상", "자전거" 등을 연습합니다.
+                        br
+                        span(class="indent-text font-weight-normal") • 감정 표현 연기: 다양한 감정을 표현하는 짧은 문장을 연기해 보며, 감정에 따라 목소리의 톤과 억양을 조절합니다. 
+                        br
+                        span(class="indent-text font-weight-normal") 예를 들어, "난 정말 기뻐!"를 기쁨에 찬 목소리로 연기해 봅니다.
                     br
                     br
                     span(class="bold-text" style="text-align: left; font-size:20px") 중주파수 범위에서의 발음이 불명확하고, 감정 표현이 부족합니다. 세부적인 발음 특성이 제대로 전달되지 않아 발화의 명확성이 떨어집니다.
-                br  
-                br
                 p(class="description-left bold-text", style = `${!poor_mfccs.includes("mfcc6") ? "display:none" :"font-size:22px"}`) ✅ 발음 유창성 연습
                     br
                     span(style="text-align: left; font-size:17px")

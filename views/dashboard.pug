@@ -45,7 +45,7 @@ html(lang="ko")
   head
     meta(charset="UTF-8")
     meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
-    title AI 가수 목소리 탐지
+    title #{title}
     link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css")
     style.
       body {
@@ -75,6 +75,7 @@ html(lang="ko")
       }
       .btn {
         height: 3rem; /* 버튼 높이를 3rem으로 설정 */
+        font-size: 1.3rem; /* 버튼 글자 크기를 1.3rem으로 설정 */
       }
       footer {
         position: fixed;
@@ -95,7 +96,7 @@ html(lang="ko")
   body
     .container
       img.avatar(src=`${imgPath}`, alt="Avatar")
-      h1 DashBoard
+      h2 #{title}
       form(action="/upload_" + `${menu}` method="GET")
         button.btn.btn-dark.btn-block(type="submit") 파일 업로드!
       form(action="/result_" + `${menu}` method="GET")

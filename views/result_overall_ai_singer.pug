@@ -1,7 +1,7 @@
 extends ./layout2.pug
 
 block content
-    .container
+    .container(style="margin-top: 60px;")
       .row.justify-content-center
         .col-md-8
           .text-center
@@ -38,10 +38,14 @@ block content
                 b #{result.ai_voice_MAE_similarity >= 95 ? '가수 본인의 목소리입니다.' : result.ai_voice_MAE_similarity >= 80 ? 'AI 합성가능성이 존재합니다.' : '전혀 다른 목소리입니다.'} 
                 | 특히, 중주파수 대역에서 
                 | 주파수 변동성, 음성의 질감 정도가 약 3.05 정도 차이 납니다.
-              .text-center.mt-4
-               a.btn.btn-black(href="/result_ai_singer") 이전 화면으로 돌아가기
-               a.btn.btn-black(href="/dashboard_ai_singer") 대시보드로 가기
-                
+      .row.mt-4
+          .col-12.text-center
+              form(action="/result_ai_singer" method="GET")
+                  button(type='submit' class="btn btn-outline-success btn-black") 이전 화면으로 가기
+              br
+              form(action="/dashboard_ai_singer" method="GET")
+                  button(type='submit' class="btn btn-outline-success btn-black") 대시보드로 돌아가기
+      br
       footer.text-center
         p © Created By Park Sohee | Lee Keejung | Lee Seungjay
         .footer-links

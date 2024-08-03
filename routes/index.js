@@ -29,6 +29,7 @@ router.get('/dashboard_forensic', ensureAuthenticated, (req, res) => {
         userId: req.user._id,
         imgPath: "./asset/forensic.png",
         menu: "forensic",
+        title: "음성 위변조 탐지 대시보드"
     })
 })
 
@@ -38,6 +39,7 @@ router.get('/dashboard_ai_singer', ensureAuthenticated, (req, res) => {
         userId: req.user._id,
         imgPath: "./asset/ai_singer.png",
         menu: "ai_singer",
+        title: "AI 가수 목소리 탐지 대시보드"
     })
 })
 
@@ -47,6 +49,7 @@ router.get('/dashboard_announce', ensureAuthenticated, (req, res) => {
         userId: req.user._id,
         imgPath: "./asset/announce.png",
         menu: "announce",
+        title: "발성 연습 및 교정 대시보드"
     })
 })
 
@@ -322,10 +325,40 @@ router.get('/announcer_improvements', ensureAuthenticated, async (req, res) => {
         return res.render('no_result', { message: error });
     }
 
+    var mfccDescriptions = [
+        {name: "음성의 피치 변화", mfcc: "MFCC2", value: result.mfcc_acc_list[0]},
+        {name: "발음의 정확성", mfcc: "MFCC3", value: result.mfcc_acc_list[1]},
+        {name: "특정 음소의 발음 전달", mfcc: "MFCC5", value: result.mfcc_acc_list[2]},
+        {name: "발음의 연결성", mfcc: "MFCC6", value: result.mfcc_acc_list[3]},
+        {name: "발음 속도", mfcc: "MFCC8", value: result.mfcc_acc_list[4]}
+      ];
+      var excellent = [];
+      var good = [];
+      var poor = [];
+      var poor_mfccs = [];
+      var thresholds = [95, 80];  // 우수: 95 이상, 양호: 80-94, 미흡: 80 미만
+      var i = 0;
+      var mfcc = ["mfcc2", "mfcc3", "mfcc5", ,"mfcc6", "mfcc8"];
+      mfccDescriptions.forEach(desc => {
+        if (desc.value >= thresholds[0]) {
+          excellent.push(`${desc.name}(${desc.mfcc})`);
+        } else if (desc.value >= thresholds[1]) {
+          good.push(`${desc.name}(${desc.mfcc})`);
+        } else {
+          poor.push(`${desc.name}(${desc.mfcc})`);
+          poor_mfccs.push(mfcc[i])
+        }
+        i++;
+      });
+      console.log(poor_mfccs)
     // 결과가 있으면 결과 페이지 렌더링
     res.render('improvements_announce', {
         userId: req.user._id,
-        result
+        result, 
+        excellent,
+        good,
+        poor,
+        poor_mfccs,
     })
 });
 
@@ -335,7 +368,7 @@ router.get('/forensic_result_detail', ensureAuthenticated, async (req, res) => {
 
     const recordAvg = await CoeffieRecordAvg.findOne({ files_record_id: result.files_record_id }).lean();
     const controlAvg = await CoeffieControlAvg.findOne({ files_control_id: result.files_control_id }).lean();
-
+    
     if (error) {
         if (status === 404 || status === 500) {
             return res.status(status).send(error);
@@ -356,7 +389,7 @@ router.get('/forensic_result_detail', ensureAuthenticated, async (req, res) => {
 router.get('/result_detail_ai_singer', ensureAuthenticated, async (req, res) => {
     
     const { result, error, status } = await checkUserResult(req.user._id, 2);
-
+    
     const recordAvg = await CoeffieRecordAvg.findOne({ files_record_id: result.files_record_id }).lean();
     const controlAvg = await CoeffieControlAvg.findOne({ files_control_id: result.files_control_id }).lean();
 
