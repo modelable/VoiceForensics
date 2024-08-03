@@ -5,8 +5,9 @@ block content
       .row.justify-content-center
         .col-md-8
           .text-center
-            h1.mb-4.mt-4 AI 가수 목소리 탐지
+            h1.mb-4.mt-4 AI 가수 목소리 탐지 종합 분석
             p VoiceForensic에 좋아하는 가수의 음원과 의심되는 음원을 업로드하세요.
+            br
       .row.justify-content-center.result-container
         .col-md-6
           .card
@@ -28,8 +29,14 @@ block content
                     tr
                       td(colspan="2").text-center.similarity-score #{result.ai_voice_MAE_similarity}% (#{result.ai_voice_MAE_similarity >= 95 ? "A" : result.ai_voice_MAE_similarity >= 80 ? "B" : "C"}등급)
               p.mt-3
-                | 원본 가수 음성과 비교 음성의 유사도는 약 #{result.ai_voice_MAE_similarity}%로, #{result.ai_voice_MAE_similarity >= 95 ? "A" : result.ai_voice_MAE_similarity >= 80 ? "B" : "C"}등급이며 
-                | #{result.ai_voice_MAE_similarity >= 95 ? '가수 본인의 목소리입니다.' : result.ai_voice_MAE_similarity >= 80 ? 'AI 합성가능성이 존재합니다.' : '전혀 다른 목소리입니다.'} 특히, 중주파수 대역에서 
+                | 원본 가수 음성과 비교 음성의 유사도는 약 
+                b #{result.ai_voice_MAE_similarity}%
+                | 로, 
+                b #{result.ai_voice_MAE_similarity >= 95 ? "A" : result.ai_voice_MAE_similarity >= 80 ? "B" : "C"}등급
+                | 이며 
+                br
+                b #{result.ai_voice_MAE_similarity >= 95 ? '가수 본인의 목소리입니다.' : result.ai_voice_MAE_similarity >= 80 ? 'AI 합성가능성이 존재합니다.' : '전혀 다른 목소리입니다.'} 
+                | 특히, 중주파수 대역에서 
                 | 주파수 변동성, 음성의 질감 정도가 약 3.05 정도 차이 납니다.
               .text-center.mt-4
                a.btn.btn-black(href="/result_ai_singer") 이전 화면으로 돌아가기
