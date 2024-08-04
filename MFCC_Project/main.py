@@ -754,16 +754,16 @@ if __name__ == '__main__':
     # app.run(port=5000)
     
     #라우트를 자동으로 호출
-    # response = requests.get(public_url + '/import_dataset')
-    # print("Response from /import_dataset route:", response.text)
+    response = requests.get(public_url + '/import_dataset')
+    print("Response from /import_dataset route:", response.text)
     
-    # response = requests.get(public_url + '/label_setting')
-    # print("Response from /label_setting route:", response.text)
+    response = requests.get(public_url + '/label_setting')
+    print("Response from /label_setting route:", response.text)
     
-    # response = requests.get(public_url + '/training')
-    # print("Response from /training route:", response.text)
+    response = requests.get(public_url + '/training')
+    print("Response from /training route:", response.text)
     
-    # response = requests.get(public_url + '/model_predict')
-    # print("Response from /model_predict route:", response.text)
+    response = requests.get(public_url + '/model_predict')
+    print("Response from /model_predict route:", response.text)
 
     print("Flask server is running and ngrok tunnel is established.")
