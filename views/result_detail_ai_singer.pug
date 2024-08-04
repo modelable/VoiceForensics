@@ -121,11 +121,14 @@ block content
                             - }
                             td= '특정 발음 패턴의 강조도가 ' + interpretation3 
                         tr
-                            td MFCC4
+                            td
+                                strong(style="color: red; font-weight: bold;") MFCC4
                             - var value4 = recordAvg && recordAvg[`MFCC${4}`] ? recordAvg[`MFCC${4}`].toFixed(2) : ''
-                            td= value4
+                            td
+                                strong(style="color: red; font-weight: bold;")= value4
                             - var controlValue4 = controlAvg && controlAvg[`MFCC${4}`] ? controlAvg[`MFCC${4}`].toFixed(2) : ''
-                            td= controlValue4
+                            td
+                                strong(style="color: red; font-weight: bold;")= controlValue4
                             - var interpretation4 = ''
                             - if (Math.abs(value4 - controlValue4) < 1) {
                             -     interpretation4 = '거의 일치함'
@@ -134,7 +137,12 @@ block content
                             - } else {
                             -     interpretation4 = '많이 차이남'
                             - }
-                            td= '중주파수 대역에서 주파수 변동성, 음성의 질감 정도가 ' + interpretation4 
+                            td  
+                                strong(style="color: red; font-weight: bold;") 중주파수 대역에서 주파수 변동성, 음성의 질감 정도가 
+                                if interpretation4 === '많이 차이남'
+                                    strong(style="color: red; font-weight: bold;")= interpretation4
+                                else
+                                    = interpretation4interpretation4 
                         tr
                             td MFCC8
                             - var value8 = recordAvg && recordAvg[`MFCC${8}`] ? recordAvg[`MFCC${8}`].toFixed(2) : ''

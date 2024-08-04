@@ -28,20 +28,20 @@ block content
                       th(colspan="2") 유사도
                     tr
                       td(colspan="2").text-center.similarity-score #{result.ai_voice_MAE_similarity}% (#{result.ai_voice_MAE_similarity >= 95 ? "A" : result.ai_voice_MAE_similarity >= 80 ? "B" : "C"}등급)
-              p.mt-3
+              p.mt-3(style="font-size: 18px")
                 | 원본 가수 음성과 비교 음성의 유사도는 약 
                 b #{result.ai_voice_MAE_similarity}%
                 | 로, 
+                br
                 b #{result.ai_voice_MAE_similarity >= 95 ? "A" : result.ai_voice_MAE_similarity >= 80 ? "B" : "C"}등급
                 | 이며 
-                br
                 b #{result.ai_voice_MAE_similarity >= 95 ? '가수 본인의 목소리입니다.' : result.ai_voice_MAE_similarity >= 80 ? 'AI 합성가능성이 존재합니다.' : '전혀 다른 목소리입니다.'} 
                 br
                 | 특히, 
                 strong #{des}
                 br
-                | 약 
-                strong #{maxDifference}
+                | 약  
+                strong #{maxDifference.toFixed(2)}
                 | 정도 차이 납니다.
       .row.mt-4
           .col-12.text-center

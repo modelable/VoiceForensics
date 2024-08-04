@@ -17,7 +17,7 @@ block content
                 p(class="description-left bold-text" style="font-size: 20px;")
                     | MFCC2: 음성 스펙트럼 - 
                     span(style=`color: ${result.mfcc_acc_list[0] >= 95 ? 'green' : result.mfcc_acc_list[0] >= 80 ? 'orange' : 'red'}; font-size: 18px;`)
-                        | #{result.mfcc_acc_list[0]}%
+                        | #{result.mfcc_acc_list[0].toFixed(2)}%
 
                 p(class="description-left" style="font-size: 18px;")
                     span(class="bold-text indent-text") 설명: 
@@ -32,7 +32,7 @@ block content
                 p(class="description-left bold-text" style="font-size: 20px;")
                     | MFCC3: 특정 발음 특성 - 
                     span(style=`color: ${result.mfcc_acc_list[1] >= 95 ? 'green' : result.mfcc_acc_list[1] >= 80 ? 'orange' : 'red'};`)
-                        | #{result.mfcc_acc_list[1]}%
+                        | #{result.mfcc_acc_list[1].toFixed(2)}%
 
                 p(class="description-left" style="font-size: 18px;")
                     span(class="bold-text indent-text") 설명: 
@@ -45,7 +45,7 @@ block content
                 p(class="description-left bold-text" style="font-size: 20px;")
                     | MFCC5: 중주파수 범위의 세부 특성 – 
                     span(style=`color: ${result.mfcc_acc_list[2] >= 95 ? 'green' : result.mfcc_acc_list[2] >= 80 ? 'orange' : 'red'};`)
-                        | #{result.mfcc_acc_list[2]}%
+                        | #{result.mfcc_acc_list[2].toFixed(2)}%
 
                 p(class="description-left" style="font-size: 18px;")
                     span(class="bold-text indent-text") 설명: 
@@ -60,7 +60,7 @@ block content
                 p(class="description-left bold-text" style="font-size: 20px;")
                     | MFCC6: 발음의 연결 및 음절 간의 변화 - 
                     span(style=`color: ${result.mfcc_acc_list[3] >= 95 ? 'green' : result.mfcc_acc_list[3] >= 80 ? 'orange' : 'red'};`)
-                        | #{result.mfcc_acc_list[3]}%
+                        | #{result.mfcc_acc_list[3].toFixed(2)}%
 
                 p(class="description-left" style="font-size: 18px;")
                     span(class="bold-text indent-text") 설명: 
@@ -73,7 +73,7 @@ block content
                 p(class="description-left bold-text" style="font-size: 20px;")
                     | MFCC8: 고주파수 대역의 변화를 반영 - 
                     span(style=`color: ${result.mfcc_acc_list[4] >= 95 ? 'green' : result.mfcc_acc_list[4] >= 80 ? 'orange' : 'red'};`)
-                        | #{result.mfcc_acc_list[4]}%
+                        | #{result.mfcc_acc_list[4].toFixed(2)}%
 
                 p(class="description-left" style="font-size: 18px;")
                     span(class="bold-text indent-text") 설명: 
