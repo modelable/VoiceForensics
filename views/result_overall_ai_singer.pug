@@ -13,7 +13,7 @@ block content
           .card
             .card-body
               h3 종합 분석
-              .table-responsive
+              .table-responsive(style="font-size: 20px")
                 table.table.table-bordered
                   thead.thead-light
                     tr
@@ -36,8 +36,13 @@ block content
                 | 이며 
                 br
                 b #{result.ai_voice_MAE_similarity >= 95 ? '가수 본인의 목소리입니다.' : result.ai_voice_MAE_similarity >= 80 ? 'AI 합성가능성이 존재합니다.' : '전혀 다른 목소리입니다.'} 
-                | 특히, 중주파수 대역에서 
-                | 주파수 변동성, 음성의 질감 정도가 약 3.05 정도 차이 납니다.
+                br
+                | 특히, 
+                strong #{des}
+                br
+                | 약 
+                strong #{maxDifference}
+                | 정도 차이 납니다.
       .row.mt-4
           .col-12.text-center
               form(action="/result_ai_singer" method="GET")

@@ -21,39 +21,59 @@ block content
                 div
                     p 
                         img(src=`fft_spectrum_${result.files_control_id}.png`, alt="MFCC spectrum graph", class="img-fluid")
+                    br
                     p
                         h4.text-left 
                             strong MFCC2
                         p.text-left(style="font-size: 20px")
-                            | MFCC2 계수는 에너지가 집중되어 있는 위치를 알려줍니다.
+                            | MFCC2 계수는
+                            strong 에너지가 집중되어 있는 위치
+                            | 를 알려줍니다.
+                            br
                             | 계수 값이 높을수록 높은 주파수 대역에 더 많은 에너지가 집중되어 있음을 의미하며, 낮을수록 낮은 주파수 대역에 더 많은 에너지가 분포하고 있음을 의미합니다.
                     p
                         h4.text-left 
                             strong MFCC3
                         p.text-left(style="font-size: 20px")
-                            | MFCC3 계수는 발음 특성을 반영하여 특정 모음의 발음 방식을 포착합니다.
+                            | MFCC3 계수는 
+                            strong 발음 특성을 반영하여 특정 모음의 발음 방식
+                            | 을 포착합니다.
+                            br
                             | 높은 값을 가질수록 특정 발음 패턴이 강조된다는 것을 의미합니다.
                     p
                         h4.text-left 
                             strong MFCC4
                         p.text-left(style="font-size: 20px")
-                            | MFCC4 계수는 중간 주파수 대역에서의 주파수 변동성, 음성 신호의 매끄럽거나 거친 정도, 톤의 다양성 등의 복잡성 정보를 반영합니다.
+                            | MFCC4 계수는 
+                            strong 중간 주파수 대역에서의 주파수 변동성, 음성 신호의 매끄럽거나 거친 정도, 톤의 다양성
+                            | 등의 복잡성 정보를 반영합니다.
+                            br
                             | 발화자의 발음 습관을 인식하는데 도움이 됩니다.
                     p
                         h4.text-left 
                             strong MFCC8
                         p.text-left(style="font-size: 20px")
-                            | MFCC8 계수는 고주파수 대역에서 입술과 혀의 움직임 정도, 미세한 발음의 변화와 같은 세부 변화를 포착합니다.
+                            | MFCC8 계수는 
+                            strong 고주파수 대역에서 입술과 혀의 움직임 정도, 미세한 발음의 변화
+                            | 와 같은 세부 변화를 포착합니다.
                     p
                         h4.text-left 
                             strong MFCC9
                         p.text-left(style="font-size: 20px")
-                            | MFCC9 계수는 3000hHz 이상의 고주파수 대역에서 발음의 끝맺음과 강세 위치에 대한 정보를 제공합니다. 강세가 있는 부분에서 고주파 성분이 두드러지게 나타납니다.
+                            | MFCC9 계수는 
+                            strong 3000hHz 이상의 고주파수 대역에서 발음의 끝맺음과 강세 위치
+                            | 에 대한 정보를 제공합니다. 
+                            br 
+                            | 강세가 있는 부분에서 고주파 성분이 두드러지게 나타납니다.
                     p
                         h4.text-left 
                             strong MFCC11
                         p.text-left(style="font-size: 20px")
-                            | MFCC11 계수는 4000Hz 이상의 고주파수 대역에서 “ㅅ” 자음과 같은 무성음의 끝맺음 발음을 반영합니다. 특히, “ㅌ”, “ㅋ”과 같은 끝맺음 소리의 세밀한 정도를 반영합니다.
+                            | MFCC11 계수는 
+                            strong 4000Hz 이상의 고주파수 대역에서 “ㅅ” 자음과 같은 무성음의 끝맺음 발음
+                            | 을 반영합니다. 
+                            br
+                            | 특히, “ㅌ”, “ㅋ”과 같은 끝맺음 소리의 세밀한 정도를 반영합니다.
                     br        
                     br
                     p 

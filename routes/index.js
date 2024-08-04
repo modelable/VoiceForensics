@@ -414,9 +414,6 @@ router.get('/result_overall_ai_singer', ensureAuthenticated, async (req, res) =>
     
     const { result, error, status } = await checkUserResult(req.user._id, 2);
 
-    const recordAvg = await CoeffieRecordAvg.findOne({ files_record_id: result.files_record_id }).lean();
-    const controlAvg = await CoeffieControlAvg.findOne({ files_control_id: result.files_control_id }).lean();
-
     if (error) {
         if (status === 404 || status === 500) {
             return res.status(status).send(error);
@@ -425,12 +422,41 @@ router.get('/result_overall_ai_singer', ensureAuthenticated, async (req, res) =>
         return res.render('no_result', { message: error });
     }
 
+    const recordAvg = await CoeffieRecordAvg.findOne({ files_record_id: result.files_record_id }).lean();
+    const controlAvg = await CoeffieControlAvg.findOne({ files_control_id: result.files_control_id }).lean();
+
+    //0803 sohee 추가 시작
+    const mfccIndices = [2, 3, 4, 8, 9, 11];
+    const mfccDescriptions = [" ", " ", "에너지 집중도가 ", "특정 발음 패턴의 강조도가 ", "중주파수 대역에서 주파수 변동성 및 음성의 질감 정도가 ",
+        " ", " ", " ", "고주파수 대역에서 미세한 발음 변화가 ", "고주파수 대역에서 강세 위치가 ", " ", "고주파수 대역에서 끝맺음 발음이 "]
+
+    let maxDifference = 0;
+    let maxDifferenceIndex = 2;
+
+    mfccIndices.forEach(index => {
+        const recordValue = recordAvg[`MFCC${index}`];
+        const controlValue = controlAvg[`MFCC${index}`];
+        const difference = Math.abs(recordValue - controlValue);
+    
+        if (difference > maxDifference) {
+            maxDifference = difference;
+            maxDifferenceIndex = index;
+        }
+    });
+
+    var des = mfccDescriptions[maxDifferenceIndex];
+
+    console.log(`가장 큰 절댓값 차이를 가진 MFCC 계수: MFCC${maxDifferenceIndex}`);
+    console.log(`그 절댓값 차이: ${maxDifference}`);
+    //0802 sohee 추가 끝
+
     // 결과가 있으면 결과 페이지 렌더링
     res.render('result_overall_ai_singer', {
         userId: req.user._id,
         result,
-        recordAvg: recordAvg || {}, // recordAvg가 null이면 빈 객체를 할당
-        controlAvg: controlAvg || {} // controlAvg가 null이면 빈 객체를 할당
+        maxDifference,
+        maxDifferenceIndex,
+        des
     })
 });
 
