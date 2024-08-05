@@ -460,51 +460,9 @@ router.get('/result_overall_ai_singer', ensureAuthenticated, async (req, res) =>
     })
 });
 
-// router.post('/file_download', ensureAuthenticated, async (req, res) => {
-//     const { flag } = req.body;
-//     const { result, error, status } = await checkUserResult(req.user._id, flag);
-
-//     if (error) {
-//         if (status === 404 || status === 500) {
-//             return res.status(status).send(error);
-//         }
-//         // 결과가 없는 경우
-//         return res.render('no_result', { message: error });
-//     }
-
-//     const browser = await puppeteer.launch({ args: ['--font-render-hinting=none'] });
-//     const page = await browser.newPage();
-
-//     // 로그인 쿠키 가져오기
-//     const cookies = req.headers.cookie.split(';').map(cookie => {
-//         const [name, value] = cookie.split('=').map(c => c.trim());
-//         return {name, value, domain: 'localhost', url: 'http://localhost:3000'};
-//     });
-
-//     // Puppeteer에 쿠키 설정
-//     await page.setCookie(...cookies);
-
-//     switch(flag) {
-//         case 1: await page.goto('http://localhost:3000/result_visual', { waitUntil: 'networkidle0' }); break;
-//         // case 2: await page.goto('http://localhost:3000/singer_result_detail', { waitUntil: 'networkidle0' }); break;
-//         // case 3: await page.goto('http://localhost:3000/announcer_result_detail', { waitUntil: 'networkidle0' }); break;
-//         default: console.log('flag error in index.js');
-//     }
-    
-
-//     // PDF로 렌더링
-//     const pdf = await page.pdf({ format: 'A4' });
-
-//     await browser.close();
-
-//     // PDF 파일을 클라이언트에게 제공
-//     res.contentType('application/pdf');
-//     res.send(pdf);
-// });
-
 router.post('/file_download_forensic', ensureAuthenticated, async (req, res) => {
-    const { flag } = req.body;
-    const { result, error, status } = await checkUserResult(req.user._id, flag);
+    
+    const { result, error, status } = await checkUserResult(req.user._id, 1);
 
     if (error) {
         if (status === 404 || status === 500) {
@@ -526,13 +484,7 @@ router.post('/file_download_forensic', ensureAuthenticated, async (req, res) => 
     // Puppeteer에 쿠키 설정
     await page.setCookie(...cookies);
 
-    switch(flag) {
-        case 1: await page.goto('http://localhost:3000/result_visual', { waitUntil: 'networkidle0' }); break;
-        // case 2: await page.goto('http://localhost:3000/singer_result_detail', { waitUntil: 'networkidle0' }); break;
-        // case 3: await page.goto('http://localhost:3000/announcer_result_detail', { waitUntil: 'networkidle0' }); break;
-        default: console.log('flag error in index.js');
-    }
-    
+    await page.goto('http://localhost:3000/forensic_result_detail', { waitUntil: 'networkidle0' });
 
     // PDF로 렌더링
     const pdf = await page.pdf({ format: 'A4' });
@@ -545,8 +497,7 @@ router.post('/file_download_forensic', ensureAuthenticated, async (req, res) => 
 });
 
 router.post('/file_download_ai_singer', ensureAuthenticated, async (req, res) => {
-    const { flag } = req.body;
-    const { result, error, status } = await checkUserResult(req.user._id, flag);
+    const { result, error, status } = await checkUserResult(req.user._id, 2);
 
     if (error) {
         if (status === 404 || status === 500) {
@@ -568,13 +519,7 @@ router.post('/file_download_ai_singer', ensureAuthenticated, async (req, res) =>
     // Puppeteer에 쿠키 설정
     await page.setCookie(...cookies);
 
-    switch(flag) {
-        case 1: await page.goto('http://localhost:3000/result_visual', { waitUntil: 'networkidle0' }); break;
-        // case 2: await page.goto('http://localhost:3000/singer_result_detail', { waitUntil: 'networkidle0' }); break;
-        // case 3: await page.goto('http://localhost:3000/announcer_result_detail', { waitUntil: 'networkidle0' }); break;
-        default: console.log('flag error in index.js');
-    }
-    
+    await page.goto('http://localhost:3000/result_detail_ai_singer', { waitUntil: 'networkidle0' });
 
     // PDF로 렌더링
     const pdf = await page.pdf({ format: 'A4' });
@@ -587,8 +532,7 @@ router.post('/file_download_ai_singer', ensureAuthenticated, async (req, res) =>
 });
 
 router.post('/file_download_announce', ensureAuthenticated, async (req, res) => {
-    const { flag } = req.body;
-    const { result, error, status } = await checkUserResult(req.user._id, flag);
+    const { result, error, status } = await checkUserResult(req.user._id, 3);
 
     if (error) {
         if (status === 404 || status === 500) {
@@ -610,13 +554,7 @@ router.post('/file_download_announce', ensureAuthenticated, async (req, res) => 
     // Puppeteer에 쿠키 설정
     await page.setCookie(...cookies);
 
-    switch(flag) {
-        case 1: await page.goto('http://localhost:3000/result_visual', { waitUntil: 'networkidle0' }); break;
-        // case 2: await page.goto('http://localhost:3000/singer_result_detail', { waitUntil: 'networkidle0' }); break;
-        // case 3: await page.goto('http://localhost:3000/announcer_result_detail', { waitUntil: 'networkidle0' }); break;
-        default: console.log('flag error in index.js');
-    }
-    
+    await page.goto('http://localhost:3000/announcer_result_detail', { waitUntil: 'networkidle0' });
 
     // PDF로 렌더링
     const pdf = await page.pdf({ format: 'A4' });
