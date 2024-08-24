@@ -472,8 +472,13 @@ router.post('/file_download_forensic', ensureAuthenticated, async (req, res) => 
         return res.render('no_result', { message: error });
     }
 
-    const browser = await puppeteer.launch({ args: ['--font-render-hinting=none'] });
+    //기존 : 글꼴 렌더링 방식에 대한 설정만 제어
+    //const browser = await puppeteer.launch({ args: ['--font-render-hinting=none'] });
+
+    //0824 수정 : 헤드리스 모드, no-sandbox 모드 : 보안을 비활성화하는 모드, 권한 문제 해결 완료
+    const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox']});
     const page = await browser.newPage();
+
 
     // 로그인 쿠키 가져오기
     const cookies = req.headers.cookie.split(';').map(cookie => {
@@ -507,7 +512,8 @@ router.post('/file_download_ai_singer', ensureAuthenticated, async (req, res) =>
         return res.render('no_result', { message: error });
     }
 
-    const browser = await puppeteer.launch({ args: ['--font-render-hinting=none'] });
+    //const browser = await puppeteer.launch({ args: ['--font-render-hinting=none'] });
+    const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox']});
     const page = await browser.newPage();
 
     // 로그인 쿠키 가져오기
@@ -542,7 +548,8 @@ router.post('/file_download_announce', ensureAuthenticated, async (req, res) => 
         return res.render('no_result', { message: error });
     }
 
-    const browser = await puppeteer.launch({ args: ['--font-render-hinting=none'] });
+    //const browser = await puppeteer.launch({ args: ['--font-render-hinting=none'] });
+    const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox']});
     const page = await browser.newPage();
 
     // 로그인 쿠키 가져오기

@@ -119,15 +119,6 @@ files_record_id = None
 mfcc_control_data = None
 mfcc_record_data = None
 
-#0801 추가
-# mfcc2_record_values = None
-# mfcc2_control_values = None
-# mfcc2_record_train_values = None
-# mfcc2_record_test_values = None
-# mfcc2_control_train_values = None
-# mfcc2_control_test_values = None
-# combined2_labels = None
-# combined2_mfcc = None
 mfcc_nums = [2, 3, 5, 6, 8]
 record_values_list = []
 control_values_list = []
@@ -419,6 +410,7 @@ def model_predict():
     print(f"유사도 점수: {similarity_score:.4f}")
     #================================== default prediction =====================================//
     
+    #================================== FLAG == 3인 경우 =====================================//
     #flag == 3인 경우 추가 
     if(flag == 3):
         similarity_score_list = []
@@ -455,8 +447,8 @@ def model_predict():
             #유사도 리스트에 저장
             similarity_score_list.append(round(each_similarity_score, 4)*100)
             print(f"MFCC{mfcc_nums[i]} 유사도 점수: {each_similarity_score:.4f}")
-            
-        
+    
+    #================================== FLAG == 3인 경우 =====================================//
     # 현재 시간을 UTC로 구하기
     current_time = datetime.datetime.utcnow()
     # 소수점 네 자리까지 반올림
@@ -472,7 +464,7 @@ def model_predict():
         #"timestamp" : current_time
     }
     
-    # flag 값에 따라서 필드에 값을 할당합니다.
+    # flag 값에 따라서 필드에 값을 할당
     if flag == 1:
         data["result_MAE_similarity"] = similarity_score * 100  # 계산된 정확도
         data["ai_voice_MAE_similarity"] = None
@@ -753,17 +745,26 @@ if __name__ == '__main__':
     #Run the Flask app in the main thread
     # app.run(port=5000)
     
-    #라우트를 자동으로 호출
-    response = requests.get(public_url + '/import_dataset')
-    print("Response from /import_dataset route:", response.text)
+    #라우트를 자동으로 호출 -> 테스트 실행용
+    # response = requests.get(public_url + '/import_dataset')
+    # print("Response from /import_dataset route:", response.text)
     
-    response = requests.get(public_url + '/label_setting')
-    print("Response from /label_setting route:", response.text)
+    # response = requests.get(public_url + '/label_setting')
+    # print("Response from /label_setting route:", response.text)
     
-    response = requests.get(public_url + '/training')
-    print("Response from /training route:", response.text)
+    # response = requests.get(public_url + '/mfcc_bar_graph')
+    # print("Response from /mfcc_bar_graph route:", response.text)
     
-    response = requests.get(public_url + '/model_predict')
-    print("Response from /model_predict route:", response.text)
+    # response = requests.get(public_url + '/mfcc_spectrum')
+    # print("Response from /mfcc_spectrum route:", response.text)
+    
+    # response = requests.get(public_url + '/fft_spectrum')
+    # print("Response from /fft_spectrum route:", response.text)
+    
+    # response = requests.get(public_url + '/training')
+    # print("Response from /training route:", response.text)
+    
+    # response = requests.get(public_url + '/model_predict')
+    # print("Response from /model_predict route:", response.text)
 
     print("Flask server is running and ngrok tunnel is established.")
