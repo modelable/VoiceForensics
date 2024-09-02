@@ -1,23 +1,27 @@
+
 extends ./layout.pug
 
 block content
   div(class='container-fluid')
     div(class="row mt-5")
       div(class="col-md-9 mx-auto text-center")
+        //- 여기에다가 넣기 사진이랑 그것들
+        .container
+          img.avatar(src=`${flag == 1 ? "./asset/forensic.png" : flag == 2 ? "./asset/ai_singer.png" : "./asset/announce.png" }`, alt="Avatar")
+          h3 Upload
         h4(class="mt-2 text-center") 인공지능 훈련 및 시각화 자료를 준비중입니다.
           div(class="card mt-4")
             div(class="card-body")
               div(class="row my-4")
                 div(class="col-12")
                   div(class="progress mt-3")
-                    div(id="progress-bar" class="progress-bar", role="progressbar", style="width: 0%; height: 20px; background-color: green;", aria-valuenow="0", aria-valuemin="0", aria-valuemax="100") 0%
+                    div(id="progress-bar" class="progress-bar", role="progressbar", style="color: white; width: 0%; height: 20px; background-color: black;", aria-valuenow="0", aria-valuemin="0", aria-valuemax="100") 0%
                   div(id="step-name" class="mt-3")
               br
-              form(action="/dashboard" method="GET")
-                button(type='submit' class="btn btn-outline-success") Back to the Dashboard
+              form(action="/" method="GET")
+                button(type='submit' class="btn btn-outline-success btn-black") Back to the Homepage
 
   script.
-
     document.addEventListener('DOMContentLoaded', function() {
         var flag = !{flag}; // 서버로부터 받은 flag
 
