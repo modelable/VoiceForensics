@@ -91,11 +91,12 @@ block content
                             th 해 석
                     tbody
                         tr
-                            td MFCC2
+                            - var isHighlight2 = maxDifferenceIndex === 2 ? 'highlight' : ''
+                            td(class=isHighlight2) MFCC2
                             - var value2 = recordAvg && recordAvg[`MFCC${2}`] ? recordAvg[`MFCC${2}`].toFixed(2) : ''
-                            td= value2
+                            td(class=isHighlight2)= value2
                             - var controlValue2 = controlAvg && controlAvg[`MFCC${2}`] ? controlAvg[`MFCC${2}`].toFixed(2) : ''
-                            td= controlValue2
+                            td(class=isHighlight2)= controlValue2
                             - var interpretation2 = ''
                             - if (Math.abs(value2 - controlValue2) < 1) {
                             -     interpretation2 = '거의 일치함'
@@ -104,13 +105,14 @@ block content
                             - } else {
                             -     interpretation2 = '많이 차이남'
                             - }
-                            td= '음성 에너지 집중도가 ' + interpretation2 
+                            td(class=isHighlight2)= '음성 에너지 집중도가 ' + interpretation2 
                         tr
-                            td MFCC3
+                            - var isHighlight3 = maxDifferenceIndex === 3 ? 'highlight' : ''
+                            td(class=isHighlight3) MFCC3
                             - var value3 = recordAvg && recordAvg[`MFCC${3}`] ? recordAvg[`MFCC${3}`].toFixed(2) : ''
-                            td= value3
+                            td(class=isHighlight3)= value3
                             - var controlValue3 = controlAvg && controlAvg[`MFCC${3}`] ? controlAvg[`MFCC${3}`].toFixed(2) : ''
-                            td= controlValue3
+                            td(class=isHighlight3)= controlValue3
                             - var interpretation3 = ''
                             - if (Math.abs(value3 - controlValue3) < 1) {
                             -     interpretation3 = '거의 일치함'
@@ -119,16 +121,14 @@ block content
                             - } else {
                             -     interpretation3 = '많이 차이남'
                             - }
-                            td= '특정 발음 패턴의 강조도가 ' + interpretation3 
+                            td(class=isHighlight3)= '특정 발음 패턴의 강조도가 ' + interpretation3 
                         tr
-                            td
-                                strong(style="color: red; font-weight: bold;") MFCC4
+                            - var isHighlight4 = maxDifferenceIndex === 4 ? 'highlight' : ''
+                            td(class=isHighlight4) MFCC4
                             - var value4 = recordAvg && recordAvg[`MFCC${4}`] ? recordAvg[`MFCC${4}`].toFixed(2) : ''
-                            td
-                                strong(style="color: red; font-weight: bold;")= value4
+                            td(class=isHighlight4)= value4
                             - var controlValue4 = controlAvg && controlAvg[`MFCC${4}`] ? controlAvg[`MFCC${4}`].toFixed(2) : ''
-                            td
-                                strong(style="color: red; font-weight: bold;")= controlValue4
+                            td(class=isHighlight4)= controlValue4
                             - var interpretation4 = ''
                             - if (Math.abs(value4 - controlValue4) < 1) {
                             -     interpretation4 = '거의 일치함'
@@ -137,18 +137,15 @@ block content
                             - } else {
                             -     interpretation4 = '많이 차이남'
                             - }
-                            td  
-                                strong(style="color: red; font-weight: bold;") 중주파수 대역에서 주파수 변동성, 음성의 질감 정도가 
-                                if interpretation4 === '많이 차이남'
-                                    strong(style="color: red; font-weight: bold;")= interpretation4
-                                else
-                                    = interpretation4interpretation4 
+                            td(class=isHighlight4)='중주파수 대역에서 주파수 변동성, 음성의 질감 정도가 ' + interpretation4
+                               
                         tr
-                            td MFCC8
+                            - var isHighlight8 = maxDifferenceIndex === 8 ? 'highlight' : ''
+                            td(class=isHighlight8) MFCC8
                             - var value8 = recordAvg && recordAvg[`MFCC${8}`] ? recordAvg[`MFCC${8}`].toFixed(2) : ''
-                            td= value8
+                            td(class=isHighlight8)= value8
                             - var controlValue8 = controlAvg && controlAvg[`MFCC${8}`] ? controlAvg[`MFCC${8}`].toFixed(2) : ''
-                            td= controlValue8
+                            td(class=isHighlight8)= controlValue8
                             - var interpretation8 = ''
                             - if (Math.abs(value8 - controlValue8) < 1) {
                             -     interpretation8 = '거의 일치함'
@@ -157,13 +154,14 @@ block content
                             - } else {
                             -     interpretation8 = '많이 차이남'
                             - }
-                            td= '고주파수 대역에서 미세한 발음 변화가 ' + interpretation8 
+                            td(class=isHighlight8)= '고주파수 대역에서 미세한 발음 변화가 ' + interpretation8 
                         tr
-                            td MFCC9
+                            - var isHighlight9 = maxDifferenceIndex === 9 ? 'highlight' : ''
+                            td(class=isHighlight9) MFCC9
                             - var value9 = recordAvg && recordAvg[`MFCC${9}`] ? recordAvg[`MFCC${9}`].toFixed(2) : ''
-                            td= value9
+                            td(class=isHighlight9)= value9
                             - var controlValue9 = controlAvg && controlAvg[`MFCC${9}`] ? controlAvg[`MFCC${9}`].toFixed(2) : ''
-                            td= controlValue9
+                            td(class=isHighlight9)= controlValue9
                             - var interpretation9 = ''
                             - if (Math.abs(value9 - controlValue9) < 1) {
                             -     interpretation9 = '거의 일치함'
@@ -172,13 +170,14 @@ block content
                             - } else {
                             -     interpretation9 = '많이 차이남'
                             - }
-                            td= '고주파수 대역에서 강세 위치가 ' + interpretation9 
+                            td(class=isHighlight9)= '고주파수 대역에서 강세 위치가 ' + interpretation9 
                         tr
-                            td MFCC11
+                            - var isHighlight11 = maxDifferenceIndex === 11 ? 'highlight' : ''
+                            td(class=isHighlight11) MFCC11
                             - var value11 = recordAvg && recordAvg[`MFCC${11}`] ? recordAvg[`MFCC${11}`].toFixed(2) : ''
-                            td= value11
+                            td(class=isHighlight11)= value11
                             - var controlValue11 = controlAvg && controlAvg[`MFCC${11}`] ? controlAvg[`MFCC${11}`].toFixed(2) : ''
-                            td= controlValue11
+                            td(class=isHighlight11)= controlValue11
                             - var interpretation11 = ''
                             - if (Math.abs(value11 - controlValue11) < 1) {
                             -     interpretation11 = '거의 일치함'
@@ -187,7 +186,7 @@ block content
                             - } else {
                             -     interpretatio11 = '많이 차이남'
                             - }
-                            td= '고주파수 대역에서 끝맺음 발음이 ' + interpretation11
+                            td(class=isHighlight11)= '고주파수 대역에서 끝맺음 발음이 ' + interpretation11
 
         .row.mt-4
             .col-12.text-center

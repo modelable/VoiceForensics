@@ -401,10 +401,29 @@ router.get('/result_detail_ai_singer', ensureAuthenticated, async (req, res) => 
         return res.render('no_result', { message: error });
     }
 
+    //0903 sohee 추가 
+    const mfccIndices = [2, 3, 4, 8, 9, 11];
+    let maxDifference = 0;
+    let maxDifferenceIndex = 2;
+
+    mfccIndices.forEach(index => {
+        const recordValue = recordAvg[`MFCC${index}`];
+        const controlValue = controlAvg[`MFCC${index}`];
+        const difference = Math.abs(recordValue - controlValue);
+    
+        if (difference > maxDifference) {
+            maxDifference = difference;
+            maxDifferenceIndex = index;
+        }
+    });
+
+    //우리가 필요한건 maxDifferenceIndex == MFCC 계수 -> 파라미터로 넘겨준다.
+
     // 결과가 있으면 결과 페이지 렌더링
     res.render('result_detail_ai_singer', {
         userId: req.user._id,
         result,
+        maxDifferenceIndex,
         recordAvg: recordAvg || {}, // recordAvg가 null이면 빈 객체를 할당
         controlAvg: controlAvg || {} // controlAvg가 null이면 빈 객체를 할당
     })
