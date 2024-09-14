@@ -508,7 +508,7 @@ router.post('/file_download_forensic', ensureAuthenticated, async (req, res) => 
     // Puppeteer에 쿠키 설정
     await page.setCookie(...cookies);
 
-    await page.goto('http://localhost:3000/forensic_result_detail', { waitUntil: 'networkidle0' });
+    await page.goto('http://localhost:3000/pdf_forensic', { waitUntil: 'networkidle0' });
 
     // PDF로 렌더링
     const pdf = await page.pdf({ format: 'A4' });
@@ -544,7 +544,7 @@ router.post('/file_download_ai_singer', ensureAuthenticated, async (req, res) =>
     // Puppeteer에 쿠키 설정
     await page.setCookie(...cookies);
 
-    await page.goto('http://localhost:3000/result_detail_ai_singer', { waitUntil: 'networkidle0' });
+    await page.goto('http://localhost:3000/pdf_singer', { waitUntil: 'networkidle0' });
 
     // PDF로 렌더링
     const pdf = await page.pdf({ format: 'A4' });
@@ -580,7 +580,7 @@ router.post('/file_download_announce', ensureAuthenticated, async (req, res) => 
     // Puppeteer에 쿠키 설정
     await page.setCookie(...cookies);
 
-    await page.goto('http://localhost:3000/announcer_result_detail', { waitUntil: 'networkidle0' });
+    await page.goto('http://localhost:3000/pdf_announcer', { waitUntil: 'networkidle0' });
 
     // PDF로 렌더링
     const pdf = await page.pdf({ format: 'A4' });
