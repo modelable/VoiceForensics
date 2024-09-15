@@ -98,10 +98,17 @@ html
                     document.getElementById('progress_div').style.display = "none";
 
                     var form = document.getElementById('uploadForm');
+
                     form.onsubmit = function(e) {
                         e.preventDefault();
-                        if(!document.getElementById("voice1").value) return;
-                        if(!document.getElementById("voice2").value) return;
+                        var file1 = document.getElementById("voice1").value;
+                        var file2 = document.getElementById("voice2").value;
+
+                        if (!file1 || !file2) {
+                            alert("모든 파일을 선택해 주세요.");
+                            return;
+                        }
+                        
                         document.getElementById('submit_button').style.display = "none";
                         document.getElementById('progress_div').style.display = "block";
 
