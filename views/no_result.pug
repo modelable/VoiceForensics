@@ -1,11 +1,10 @@
-extends ./layout.pug
+extends ./layout2.pug
 
 block content
-    div(class='container')
-        div(class="row mt-5")
-            div(class="col-md-6 m-auto text-center")
-                h2 아직 결과가 출력되지 않았습니다
-    
-    br
-    form(action="/dashboard" method="GET")
-        button(type='submit' class="btn btn-outline-success") Back to the Dashboard
+    .container-fluid.mt-5
+        .row.features.mt-5.justify-content-center
+            .col-md-8.col-lg-6.feature
+                h3 🙅‍♂️ 아직 결과가 출력되지 않았습니다 🙅‍♂️
+                br
+                form(action="/" method="GET")
+                    button(type='submit' class="btn btn-outline-success btn-black") 홈으로 돌아가기
