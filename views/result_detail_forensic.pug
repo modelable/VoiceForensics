@@ -2,71 +2,71 @@ extends ./layout2.pug
 
 block content
     .container
-      .row.mt-5
-        .col-12.text-center
-          h1 음성 위변조 탐지 보고서 
-      hr
-      h2 🎤 MFCC란?
-      p(class="strong-text text-center description" style="font-size: 20px")
-          | MFCC(Mel-Frequency Cepstral Coefficients)란 음성 신호의 다양한 특징을 추출하는 기법입니다. 
-          br
-          | 음성 신호 스펙트럼을 사람의 청각 인식 패턴과 유사한 주파수 척도인 Mel-Frequency로 변환한 뒤, 
-          br
-          | 스펙트럼의 주기적 패턴을 분석하여 추출한 12개의 계수들을 의미합니다.
-      br
-      p
-          h4.text-left 
-              strong MFCC1
-          p.text-left(style="font-size: 20px")
-              | MFCC1 계수는 
-              strong 음성 신호의 전반적인 에너지 수준
-              | 을 반영합니다.
-              br
-              | MFCC1이 높으면 음성이 더 크거나 강하게 발성되었다는 것을 의미하여 해당 계수를 통해 화자의 감정 상태, 강조 등을 측정할 수 있습니다.
-      p
-          h4.text-left 
-              strong MFCC2
-          p.text-left(style="font-size: 20px")
-              | MFCC2 계수는 
-              strong 에너지가 집중되어 있는 위치
-              | 를 알려줍니다.
-              br
-              | 계수 값이 높을수록 높은 주파수 대역에 더 많은 에너지가 집중되어 있음을 의미하며, 낮을수록 낮은 주파수 대역에 더 많은 에너지가 분포하고 있음을 의미합니다.
+        .row.mt-5
+            .col-12.text-center
+                h1 음성 위변조 탐지 보고서 
+        hr
+        h2 🎤 MFCC란?
+        p(class="strong-text text-center description" style="font-size: 20px")
+            | MFCC(Mel-Frequency Cepstral Coefficients)란 음성 신호의 다양한 특징을 추출하는 기법입니다. 
+            br
+            | 음성 신호 스펙트럼을 사람의 청각 인식 패턴과 유사한 주파수 척도인 Mel-Frequency로 변환한 뒤, 
+            br
+            | 스펙트럼의 주기적 패턴을 분석하여 추출한 12개의 계수들을 의미합니다.
+        br
+        p
+            h4.text-left 
+                strong MFCC1
+            p.text-left(style="font-size: 20px")
+                | MFCC1 계수는 
+                strong 음성 신호의 전반적인 에너지 수준
+                | 을 반영합니다.
+                br
+                | MFCC1이 높으면 음성이 더 크거나 강하게 발성되었다는 것을 의미하여 해당 계수를 통해 화자의 감정 상태, 강조 등을 측정할 수 있습니다.
+        p
+            h4.text-left 
+                strong MFCC2
+            p.text-left(style="font-size: 20px")
+                | MFCC2 계수는 
+                strong 에너지가 집중되어 있는 위치
+                | 를 알려줍니다.
+                br
+                | 계수 값이 높을수록 높은 주파수 대역에 더 많은 에너지가 집중되어 있음을 의미하며, 낮을수록 낮은 주파수 대역에 더 많은 에너지가 분포하고 있음을 의미합니다.
 
-      p
-          h4.text-left 
-              strong MFCC3
-          p.text-left(style="font-size: 20px")
-              | MFCC3 계수는 발음 특성을 반영하여 
-              strong 특정 모음의 발음 방식
-              | 을 포착합니다.
-              br
-              | 높은 값을 가질수록 특정 발음 패턴이 강조된다는 것을 의미합니다.
+        p
+            h4.text-left 
+                strong MFCC3
+            p.text-left(style="font-size: 20px")
+                | MFCC3 계수는 발음 특성을 반영하여 
+                strong 특정 모음의 발음 방식
+                | 을 포착합니다.
+                br
+                | 높은 값을 가질수록 특정 발음 패턴이 강조된다는 것을 의미합니다.
       
-      p
-          h4.text-left 
+        p
+            h4.text-left 
                 strong MFCC4
-          p.text-left(style="font-size: 20px")
+            p.text-left(style="font-size: 20px")
                 | MFCC4 계수는 
                 strong 중주파수 대역에서의 주파수 변동성, 음성 신호의 매끄럽거나 거친 정도, 톤의 다양성 등의 정보
                 | 를 반영합니다.
                 br
                 | 발화자의 발음 습관을 인식하는데 도움이 됩니다.
 
-      p
-          h4.text-left 
+        p
+            h4.text-left 
                 strong MFCC5
-          p.text-left(style="font-size: 20px")
+            p.text-left(style="font-size: 20px")
                 | MFCC5 계수는 
                 strong 중간 주파수 범위에서 발음의 세부적인 특성
                 | 을 잡아냅니다.
                 br
                 | MFCC5가 높을 경우, 특정 발음 패턴이나 음절의 변화가 강조됨을 알려주며 이 특징을 바탕으로 발음의 섬세함이나 발화의 독특함을 알 수 있습니다.
 
-      p
-          h4.text-left 
+        p
+            h4.text-left 
                 strong MFCC6
-          p.text-left(style="font-size: 20px")
+            p.text-left(style="font-size: 20px")
                 | MFCC6 계수는 음성 신호에서 
                 strong 더 미세한 중주파수 세부사항
                 | 을 포착하여 
@@ -75,10 +75,10 @@ block content
                 br
                 | MFCC6의 값이 높으면, 음성의 흐름에서 복잡성이나 특정 발음의 빈번한 전환을 나타낼 수 있습니다.
 
-      p
-          h4.text-left 
+        p
+            h4.text-left 
                 strong MFCC7
-          p.text-left(style="font-size: 20px")
+            p.text-left(style="font-size: 20px")
                 | MFCC7 계수는 
                 strong 중간 주파수 대역의 정교한 세부사항
                 | 을 반영하며, 
@@ -87,115 +87,115 @@ block content
                 br
                 | MFCC7이 높다면, 발화자가 발음을 매우 섬세하게 조절하고 있음을 의미하여, 발화자의 감정이나 강조표현을 알 수 있습니다.
 
-      p
-          h4.text-left 
+        p
+            h4.text-left 
                 strong MFCC8
-          p.text-left(style="font-size: 20px")
+            p.text-left(style="font-size: 20px")
                 | MFCC8 계수는 
                 strong 고주파수 대역에서 입술과 혀의 움직임 정도, 미세한 발음의 변화
                 | 를 반영하여 발음의 빠르기 정보를 가집니다.
                 br
                 | MFCC8의 값이 높을수록 명확하고 또렷한 발음을 구사하고 있음을 의미하며 발음의 디테일과 정확도가 높아집니다.
 
-      p
-          h4.text-left 
+        p
+            h4.text-left 
                 strong MFCC9
-          p.text-left(style="font-size: 20px")
+            p.text-left(style="font-size: 20px")
                 | MFCC9 계수는 
                 strong 3000hHz 이상의 고주파수 대역에서 발음의 끝맺음과 강세 위치
                 | 에 대한 정보를 제공합니다. 
                 br
                 | 강세가 있는 부분에서 고주파 성분이 두드러지게 나타납니다.
 
-      p
-          h4.text-left 
+        p
+            h4.text-left 
                 strong MFCC10, MFCC11
-          p.text-left(style="font-size: 20px")
+            p.text-left(style="font-size: 20px")
                 | MFCC10, MFCC11 계수는 
                 strong 4000Hz 이상의 고주파수 대역에서 “ㅅ” 자음과 같은 무성음의 끝맺음 발음
                 | 을 반영합니다. 
                 br
                 | 특히, “ㅌ”, “ㅋ”과 같은 끝맺음 소리의 세밀한 정도를 반영합니다.
 
-      p
-          h4.text-left 
+        p
+            h4.text-left 
                 strong MFCC12
-          p.text-left(style="font-size: 20px")
+            p.text-left(style="font-size: 20px")
                 | MFCC12 계수는 
                 strong 음성의 가장 높은 주파수에서의 세밀한 특징
                 | 을 포착합니다.
                 br
                 | 특히 고주파수 대역에서 음성의 질감, 미세한 발음의 변화, 그리고 발음의 매우 섬세한 부분의 특징 정보를 담고 있습니다.
 
-      br
-      br
-      .row.mt-4
-        .col-12
-          img(src=`clustering_label_${result.files_control_id}.png`, alt="Clustering graph", class="image-small mx-auto d-block" width="500")
-          p(class="strong-text text-center" style="font-size: 20px;") 
-            | AI모델 학습 전 실시간/녹취록 음성에서 추출한 MFCC 계수들을 2차원 좌표평면에 나타내고 
-            br
-            | 분포에 따라 레이블을 부여한 결과입니다.
-          br
-          hr
+        br
+        br
+        .row.mt-4
+            .col-12
+                img(src=`clustering_label_${result.files_control_id}.png`, alt="Clustering graph", class="image-small mx-auto d-block" width="500")
+                p(class="strong-text text-center" style="font-size: 20px;") 
+                    | AI모델 학습 전 실시간/녹취록 음성에서 추출한 MFCC 계수들을 2차원 좌표평면에 나타내고 
+                    br
+                    | 분포에 따라 레이블을 부여한 결과입니다.
+                br
+                hr
 
-          br
-          img(src=`train_acc_loss_${result.files_control_id}.png`, alt="Train accuracy and loss graph", class="img-fluid" width="900")
-          p(class="strong-text text-center" style="font-size: 20px;" ) 훈련 횟수에 따른 모델의 오차율과 훈련 정확도를 보여줍니다.
-          br
-          hr
+                br
+                img(src=`train_acc_loss_${result.files_control_id}.png`, alt="Train accuracy and loss graph", class="img-fluid" width="900")
+                p(class="strong-text text-center" style="font-size: 20px;" ) 훈련 횟수에 따른 모델의 오차율과 훈련 정확도를 보여줍니다.
+                br
+                hr
           
-          br
-          img(src=`fft_spectrum_${result.files_control_id}.png`, alt="MFCC spectrum graph", class="img-fluid" width="1000")
-          p(class="strong-text text-center" style="font-size: 20px;") 의심되는 음성과 원본의 주파수 대역별 데시벨을 비교한 그래프입니다. 
-          br
-          hr
+                br
+                img(src=`fft_spectrum_${result.files_control_id}.png`, alt="MFCC spectrum graph", class="img-fluid" width="1000")
+                p(class="strong-text text-center" style="font-size: 20px;") 의심되는 음성과 원본의 주파수 대역별 데시벨을 비교한 그래프입니다. 
+                br
+                hr
 
-          br                        
-          img(src=`mfcc_spectrum_graph_${result.files_control_id}.png`, alt="Spectrogram of recorded and live speech", class="img-fluid" width="860")
-          p(class="strong-text text-center" style="font-size: 20px;") 각 프레임에 따른 MFCC 계수값들의 세기를 색깔로 표현한 스펙트럼입니다.
-          br
-          hr
+                br                        
+                img(src=`mfcc_spectrum_graph_${result.files_control_id}.png`, alt="Spectrogram of recorded and live speech", class="img-fluid" width="860")
+                p(class="strong-text text-center" style="font-size: 20px;") 각 프레임에 따른 MFCC 계수값들의 세기를 색깔로 표현한 스펙트럼입니다.
+                br
+                hr
 
-          br
-          img(src=`mfcc_bar_graph_${result.files_control_id}.png`, alt="MFCC coefficients average values graph", class="img-fluid" width="800")
-          p(class="strong-text text-center" style="font-size: 20px;") 의심되는 음성과 원본 음성의 MFCC 계수별 평균값을 비교한 막대 그래프입니다.
-          br
-          hr
+                br
+                img(src=`mfcc_bar_graph_${result.files_control_id}.png`, alt="MFCC coefficients average values graph", class="img-fluid" width="800")
+                p(class="strong-text text-center" style="font-size: 20px;") 의심되는 음성과 원본 음성의 MFCC 계수별 평균값을 비교한 막대 그래프입니다.
+                br
+                hr
 
-          #{console.log(recordAvg)}
-      .row.mt-4
-        .col-12
-          table.table.table-bordered
-            thead.thead-dark
-              tr
-                th MFCC 계수
-                each val in [1,2,3,4,5,6,7,8,9,10,11,12]
-                  th= val
-            tbody
-              tr
-                th 원본
-                each num in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-                  - let value = recordAvg && recordAvg[`MFCC${num}`] ? recordAvg[`MFCC${num}`].toFixed(2) : ''
-                  td= value
-              tr
-                th 의심되는 파일
-                each num in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-                  - let value = controlAvg && controlAvg[`MFCC${num}`] ? controlAvg[`MFCC${num}`].toFixed(2) : ''
-                  td= value
+                #{console.log(recordAvg)}
+        .row.mt-4
+            .col-12
+                table.table.table-bordered
+                    thead.thead-dark
+                        tr
+                            th MFCC 계수
+                            each val in [1,2,3,4,5,6,7,8,9,10,11,12]
+                                th= val
+                    tbody
+                        tr
+                            th 원본
+                            each num in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                                - let value = recordAvg && recordAvg[`MFCC${num}`] ? recordAvg[`MFCC${num}`].toFixed(2) : ''
+                                td= value
+                        tr
+                            th 의심되는 파일
+                            each num in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                                - let value = controlAvg && controlAvg[`MFCC${num}`] ? controlAvg[`MFCC${num}`].toFixed(2) : ''
+                                td= value
 
-      p(class="strong-text text-center" style="font-size: 20px;") 의심되는 음성과 원본 음성의 MFCC 계수별 평균값을 비교한 표 입니다.
-      br
-      .row.mt-4
-        .col-12.text-center
-                form(action="/result_forensic" method="GET")
-                    button(type='submit' class="btn btn-outline-success btn-black") 이전 화면으로 가기
+        p(class="strong-text text-center" style="font-size: 20px;") 의심되는 음성과 원본 음성의 MFCC 계수별 평균값을 비교한 표 입니다.
+        br
+        .row.mt-4
+            .col-12.text-center
+                    form(action="/result_forensic" method="GET")
+                        button(type='submit' class="btn btn-outline-success btn-black") 이전 화면으로 가기
 
     footer
         p © Created By Park Sohee | Lee Keejung | Lee Seungjay
         .footer-links
-          a(href="https://github.com", target="_blank") GitHub
-          a(href="https://linkedin.com", target="_blank") LinkedIn
+            a(href="https://github.com", target="_blank") GitHub
+            a(href="https://linkedin.com", target="_blank") LinkedIn
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js")
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")
