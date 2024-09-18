@@ -104,14 +104,14 @@ app.use((req, res, next) => {
 });
 
 // MongoDB 로컬에 연결
-mongoose.connect('mongodb://localhost:27017/mydatabase');
+//mongoose.connect('mongodb://localhost:27017/mydatabase');
 
 const db = mongoose.connection;
 
 // 수정 -> MongoDB Atlas(클라우드)에 연결
-//const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 
-//mongoose.connect(uri);
+mongoose.connect(uri);
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
