@@ -23,9 +23,9 @@ from threading import Thread
 import io
 import os
 
-#flask 및 몽고디비 connection string 선언
+#flask 및 몽고디비 connection string 선언, 0918 수정
 app = Flask(__name__)
-connection_string = 'mongodb+srv://hansunguniv001:hansung@cluster0.hlw86l4.mongodb.net/'
+connection_string = 'mongodb://localhost:27017'
 
 # FFmpeg 경로 설정
 AudioSegment.converter = "C:\\Users\\sohee\\ffmpeg\\ffmpeg-n7.0-latest-win64-gpl-7.0\\bin\\ffmpeg.exe"
@@ -35,9 +35,9 @@ AudioSegment.ffprobe = "C:\\Users\\sohee\\ffmpeg\\ffmpeg-n7.0-latest-win64-gpl-7
 #0802 추가
 flag = None
 
-# MongoDB 클라이언트 설정 및 컬렉션 선언
-client = MongoClient(connection_string, tls=True, tlsAllowInvalidCertificates=True)
-db = client['test']  # 데이터베이스 이름
+# MongoDB 클라이언트 설정 및 컬렉션 선언, 0918 수정
+client = MongoClient(connection_string)
+db = client['mydatabase']  # 데이터베이스 이름, 0918 수정
 control_collection = db['coeffie_control']
 record_collection = db['coeffie_record']
 control_mfcc_avg = db['coeffie_control_avg']

@@ -1,4 +1,3 @@
-//pdf_announcer
 extends ./layout2.pug
 
 block content
@@ -6,7 +5,7 @@ block content
         .row.features.mt-5.justify-content-center
             .col-md-8.col-lg-6.feature
                 img(src="./asset/announce.png" alt="발성 연습 및 교정" class="img-fluid")
-                h2 Result
+                h2 발성 연습 평가 보고서
                 p(class="strong-text text-center description")
                     | 스피치 유사도: 
                     span(style=`color: ${result.announcer_MAE_similarity >= 95 ? 'green' : result.announcer_MAE_similarity >= 80 ? 'orange' : 'red'}; font-size: 1.5em`)

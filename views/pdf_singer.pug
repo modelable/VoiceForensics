@@ -5,7 +5,7 @@ block content
         .row.features.mt-5.justify-content-center
             .col-md-8.col-lg-6.feature
                 img(src="./asset/ai_singer.png" alt="발성 연습 및 교정" class="img-fluid")
-                h2 Result
+                h2 AI 가수 목소리 판정 결과
                 p(class="strong-text text-center description")
                     | 가수 음성 유사도: 
                     span(style=`color: ${result.ai_voice_MAE_similarity >= 95 ? 'green' : result.ai_voice_MAE_similarity >= 80 ? 'orange' : 'red'}; font-size: 1.5em`)
@@ -15,7 +15,6 @@ block content
                     strong(style="font-size:20px")
                         | #{result.ai_voice_MAE_similarity.toFixed(2) >= 95 ? '가수 본인의 목소리입니다.' : result.ai_voice_MAE_similarity.toFixed(2) >= 80 ? 'AI 합성가능성이 존재합니다.' : '원본 가수와 전혀 다른 목소리입니다.'}
 
-                #{console.log(result)}
                 .row.my-4.justify-content-center
                     table.table.table-bordered.table-striped(style="width: auto;")
                         thead
@@ -36,10 +35,6 @@ block content
                                 td ~ 80%
                                 td C
                                 td 전혀 다른 목소리입니다.
-
-                h1 AI 가수 목소리 탐지 결과 보고서
-                hr
-
         .row.mt-4
             .col-12
                 h2 🎤 MFCC란?

@@ -192,6 +192,16 @@ router.get('/result_forensic', ensureAuthenticated, async (req, res) => {
         return res.render('no_result', { message: error });
     }
 
+    //0918 SOHEE 추가
+    if (result.result_MAE_similarity === null) {
+        return res.send(`
+            <script>
+                alert('결과 보기에 앞서 먼저 위변조 탐지를 위한 음성을 업로드해주세요.');
+                window.history.back(); // Redirects back to the previous page
+            </script>
+        `);
+    }
+
     // 결과가 있으면 결과 페이지 렌더링
     res.render('result_forensic', {
         userId: req.user._id,
@@ -212,6 +222,16 @@ router.get('/result_ai_singer', ensureAuthenticated, async (req, res) => {
         return res.render('no_result', { message: error });
     }
 
+    // If result.ai_voice_MAE_similarity is null, show alert and prevent rendering
+    if (result.ai_voice_MAE_similarity === null) {
+        return res.send(`
+            <script>
+                alert('AI 가수 유사도를 보기에 앞서 먼저 음성을 업로드해주세요.');
+                window.history.back(); // Redirects back to the previous page
+            </script>
+        `);
+    }
+
     // 결과가 있으면 결과 페이지 렌더링
     res.render('result_ai_singer', {
         userId: req.user._id,
@@ -229,6 +249,16 @@ router.get('/result_announce', ensureAuthenticated, async (req, res) => {
         }
         // 결과가 없는 경우
         return res.render('no_result', { message: error });
+    }
+
+    //0918 SOHEE 추가
+    if (result.announcer_MAE_similarity === null) {
+        return res.send(`
+            <script>
+                alert('결과 보기에 앞서 먼저 발성 연습을 위한 음성을 업로드해주세요.');
+                window.history.back(); // Redirects back to the previous page
+            </script>
+        `);
     }
 
     // 결과가 있으면 결과 페이지 렌더링
@@ -336,7 +366,7 @@ router.get('/announcer_improvements', ensureAuthenticated, async (req, res) => {
       var poor_mfccs = [];
       var thresholds = [95, 80];  // 우수: 95 이상, 양호: 80-94, 미흡: 80 미만
       var i = 0;
-      var mfcc = ["mfcc2", "mfcc3", "mfcc5", ,"mfcc6", "mfcc8"];
+      var mfcc = ["mfcc2", "mfcc3", "mfcc5","mfcc6", "mfcc8"];
       mfccDescriptions.forEach(desc => {
         if (desc.value >= thresholds[0]) {
           excellent.push(`${desc.name}(${desc.mfcc})`);
@@ -404,6 +434,7 @@ router.get('/result_detail_ai_singer', ensureAuthenticated, async (req, res) => 
     let maxDifference = 0;
     let maxDifferenceIndex = 2;
 
+    //MFCC 계수 평균 편차가 가장 큰 Index 구하는 알고리즘(절댓값 이용)
     mfccIndices.forEach(index => {
         const recordValue = recordAvg[`MFCC${index}`];
         const controlValue = controlAvg[`MFCC${index}`];
@@ -515,6 +546,16 @@ router.post('/file_download_forensic', ensureAuthenticated, async (req, res) => 
         return res.render('no_result', { message: error });
     }
 
+    //0918 SOHEE 추가
+    if (result.result_MAE_similarity === null) {
+        return res.send(`
+            <script>
+                alert('결과 보기에 앞서 먼저 위변조 탐지를 위한 음성을 업로드해주세요.');
+                window.history.back(); // Redirects back to the previous page
+            </script>
+        `);
+    }
+
     //기존 : 글꼴 렌더링 방식에 대한 설정만 제어
     //const browser = await puppeteer.launch({ args: ['--font-render-hinting=none'] });
 
@@ -605,6 +646,15 @@ router.post('/file_download_ai_singer', ensureAuthenticated, async (req, res) =>
         return res.render('no_result', { message: error });
     }
 
+    if (result.ai_voice_MAE_similarity === null) {
+        return res.send(`
+            <script>
+                alert('결과 보기에 앞서 먼저 AI 가수 목소리 탐지를 위한 음성을 업로드해주세요.');
+                window.history.back(); // Redirects back to the previous page
+            </script>
+        `);
+    }
+
     //const browser = await puppeteer.launch({ args: ['--font-render-hinting=none'] });
     const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox']});
     const page = await browser.newPage();
@@ -649,7 +699,7 @@ router.get('/pdf_announcer', ensureAuthenticated, async (req, res) => {
       var poor_mfccs = [];
       var thresholds = [95, 80];  // 우수: 95 이상, 양호: 80-94, 미흡: 80 미만
       var i = 0;
-      var mfcc = ["mfcc2", "mfcc3", "mfcc5", ,"mfcc6", "mfcc8"];
+      var mfcc = ["mfcc2", "mfcc3", "mfcc5" ,"mfcc6", "mfcc8"];
 
       if (error) {
         if (status === 404 || status === 500) {
@@ -692,6 +742,16 @@ router.post('/file_download_announce', ensureAuthenticated, async (req, res) => 
         }
         // 결과가 없는 경우
         return res.render('no_result', { message: error });
+    }
+
+    //0918 SOHEE 추가
+    if (result.announcer_MAE_similarity === null) {
+        return res.send(`
+            <script>
+                alert('결과 보기에 앞서 먼저 발성 연습을 위한 음성을 업로드해주세요.');
+                window.history.back(); // Redirects back to the previous page
+            </script>
+        `);
     }
 
     //const browser = await puppeteer.launch({ args: ['--font-render-hinting=none'] });

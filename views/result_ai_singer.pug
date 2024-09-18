@@ -5,7 +5,7 @@ block content
         .row.features.mt-5.justify-content-center
             .col-md-8.col-lg-6.feature
                 img(src="./asset/ai_singer.png" alt="발성 연습 및 교정" class="img-fluid")
-                h2 Result
+                h2 AI 가수 목소리 판정 결과
                 p(class="strong-text text-center description")
                     | 가수 음성 유사도: 
                     span(style=`color: ${result.ai_voice_MAE_similarity >= 95 ? 'green' : result.ai_voice_MAE_similarity >= 80 ? 'orange' : 'red'}; font-size: 1.5em`)
