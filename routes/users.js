@@ -29,6 +29,12 @@ router.post('/login', (req, res, next) => {
         }
         if (!user) {
             // 사용자 인증 실패
+            res.send(`
+                <script>
+                    alert('ID가 존재하지 않거나, PW가 일치하지 않습니다');
+                    window.history.back(); // Redirects back to the previous page
+                </script>
+            `);
             return res.redirect('/users/login');
         }
         req.logIn(user, (err) => {
