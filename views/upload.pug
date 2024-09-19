@@ -71,7 +71,7 @@ html
             .text-center
               br
               button.btn.btn-primary(id = "submit_button") 제출
-              div(class="text-center mt-4")
+              //div(class="text-center mt-4")
                   
               br
               div(id = "progress_div")
@@ -137,7 +137,10 @@ html
                         xhr.send(formData);
                     };
                 });
-
+      .row.mt-4
+          .col-12.text-center
+              form(action="/" method="GET")
+                  button(type='submit' class="btn btn-outline-success btn-black") 홈으로 돌아가기
       br
       footer.text-center
         p © Created By Park Sohee | Lee Keejung | Lee Seungjay

@@ -32,10 +32,12 @@ router.post('/login', (req, res, next) => {
             res.send(`
                 <script>
                     alert('ID가 존재하지 않거나, PW가 일치하지 않습니다');
-                    window.history.back(); // Redirects back to the previous page
+                    window.history.back(); // Redirects back to the previous pa// 링크를 새 창에 띄우기
+                    //window.open('http://localhost:3000/users/login', '_self');
                 </script>
             `);
-            return res.redirect('/users/login');
+            return
+            //return res.redirect('/users/login');
         }
         req.logIn(user, (err) => {
             if (err) {
