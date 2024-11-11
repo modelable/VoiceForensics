@@ -1,4 +1,7 @@
 # Develop Environment Configuration
+
+### 시연 영상 링크 : https://youtu.be/kDAXhBB7Kv0
+
 ### requirement module install
 
     npm i express pug passport passport-local bcrypt express-flash express-session mongoose dotenv puppeteer socket.io axios
