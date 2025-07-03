@@ -1,4 +1,4 @@
- # 음성 위변조 탐지 포렌식
+ # 음성 위변조 탐지 포렌식 🎙️
 ### AI 합성 탐지 및 발음 교정 플랫폼, 음성 위변조 탐지 포렌식
 VoiceForensics: A Platform for Detecting AI-synthesized Voices and Providing Pronunciation Correction
 
@@ -42,6 +42,8 @@ VoiceForensics: A Platform for Detecting AI-synthesized Voices and Providing Pro
 
 ### 시스템 아키텍쳐
 <image src="https://github.com/modelable/VoiceForensics/assets/123307856/e914b85d-cf16-4253-8b0a-22887c71a211" width="800" height="400"></image>
+
+<br>
 
 ### Tool 
 ```
