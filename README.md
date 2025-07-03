@@ -1,6 +1,120 @@
-# Develop Environment Configuration
+ # 음성 위변조 탐지 포렌식
+### AI 합성 탐지 및 발음 교정 플랫폼, 음성 위변조 탐지 포렌식
+VoiceForensics: A Platform for Detecting AI-synthesized Voices and Providing Pronunciation Correction
 
-### 시연 영상 링크 : https://youtu.be/kDAXhBB7Kv0
+<div style="display: flex; gap: 10px;">
+  <img src="./readme_images/vfMain1.png" width="400px"/>
+  <img src="./readme_images/vfMain2.png" width="400px"/>
+</div>
+시연 URL: [https://www.youtube.com/watch?v=0ooLWTzr20A](https://youtu.be/kDAXhBB7Kv0)
+
+<br><br>
+
+## 팀 정보 🧑‍🤝‍🧑
+<table align="center">
+    <tr align="center">
+        <td><a href="https://github.com/smilehee18">
+            <img src="https://avatars.githubusercontent.com/smilehee18" width="100px"  alt="smilehee18"/><br/>
+            <sub><b>박소희</b></sub></a>
+            <br/> AI, Frontend
+        </td>
+        <td><a href="https://github.com/modelable">
+            <img src="https://avatars.githubusercontent.com/modelable" width="100px" alt="modelable"/><br/>
+            <sub><b>이기정</b></sub></a>
+            <br/> Backend, Frontend
+        </td>
+        <td><a href="https://github.com/sjlee9908">
+            <img src="https://avatars.githubusercontent.com/sjlee9908" width="100px" alt="sjlee9908"/><br/>
+            <sub><b>이승재</b></sub></a>
+            <br/> Backend, Frontend
+        </td>
+        <td><a href="https://github.com/asdasdasd111as">
+            <img src="https://avatars.githubusercontent.com/asdasdasd111as" width="100px" alt="asdasdasd111as"/><br/>
+            <sub><b>신서형</b></sub></a>
+            <br/> AI
+        </td>
+    </tr>
+</table>
+
+<br>
+
+## 주요 기술 🛠️
+
+### 시스템 아키텍쳐
+<image src="https://github.com/modelable/VoiceForensics/assets/123307856/e914b85d-cf16-4253-8b0a-22887c71a211" width="800" height="400"></image>
+
+### Tool 
+```
+- 개발 환경 : Windows, Mac OS
+- 개발 도구 : Visual Studio Code, MongoDB Atlas
+- 개발 언어 : Python, JavaScript
+- 주요 기술: TensorFlow, Flask, node-MFCC, Node.js, Express.js
+```
+
+### 주요 라우트 설명
+
+| 경로                       | 설명                                    | 렌더링 / 응답                       |
+|----------------------------|---------------------------------------|------------------------------------|
+| `/`                        | 인덱스 페이지 렌더링                    | `index.pug`                        |
+| `/dashboard_forensic`       | 음성 위변조 탐지 대시보드               | `dashboard.pug`                    |
+| `/dashboard_ai_singer`      | AI 가수 목소리 탐지 대시보드            | `dashboard.pug`                    |
+| `/dashboard_announce`       | 발성 연습 및 교정 대시보드               | `dashboard.pug`                    |
+| `/upload_forensic`          | 음성 위변조 탐지 음성 업로드             | `upload.pug`                      |
+| `/upload_ai_singer`         | AI 가수 목소리 탐지 음성 업로드           | `upload.pug`                      |
+| `/upload_announce`          | 발음 연습 및 교정 음성 업로드              | `upload.pug`                      |
+| `/train_process`            | 업로드된 음성 기반 분석 단계 페이지         | `train_process.pug`                |
+| `/upload_wait_events`       | Flask 서버와 연동 SSE 이벤트 전송          | `text/event-stream`                |
+| `/result_forensic`          | 음성 위변조 탐지 결과 페이지                   | `result_forensic.pug` / `no_result.pug` |
+| `/result_ai_singer`         | AI 가수 목소리 탐지 결과 페이지             | `result_ai_singer.pug` / `no_result.pug` |
+| `/result_announce`          | 발음 연습 및 교정 결과 페이지                     | `result_announce.pug` / `no_result.pug` |
+| `/result_visual`            | 결과 시각화 페이지           | `result_visual.pug`                |
+| `/announcer_result`         | 발음 연습 및 교정 결과 페이지                 | `announcer_result.pug`             |
+| `/announcer_result_detail`  | 발음 연습 및 교정 결과 상세보기 페이지             | `result_detail_announce.pug`      |
+| `/announcer_improvements`   | 발음 연습 및 교정 개선연습 페이지      | `improvements_announce.pug`       |
+| `/forensic_result_detail`   | 음성 위변조 탐지 결과 상세보기 페이지           | `result_detail_forensic.pug`      |
+| `/result_detail_ai_singer`  | AI 가수 목소리 탐지 결과 상세보기 페이지         | `result_detail_ai_singer.pug`     |
+| `/result_overall_ai_singer` | AI 가수 목소리 탐지 종합 결과 페이지              | `result_overall_ai_singer.pug`    |
+
+<br>
+
+### 데이터 모델링 구조
+
+| **Collection (Schema)**      | **주요 필드**                                              | **참조 관계 (Ref)**                                  |
+|------------------------------|-----------------------------------------------------------|-------------------------------------------------------|
+| `User`                       | name, email, password, date                               | `files_record_id` → `FileRecord`  <br>`files_control_id` → `FileControl` |
+| `FileRecord`                 | filename, path, date                                      | -                                                     |
+| `FileControl`                | filename, path, flag, date                                | -                                                     |
+| `CoeffieRecord`              | MFCID, MFCC1~12, date                                     | `files_record_id` → `FileRecord`                     |
+| `CoeffieRecordAvg`           | MFCID, MFCC1~12, timestamp                                | `files_record_id` → `FileRecord`                     |
+| `CoeffieControl`             | MFCID, MFCC1~12, date                                     | `files_control_id` → `FileControl`                   |
+| `CoeffieControlAvg`          | MFCID, MFCC1~12, timestamp                                | `files_control_id` → `FileControl`                   |
+| `Result`                     | live_data_prediction, record_data_prediction, MAE 등     | `files_record_id` → `FileRecord` <br>`files_control_id` → `FileControl` |
+
+## 개발 기간 🗓️
+
+2024.04.08. - 2024.09.19
+
+<br>
+
+## 작품 개요 ⛰️
+``` 
+AI 기술이 발전함에 따라 음성 변조 기술이 보다 섬세하고 정교해지고 있다.
+최근 이러한 기술의 발전을 악용하여 사용자를 속여 금전을 갈취하는 보이스피싱 공격,
+AI 커버곡의 무단 유포 및 저작권 침해 등의 문제가 제기되고 있다.
+
+이를 예방하고자 딥러닝 학습 및 예측을 통해 두 음성을 비교하여 유사도를 도출하고
+음성 특징 정보들을 그래프로 가시화하여 근거로 제시하는 음성 위변조 탐지 포렌식을 제안한다.
+
+본 작품은 MFCC 기술을 통해 추출한 두 개의 음성 간 특정 주파수 대역에서의 발음 패턴, 음성의 높낮이,
+에너지 분포 정도 등의 정보를 비교하여 음성의 위변조 여부를 유사도와 시각화 자료를 통해 도출한다.
+
+첫째, 원조 가수의 목소리를 AI 합성하여 생성한 음원의 무단 배포 및 저작권 침해 예방을 위해 AI 가수의 목소리를 탐지하는 데 활용한다.
+둘째, 녹취 음성 파일을 증거물로 제출하는 법정 상황과 보이스피싱 상황에서 음성의 신뢰성을 판단하는 데 활용한다.
+셋째, 두 음성 간의 MFCC 계수들의 세밀한 분석을 통해 언어 교정이 필요한 아나운서의 발성 연습을 지원하는 데 활용한다.
+```
+<br>
+
+### Develop Environment Configuration
 
 ### requirement module install
 
@@ -24,9 +138,6 @@
        AudioSegment.converter = "C:\\ffmpeg\\bin\\ffmpeg.exe"
        AudioSegment.ffmpeg = "C:\\ffmpeg\\bin\\ffmpeg.exe"
        AudioSegment.ffprobe = "C:\\ffmpeg\\bin\\ffprobe.exe"
-
-### 음성 위변조 탐지 포렌식 시스템 구조도
-<image src="https://github.com/modelable/VoiceForensics/assets/123307856/e914b85d-cf16-4253-8b0a-22887c71a211" width="800" height="400"></image>
 
 # mfcc
 Node.JS implementation of the MFCC (Mel Frequency Cepstrum Coefficients) algorithm.
@@ -107,27 +218,3 @@ Processing the MFCC for a `.wav` file:
 To see all available options:
 
     node mfcc.js
-
-# License
-
-The MIT License (MIT)
-
-Copyright (c) 2015 Vail Systems (Chicago, IL)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
