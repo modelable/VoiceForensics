@@ -3,7 +3,7 @@
 VoiceForensics: A Platform for Detecting AI-synthesized Voices and Providing Pronunciation Correction
 
 <div style="display: flex; gap: 10px;">
-  <img src="./readme_images/vfMain1.jpg" width="400px"/>
+  <img src="./readme_images/voiceMain.png" width="400px"/>
   <img src="./readme_images/vfMain2.jpg" width="400px"/>
 </div>
 시연 URL: https://www.youtube.com/watch?v=0ooLWTzr20A
