@@ -2,10 +2,7 @@
 ### AI 합성 음성 탐지 및 발음 교정 플랫폼, 음성 위변조 탐지 포렌식
 VoiceForensics: A Platform for Detecting AI-synthesized Voices and Providing Pronunciation Correction
 
-<div style="display: flex; gap: 10px;">
-  <img src="./readme_images/voiceMain.png" width="400px"/>
-  <img src="./readme_images/vfMain2.jpg" width="400px"/>
-</div>
+<img src="./readme_images/voiceMainc.png" width="600px"/>
 시연 URL: https://www.youtube.com/watch?v=0ooLWTzr20A
 
 <br><br>
@@ -52,6 +49,8 @@ VoiceForensics: A Platform for Detecting AI-synthesized Voices and Providing Pro
 - 개발 언어 : Python, JavaScript
 - 주요 기술: TensorFlow, Flask, node-MFCC, Node.js, Express.js
 ```
+
+<br>
 
 ### 주요 라우트 설명
 
@@ -118,6 +117,16 @@ AI 커버곡의 무단 유포 및 저작권 침해 등의 문제가 제기되고
 ```
 <br>
 
+## 주요 수행 결과 📌
+
+원본 음성(여성) vs 비교 음성(남성) → 다른 화자인 경우
+
+<img src="./readme_images/img1.png" width="600px"/>
+<img src="./readme_images/img2.png" width="600px"/>
+<img src="./readme_images/img3.png" width="600px"/>
+<img src="./readme_images/img4.png" width="600px"/>
+<img src="./readme_images/img5.png" width="600px"/>
+ 
 ## Develop Environment Configuration ✏️
 
 ### requirement module install
