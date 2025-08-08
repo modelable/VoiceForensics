@@ -38,7 +38,8 @@ VoiceForensics: A Platform for Detecting AI-synthesized Voices and Providing Pro
 ## 주요 기술 🛠️
 
 ### 시스템 아키텍쳐
-<image src="https://github.com/modelable/VoiceForensics/assets/123307856/e914b85d-cf16-4253-8b0a-22887c71a211" width="800" height="400"></image>
+<!-- <image src="https://github.com/modelable/VoiceForensics/assets/123307856/e914b85d-cf16-4253-8b0a-22887c71a211" width="800" height="400"></image> -->
+<img src="./readme_images/VoiceForensic_architecture.png" width="600px"/>
 
 <br>
 
