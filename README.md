@@ -2,7 +2,7 @@
 ### AI 합성 음성 탐지 및 발음 교정 플랫폼, 음성 위변조 탐지 포렌식
 VoiceForensics: A Platform for Detecting AI-synthesized Voices and Providing Pronunciation Correction
 
-<img src="./readme_images/voiceMainc.png" width="600px"/>
+<img src="./readme_images/vf_main_clean.png" width="600px"/>
 시연 URL: https://www.youtube.com/watch?v=kDAXhBB7Kv0
 
 <br><br>
